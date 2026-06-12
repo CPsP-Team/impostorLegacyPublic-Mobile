@@ -7,6 +7,12 @@ import openfl.errors.Error;
 import openfl.events.UncaughtErrorEvent;
 import openfl.Lib;
 
+#if sys
+import sys.io.File;
+import sys.FileSystem;
+#end
+
+
 // todo more witht his actually...
 @:nullSafety
 class CrashHandler
@@ -80,6 +86,14 @@ class CrashHandler
 		
 		var fullReport = '$curFlxState\n\nException caught: $message\n\nCallstack:$callstackMessage';
 		
+		    #if mobile
+        if (!FileSystem.exists("./crash/")) FileSystem.createDirectory("./crash/");
+        var time = Date.now().toString().replace(":", "-").replace(" ", "_");
+		  	var path = "./crash/crash_" + time + ".txt";
+		  	File.saveContent(MobileUtil.getDirectory() + path, fullReport + "\n");
+			Sys.println("Crash log saved to " + path);
+       #end
+
 		FlxG.switchState(() -> new FallbackState(fullReport, () -> FlxG.switchState(() -> new MainMenuState())));
 	}
 }
