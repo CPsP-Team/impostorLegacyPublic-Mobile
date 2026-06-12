@@ -166,28 +166,28 @@ class ExtraDropShadowShader extends flixel.system.FlxAssets.FlxShader
 		uniform vec4 frameBounds;
 		
 		float intensity(vec4 color) {
-			return (uThreshMode == 0 ? dot(color.rgb, vec3(.2126, .7152, .0722)) : max(max(color.r, color.g), color.b));
+			return (uThreshMode == 0 ? dot(color.rgb, vec3(0.2126, 0.7152, 0.0722)) : max(max(color.r, color.g), color.b));
 		}
 		
 		float cutoff(vec4 color, float thresh, float roughness) {
-			if (thresh <= 0.) return 1.;
+			if (thresh <= 0.0) return 1.0;
 			
-			return clamp((intensity(color) - thresh) * (1. - thresh) * 4. * roughness, 0., 1.);
+			return clamp((intensity(color) - thresh) * (1.0 - thresh) * 4.0 * roughness, 0.0, 1.0);
 		}
 		
 		vec2 hash22(vec2 p) {
-			vec3 p3 = fract(vec3(p.xyx) * vec3(.1031, .1030, .0973));
+			vec3 p3 = fract(vec3(p.xyx) * vec3(0.1031, 0.1030, 0.0973));
 			p3 += dot(p3, p3.yzx + 33.33);
 			return fract((p3.xx + p3.yz) * p3.zy);
 		}
 		
 		float antialias(vec2 coord, float thresh, float roughness) { // form the fnf shader
-			if (aaStages == 0. || !aa) return cutoff(texture2D(bitmap, coord), thresh, roughness);
+			if (aaStages == 0.0 || !aa) return cutoff(texture2D(bitmap, coord), thresh, roughness);
 			
 			const int MAX_AA = 8;
 
-			float AA_TOTAL_PASSES = (aaStages * aaStages + 1.);
-			const float AA_JITTER = .5;
+			float AA_TOTAL_PASSES = (aaStages * aaStages + 1.0);
+			const float AA_JITTER = 0.5;
 			
 			float intensity = cutoff(texture2D(bitmap, coord), thresh, roughness);
 			for (int i = 0; i < MAX_AA * MAX_AA; i++) {
@@ -196,7 +196,7 @@ class ExtraDropShadowShader extends flixel.system.FlxAssets.FlxShader
 				
 				if (float(x) >= aaStages || float(y) >= aaStages) continue;
 				
-				vec2 offset = (AA_JITTER * (2. * hash22(vec2(float(x), float(y))) - 1.) / openfl_TextureSize);
+				vec2 offset = (AA_JITTER * (2.0 * hash22(vec2(float(x), float(y))) - 1.0) / openfl_TextureSize);
 				intensity += cutoff(texture2D(bitmap, coord + offset), thresh, roughness);
 			}
 			
@@ -206,7 +206,7 @@ class ExtraDropShadowShader extends flixel.system.FlxAssets.FlxShader
 		float getLayerIntensity(vec4 color, mat3 data) {
 			float strength = data[1].x;
 			
-			if (strength <= 0.) return 0.;
+			if (strength <= 0.0) return 0.0;
 			
 			float angle = data[0].x;
 			float dist = data[0].y;
@@ -218,30 +218,30 @@ class ExtraDropShadowShader extends flixel.system.FlxAssets.FlxShader
 			
 			if (!aa) coord = (floor(coord * openfl_TextureSize) / openfl_TextureSize);
 			
-			float rimIntensity = (1. - texture2D(bitmap, coord).a);
-			if (frameBounds.z > 0 && (coord.x < frameBounds.x || coord.y < frameBounds.y || coord.x >= frameBounds.z || coord.y >= frameBounds.w)) rimIntensity = 1.;
+			float rimIntensity = (1.0 - texture2D(bitmap, coord).a);
+			if (frameBounds.z > 0 && (coord.x < frameBounds.x || coord.y < frameBounds.y || coord.x >= frameBounds.z || coord.y >= frameBounds.w)) rimIntensity = 1.0;
 			
 			return (rimIntensity * strength * antialias(openfl_TextureCoordv, data[0].z, data[1].y));
 		}
 		
 		vec4 applyLayer(vec4 tintedColor, vec4 baseColor, mat4 multipliers, vec4 offsets, float intensity) {
-			if (intensity <= 0.) return tintedColor;
+			if (intensity <= 0.0) return tintedColor;
 			
-			return mix(tintedColor, clamp((stack ? tintedColor : baseColor) * multipliers + offsets, 0., 1.), intensity);
+			return mix(tintedColor, clamp((stack ? tintedColor : baseColor) * multipliers + offsets, 0.0, 1.0), intensity);
 		}
 		
 		void main() {
 			vec4 color = texture2D(bitmap, openfl_TextureCoordv);
 			
-			if (color.a == 0.) {
-				gl_FragColor = vec4(0.);
+			if (color.a == 0.0) {
+				gl_FragColor = vec4(0.0);
 			} else {
-				if (color.a > 0.) color.rgb /= color.a;
+				if (color.a > 0.0) color.rgb /= color.a;
 				
-				if (openfl_HasColorTransform || hasColorTransform) color = clamp(color * vec4(openfl_ColorMultiplierv.rgb, 1.) + openfl_ColorOffsetv, 0., 1.);
+				if (openfl_HasColorTransform || hasColorTransform) color = clamp(color * vec4(openfl_ColorMultiplierv.rgb, 1.0) + openfl_ColorOffsetv, 0.0, 1.0);
 				
-				vec4 tinted = clamp(color * hollowMultipliers + hollowOffsets, 0., 1.);
-				tinted = applyLayer(tinted, color, shadowMultipliers, shadowOffsets, antialias(openfl_TextureCoordv, uThreshold, uRoughness * 4.) * uShadowStrength);
+				vec4 tinted = clamp(color * hollowMultipliers + hollowOffsets, 0.0, 1.0);
+				tinted = applyLayer(tinted, color, shadowMultipliers, shadowOffsets, antialias(openfl_TextureCoordv, uThreshold, uRoughness * 4.0) * uShadowStrength);
 				
 				tinted = applyLayer(tinted, color, rimlightMultipliers5, rimlightOffsets5, getLayerIntensity(color, rimlightData5));
 				tinted = applyLayer(tinted, color, rimlightMultipliers4, rimlightOffsets4, getLayerIntensity(color, rimlightData4));
