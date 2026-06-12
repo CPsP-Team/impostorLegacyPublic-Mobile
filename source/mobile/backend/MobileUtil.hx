@@ -1,46 +1,116 @@
 package mobile.backend;
 
 #if android
-import extension.androidtools.os.Build.VERSION;
-import extension.androidtools.os.Build.VERSION_CODES;
-import extension.androidtools.os.Environment;
-import extension.androidtools.Permissions;
-import extension.androidtools.Settings;
+import extension.androidtools.content.Context as AndroidContext;
+import extension.androidtools.widget.Toast as AndroidToast;
+import extension.androidtools.os.Environment as AndroidEnvironment;
+import extension.androidtools.Permissions as AndroidPermissions;
+import extension.androidtools.Settings as AndroidSettings;
+import extension.androidtools.Tools as AndroidTools;
+import extension.androidtools.os.Build.VERSION as AndroidVersion;
+import extension.androidtools.os.Build.VERSION_CODES as AndroidVersionCode;
 #end
+
+import lime.system.System as LimeSystem;
+import haxe.io.Path;
+import haxe.Exception;
 
 import lime.system.System;
 import lime.app.Application;
 import openfl.Assets;
 import haxe.io.Bytes;
-import haxe.io.Path;
 #if sys
 import sys.FileSystem;
 import sys.io.File;
+import sys.io.Process;
 #end
 
 using StringTools;
 
 /** 
-* @Authors MaysLastPlay, MarioMaster (MasterX-39), Dechis (dx7405), ArkoseLabs
+* @Authors MaysLastPlay, ArkoseLabs, MarioMaster (MasterX-39), Dechis (dx7405)
 * @version: 0.4.0
 **/
+typedef CustomStorageModeData = { modes:Array<ModeData> }
+typedef ModeData = { Name:String, Folder:String }
+class MobileUtil
+{
+	#if sys
+	public static inline function getAssetDirectory():String
+		return #if android haxe.io.Path.addTrailingSlash("/sdcard/Android/data/com.motorfrog.impostor/files") #elseif ios lime.system.System.documentsDirectory #else Sys.getCwd() #end;
 
-class MobileUtil {
-	public static var currentDirectory:String = null;
+	#if android
+	public static inline function getCustomStoragePath():String
+		return AndroidContext.getExternalFilesDir() + '/storageModes.json';
+	public static inline function getStorageTypePath():String
+		return AndroidContext.getExternalFilesDir() + '/storagetype.txt';
 
-   /*
-	 * Get the directory for the application. (External for Android Platform and Internal for iOS Platform.)
-	 */
+	public static function getCustomStorageDirectories(?doNotSeperate:Bool):Array<String>
+	{
+		var curJsonFile:String = getCustomStoragePath();
+		var ArrayReturn:Array<String> = [];
 
+		if (FileSystem.exists(curJsonFile))
+		{
+			try {
+				var rawJson:String = File.getContent(curJsonFile);
+				var parsedData:CustomStorageModeData = haxe.Json.parse(rawJson);
+
+				if (parsedData.modes != null) {
+					for (mode in parsedData.modes) {
+						if (mode.Name == null || mode.Folder == null) continue;
+
+						if (doNotSeperate)
+							// Keeping the "Name|Folder" format, so initDirectory() doesn't break
+							ArrayReturn.push(mode.Name + "|" + mode.Folder);
+						else
+							ArrayReturn.push(mode.Name);
+					}
+				}
+			} catch (e:haxe.Exception) {
+				trace("Error parsing storage JSON: " + e.message);
+			}
+		}
+		return ArrayReturn;
+	}
+
+	// always force path due to haxe
+	public static var currentDirectory:String;
 	public static function initDirectory():String {
 		var daPath:String = '';
-		#if android
-        daPath = Path.addTrailingSlash("/sdcard/.ImpostorLegacy");
-        #elseif ios
-        daPath = lime.system.System.documentsDirectory;
-        #else
-        daPath = "";
-        #end
+		if (!FileSystem.exists(getStorageTypePath()))
+			File.saveContent(getStorageTypePath(), ClientPrefs.storageType);
+
+		var curStorageType:String = File.getContent(getStorageTypePath());
+
+		/* Put this there because I don't want to override original paths, also brokes the normal storage system */
+		for (line in getCustomStorageDirectories(true))
+		{
+			if (line.startsWith(curStorageType) && (line != '' || line != null)) {
+				var dat = line.split("|");
+				daPath = dat[1];
+			}
+		}
+
+		/* Hardcoded Storage Types, these types cannot be changed by Custom Type
+		 * paths using "/sdcard/" location because otherwise engine crashes. -ArkoseLabs
+		 **/
+		switch(curStorageType) {
+			case 'EXTERNAL':
+				daPath = "/sdcard/.ImpostorLegacy";
+			/* obb doesnt work and I dont wanna fix it -ArkoseLabs
+			case 'EXTERNAL_OBB':
+				daPath = "/sdcard/Android/obb/com.yoshman29.codenameengine";
+			*/
+			case 'EXTERNAL_MEDIA':
+				daPath = "/sdcard/Android/media/com.motorfrog.impostor";
+			case 'EXTERNAL_DATA':
+				daPath = "/sdcard/Android/data/com.motorfrog.impostor";
+			default: //technically not needed but here for safety -ArkoseLabs
+				if (daPath == null || daPath == '') daPath = "/sdcard/Android/data/com.motorfrog.impostor/files";
+		}
+		daPath = Path.addTrailingSlash(daPath);
+		currentDirectory = daPath;
 
 		try
 		{
@@ -51,6 +121,7 @@ class MobileUtil {
 		{
 			Application.current.window.alert("Looks like you doesn't have directory named\n" + MobileUtil.getAssetDirectory() +
 			"\nBut maybe this couldn't be right, android loves to give errors like this\nPress OK & let's see what happens\nCurrent Error You Got:\n" + e, "Warning!");
+			//lime.system.System.exit(1);
 		}
 
 		try
@@ -60,7 +131,7 @@ class MobileUtil {
 		}
 		catch (e:Dynamic)
 		{
-			Application.current.window.alert("Looks like you doesn't have directory named\n" + MobileUtil.getDirectory() + "mods/" + 
+			Application.current.window.alert("Looks like you doesn't have directory named\n" + MobileUtil.getDirectory() + "content/" + 
 			"\nBut maybe this couldn't be right, android loves to give errors like this\nPress OK & let's see what happens\nCurrent Error You Got:\n" + e, "Warning!");
 			//lime.system.System.exit(1);
 		}
@@ -68,10 +139,49 @@ class MobileUtil {
 		return daPath;
 	}
 
-	public static inline function getAssetDirectory():String
-		return #if android haxe.io.Path.addTrailingSlash("/sdcard/Android/data/com.motorfrog.impostor/files") #elseif ios lime.system.System.documentsDirectory #else Sys.getCwd() #end;
+	/**
+	 * Requests Storage Permissions on Android Platform.
+	 */
+	public static function getPermissions():Void
+	{
+		if (AndroidVersion.SDK_INT >= AndroidVersionCode.TIRAMISU)
+			AndroidPermissions.requestPermissions([
+				'READ_MEDIA_IMAGES',
+				'READ_MEDIA_VIDEO',
+				'READ_MEDIA_AUDIO',
+				'READ_MEDIA_VISUAL_USER_SELECTED'
+			]);
+		else
+			AndroidPermissions.requestPermissions(['READ_EXTERNAL_STORAGE', 'WRITE_EXTERNAL_STORAGE']);
 
-  public static function getDirectory():String
+		if (!AndroidEnvironment.isExternalStorageManager())
+			AndroidSettings.requestSetting('MANAGE_APP_ALL_FILES_ACCESS_PERMISSION');
+	}
+
+	public static var lastGettedPermission:Int;
+	public static function chmodPermission(fullPath:String) {
+		var process = new Process('stat -c %a ${fullPath}');
+		var stringOutput:String = process.stdout.readAll().toString();
+		process.close();
+		lastGettedPermission = Std.parseInt(stringOutput);
+	}
+
+	public static function chmod(permissions:Int, fullPath:String) {
+		var process = new Process('chmod -R ${permissions} ${fullPath}');
+
+		var exitCode = process.exitCode();
+		if (exitCode == 0) 
+			trace('Success: Permissions for the ${fullPath} file have been set to (${permissions})');
+		else
+		{
+			var errorOutput = process.stderr.readAll().toString();
+			trace('ERROR: Request to change permissions for the (${fullPath}) file failed. Exit Code: ${exitCode}, Error: ${errorOutput}');
+		}
+		process.close();
+	}
+	#end
+
+	public static function getDirectory():String
 	{
 		#if android	
 		var _currentDirectory = currentDirectory;
@@ -88,29 +198,8 @@ class MobileUtil {
 	}
 
 	/**
-	 * Requests Storage Permissions on Android Platform.
-	 */
-
-	public static function getPermissions():Void
-	{
-		if (VERSION.SDK_INT >= VERSION_CODES.TIRAMISU)
-			Permissions.requestPermissions([
-				'READ_MEDIA_IMAGES',
-				'READ_MEDIA_VIDEO',
-				'READ_MEDIA_AUDIO',
-				'READ_MEDIA_VISUAL_USER_SELECTED'
-			]);
-		else
-			Permissions.requestPermissions(['READ_EXTERNAL_STORAGE', 'WRITE_EXTERNAL_STORAGE']);
-
-		if (!Environment.isExternalStorageManager())
-			Settings.requestSetting('MANAGE_APP_ALL_FILES_ACCESS_PERMISSION');
-	}
-	
-		/**
 	 * Saves a file to the external storage.
 	 */
-	
 	public static function save(fileName:String = 'Ye', fileExt:String = '.txt', fileData:String = 'Nice try, but you failed, try again!', ?alert:Bool = true):Void
 	{
 		final folder:String = #if android MobileUtil.getDirectory() + #else Sys.getCwd() + #end 'saves/';
@@ -129,8 +218,9 @@ class MobileUtil {
 			else
 				trace('$fileName couldn\'t be saved. (${e.message})');
 	}
-	
-		/**
+	#end
+
+	/**
 	 * @param folders Optional list of specific folders (e.g. ["assets/data/"]). If null, copies all assets.
 	 */
 	public static function copyAssets(folders:Array<String> = null, onProgress:String->Int->Int->Void = null, onComplete:Void->Void = null):Void {
