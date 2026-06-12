@@ -39,6 +39,7 @@
 	<define name="MODS_ALLOWED" if="desktop || mobile" />
 	<define name="VIDEOS_ALLOWED" if="desktop || mobile" />
 	<define name="DISCORD_ALLOWED" if="desktop"/>
+	<define name="DLC" if="desktop || mobile"/>
 
 	<!-- _____________________________ Path Settings ____________________________ -->
 
@@ -58,7 +59,8 @@
 		<log info="INCLUDING ASSETS!!" />
 		<log info="INCLUDING DLC!!" if="DLC" />
 		<assets path="content/securitydlc" embed="false" if="MODS_ALLOWED DLC"/>
-		<assets path="assets/embeds" rename="assets" embed="true"/>
+		<assets path="assets/embeds" rename="assets" embed="true" unless="mobile"/>
+		<assets path="assets/embeds" rename="assets" embed="false" if="mobile"/>
 		<assets path="assets/legacy" rename="assets"/>
 	</section>
 

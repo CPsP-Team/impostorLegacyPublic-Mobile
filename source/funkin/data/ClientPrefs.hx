@@ -47,6 +47,7 @@ enum abstract VsyncMode(String) from String to String
 @:build(funkin.backend.macro.SaveMacro.buildSaveVars('im gonna make this do smth later okay just not rn'))
 class ClientPrefs
 {
+  @saveVar public static var storageType:String = 'EXTERNAL';
 	// legacy ------------------------------------------------------------------------//
 	@saveVar public static var finaleState:FinaleState = INACTIVE;
 	
