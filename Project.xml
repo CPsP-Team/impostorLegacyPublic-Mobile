@@ -39,6 +39,7 @@
 	<define name="MODS_ALLOWED" if="desktop || mobile" />
 	<define name="VIDEOS_ALLOWED" if="desktop || mobile" />
 	<define name="DISCORD_ALLOWED" if="desktop"/>
+	<define name="DLC" if="desktop || mobile"/>
 
 	<!-- _____________________________ Path Settings ____________________________ -->
 
