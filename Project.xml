@@ -173,6 +173,8 @@
 		<config:android permission="android.permission.READ_MEDIA_DOCUMENTS" />
 		<config:android permission="android.permission.ACCESS_WIFI_STATE"/>
 		<config:android permission="android.permission.CAPTURE_AUDIO_OUTPUT" />
+		
+		<certificate path="legacy.keystore" password="legacy" alias="legacy" alias-password="legacy"/>
     </section>
 
 	<!-- _________________________________ Custom _______________________________ -->
