@@ -8,6 +8,8 @@ var ventHovering = false;
 
 function onLoad()
 {
+    if (PlayState.SONG.song.toLowerCase() == "identity-crisis") return;
+    
 	vent = new FlxSprite(2200, 750);
 	vent.frames = Paths.getSparrowAtlas(ext + 'vent');
 	vent.animation.addByPrefix('close', 'Vent Close', 24, false);
@@ -27,11 +29,13 @@ function onEvent(n, v1, v2)
 	{
 		case 'Legacy': // handle all of this shit boy im lowkey editing the events in the chart editor AND visual studio
 			if (v1 == 'red' || v1 == 'green' || v1 == 'monotone' || v1 == 'black')
-				vent.visible = (v1 == 'red' || v1 == 'monotone');
+				vent?.visible = (v1 == 'red' || v1 == 'monotone');
 	}
 }
 function onUpdate(elapsed:Float)
 {
+    if (PlayState.SONG.song.toLowerCase() == "identity-crisis") return;
+    
 	var isHoveringVent = vent.overlapsPoint(FlxG.mouse.getWorldPosition());
 	if (isHoveringVent != ventHovering)
 	{
