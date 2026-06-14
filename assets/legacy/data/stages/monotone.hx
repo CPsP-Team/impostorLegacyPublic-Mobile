@@ -160,7 +160,6 @@ function onCreatePost()
 	copyPet.x -= (copyPet._petOffset.x * 2);
 	copyPet.setColorTransform(1, 1, 1, 1, -16, -16, -16);
 	
-	if (Paths.fileExists('scripts/vent.hx')) initScript('scripts/vent');
 	add(copyPet);
 	
 	// cache characters
