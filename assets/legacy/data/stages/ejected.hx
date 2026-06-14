@@ -165,7 +165,7 @@ function onCreatePost()
 	
 	gf.scrollFactor.set(0.7, 0.7);
 	
-	speedlines = new FlxBackdrop().loadGraphic(Paths.image(ext + 'speedlines'));
+	speedlines = new FlxBackdrop().loadGraphic(Paths.image(ext + 'speedLines'));
 	speedlines.scale.set(3, 3);
 	speedlines.updateHitbox();
 	speedlines.scrollFactor.set(.3, .3);
