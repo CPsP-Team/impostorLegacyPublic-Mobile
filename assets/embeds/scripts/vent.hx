@@ -8,7 +8,7 @@ var ventHovering = false;
 
 function onLoad()
 {
-    if (PlayState.SONG.song.toLowerCase() == "identity-crisis") return;
+    if (!PlayState.SONG.song.toLowerCase() == "identity-crisis") return;
     
 	vent = new FlxSprite(2200, 750);
 	vent.frames = Paths.getSparrowAtlas(ext + 'vent');
@@ -34,7 +34,7 @@ function onEvent(n, v1, v2)
 }
 function onUpdate(elapsed:Float)
 {
-    if (PlayState.SONG.song.toLowerCase() == "identity-crisis") return;
+    if (!PlayState.SONG.song.toLowerCase() == "identity-crisis") return;
     
 	var isHoveringVent = vent.overlapsPoint(FlxG.mouse.getWorldPosition());
 	if (isHoveringVent != ventHovering)
