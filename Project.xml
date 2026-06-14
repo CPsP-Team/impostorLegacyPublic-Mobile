@@ -63,6 +63,8 @@
 		<assets path="assets/embeds" rename="assets" embed="false" if="mobile"/>
 		<assets path="assets/legacy" rename="assets"/>
 	</section>
+	
+	<assets path="assets" include="*.ttf|*.otf|*.txt" type="binary" nocompress="true"/>
 
 	<!--OpenAL config-->	<!-- appreciate you cyn0x8 and smokey for finding this -->
 	<section if="desktop">
