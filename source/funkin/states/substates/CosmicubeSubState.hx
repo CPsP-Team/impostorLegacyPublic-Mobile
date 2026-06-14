@@ -441,7 +441,7 @@ class CosmicubeSubState extends MusicBeatSubstate
 			CosmicubeData.setMoney(node.meta.currency, CosmicubeData.getMoney(node.meta.currency) - node.price);
 			
 			ClientPrefs.cosmicubeUnlocks.push(node.id);
-			FlxG.sound.play(Paths.sound('shopBuy'));
+			FlxG.sound.play(Paths.sound('shopbuy'));
 			node.unlocked = true;
 			checkCosmiCollectorAward();
 			checkTheHundredAward();
