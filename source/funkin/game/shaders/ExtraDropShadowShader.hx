@@ -190,9 +190,11 @@ class ExtraDropShadowShader extends flixel.system.FlxAssets.FlxShader
 			const float AA_JITTER = 0.5;
 			
 			float intensity = cutoff(texture2D(bitmap, coord), thresh, roughness);
-			for (int i = 0; i < MAX_AA * MAX_AA; i++) {
-				int x = (i / MAX_AA);
-				int y = (i - (MAX_AA * int(i/MAX_AA)));
+			
+			// Hardcoded to 64 to avoid GLSL 100 dynamic loop restrictions
+			for (int i = 0; i < 64; i++) {
+				int x = i / MAX_AA;
+				int y = i - (MAX_AA * x); // Removed redundant int() cast
 				
 				if (float(x) >= aaStages || float(y) >= aaStages) continue;
 				
@@ -219,7 +221,9 @@ class ExtraDropShadowShader extends flixel.system.FlxAssets.FlxShader
 			if (!aa) coord = (floor(coord * openfl_TextureSize) / openfl_TextureSize);
 			
 			float rimIntensity = (1.0 - texture2D(bitmap, coord).a);
-			if (frameBounds.z > 0 && (coord.x < frameBounds.x || coord.y < frameBounds.y || coord.x >= frameBounds.z || coord.y >= frameBounds.w)) rimIntensity = 1.0;
+			
+			// Changed 0 to 0.0 to fix float comparison strictness
+			if (frameBounds.z > 0.0 && (coord.x < frameBounds.x || coord.y < frameBounds.y || coord.x >= frameBounds.z || coord.y >= frameBounds.w)) rimIntensity = 1.0;
 			
 			return (rimIntensity * strength * antialias(openfl_TextureCoordv, data[0].z, data[1].y));
 		}
@@ -255,7 +259,7 @@ class ExtraDropShadowShader extends flixel.system.FlxAssets.FlxShader
 		}
 		
 		// written by emi3
-	')
+	')	
 	
 	public function new()
 	{
