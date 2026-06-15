@@ -14,9 +14,17 @@ import funkin.states.transitions.SwipeTransition;
 import funkin.input.Controls;
 import funkin.scripts.*;
 
+#if mobile
+import flixel.group.FlxGroup;
+import mobile.controls.MobileHitbox;
+#end
+
 class MusicBeatState extends FlxUIState
 {
 	static final _defaultTransState:Class<BaseTransitionState> = SwipeTransition;
+	
+	// using for mobile
+	public static var instance:MusicBeatState;
 	
 	// change these to change the transition
 	public static var transitionInState:Null<Class<BaseTransitionState>> = null;
@@ -40,6 +48,40 @@ class MusicBeatState extends FlxUIState
 	private static var playTimeTimestamp:Float = -1;
 	private static var playTimeDirtyTimer:Float = 0;
 	private static final PLAY_TIME_SAVE_INTERVAL:Float = 30;
+	
+	#if mobile
+	public var hitbox:MobileHitbox;
+
+	public var hitboxCam:FlxCamera;
+
+	public function addMobileControls(DefaultDrawTarget:Bool = false)
+	{
+		hitbox = new MobileHitbox();
+
+		hitboxCam = new FlxCamera();
+		hitboxCam.bgColor.alpha = 0;
+		FlxG.cameras.add(hitboxCam, DefaultDrawTarget);
+
+		hitbox.cameras = [hitboxCam];
+		hitbox.visible = false;
+		add(hitbox);
+	}
+
+	public function removeMobileControls()
+	{
+		if (hitbox != null)
+		{
+			remove(hitbox);
+			hitbox = FlxDestroyUtil.destroy(hitbox);
+		}
+
+		if(hitboxCam != null)
+		{
+			FlxG.cameras.remove(hitboxCam);
+			hitboxCam = FlxDestroyUtil.destroy(hitboxCam);
+		}
+	}
+	#end
 	
 	// script related vars
 	public var scripted:Bool = false;
@@ -155,6 +197,8 @@ class MusicBeatState extends FlxUIState
 		updateMods();
 		
 		super.create();
+		instance = this;
+		
 		bindPTH();
 		beginPlayTimeTracking();
 		
@@ -334,6 +378,10 @@ class MusicBeatState extends FlxUIState
 		scriptGroup = FlxDestroyUtil.destroy(scriptGroup);
 		
 		super.destroy();
+		
+		#if mobile
+		removeMobileControls();
+		#end
 	}
 	
 	override function closeSubState()

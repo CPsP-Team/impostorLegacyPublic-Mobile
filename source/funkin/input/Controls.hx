@@ -9,6 +9,9 @@ import flixel.input.actions.FlxActionSet;
 import flixel.input.gamepad.FlxGamepad;
 import flixel.input.gamepad.FlxGamepadInputID;
 import flixel.input.keyboard.FlxKey;
+#if mobile
+import mobile.backend.flixel.input.FlxMobileInputID;
+#end
 
 // at some point i do wanna rework this to be simpler and easier to work with
 
@@ -203,51 +206,51 @@ class Controls extends FlxActionSet
 	
 	public var NOTE_UP(get, never):Bool;
 	
-	inline function get_NOTE_UP() return _note_up.check();
+	inline function get_NOTE_UP() return _note_up.check() #if mobile || hitboxPressed([noteUP]) #end;
 	
 	public var NOTE_LEFT(get, never):Bool;
 	
-	inline function get_NOTE_LEFT() return _note_left.check();
+	inline function get_NOTE_LEFT() return _note_left.check() #if mobile || hitboxPressed([noteLEFT]) #end;
 	
 	public var NOTE_RIGHT(get, never):Bool;
 	
-	inline function get_NOTE_RIGHT() return _note_right.check();
+	inline function get_NOTE_RIGHT() return _note_right.check() #if mobile || hitboxPressed([noteRIGHT]) #end;
 	
 	public var NOTE_DOWN(get, never):Bool;
 	
-	inline function get_NOTE_DOWN() return _note_down.check();
+	inline function get_NOTE_DOWN() return _note_down.check() #if mobile || hitboxPressed([noteDOWN]) #end;
 	
 	public var NOTE_UP_P(get, never):Bool;
 	
-	inline function get_NOTE_UP_P() return _note_upP.check();
+	inline function get_NOTE_UP_P() return _note_upP.check() #if mobile || hitboxJustPressed([noteUP]) #end;
 	
 	public var NOTE_LEFT_P(get, never):Bool;
 	
-	inline function get_NOTE_LEFT_P() return _note_leftP.check();
+	inline function get_NOTE_LEFT_P() return _note_leftP.check() #if mobile || hitboxJustPressed([noteLEFT]) #end;
 	
 	public var NOTE_RIGHT_P(get, never):Bool;
 	
-	inline function get_NOTE_RIGHT_P() return _note_rightP.check();
+	inline function get_NOTE_RIGHT_P() return _note_rightP.check() #if mobile || hitboxJustPressed([noteRIGHT]) #end;
 	
 	public var NOTE_DOWN_P(get, never):Bool;
 	
-	inline function get_NOTE_DOWN_P() return _note_downP.check();
+	inline function get_NOTE_DOWN_P() return _note_downP.check() #if mobile || hitboxJustPressed([noteDOWN]) #end;
 	
 	public var NOTE_UP_R(get, never):Bool;
 	
-	inline function get_NOTE_UP_R() return _note_upR.check();
+	inline function get_NOTE_UP_R() return _note_upR.check() #if mobile || hitboxJustReleased([noteUP]) #end;
 	
 	public var NOTE_LEFT_R(get, never):Bool;
 	
-	inline function get_NOTE_LEFT_R() return _note_leftR.check();
+	inline function get_NOTE_LEFT_R() return _note_leftR.check() #if mobile || hitboxJustReleased([noteLEFT]) #end;
 	
 	public var NOTE_RIGHT_R(get, never):Bool;
 	
-	inline function get_NOTE_RIGHT_R() return _note_rightR.check();
+	inline function get_NOTE_RIGHT_R() return _note_rightR.check() #if mobile || hitboxJustReleased([noteRIGHT]) #end;
 	
 	public var NOTE_DOWN_R(get, never):Bool;
 	
-	inline function get_NOTE_DOWN_R() return _note_downR.check();
+	inline function get_NOTE_DOWN_R() return _note_downR.check() #if mobile || hitboxJustReleased([noteDOWN]) #end;
 	
 	public var ACCEPT(get, never):Bool;
 	
@@ -689,4 +692,43 @@ class Controls extends FlxActionSet
 	{
 		return input.device == GAMEPAD && (deviceID == FlxInputDeviceID.ALL || input.deviceID == deviceID);
 	}
+	
+	#if mobile
+	public var gameplayRequest(get, never):Dynamic; 
+	
+	public function hitboxPressed(keys:Array<FlxMobileInputID>):Bool
+	{
+		if (keys != null && gameplayRequest != null)
+		{
+			if (gameplayRequest.isAnyPressed(keys)) return true;
+		}
+		return false;
+	}
+	
+	public function hitboxJustPressed(keys:Array<FlxMobileInputID>):Bool
+	{
+		if (keys != null && gameplayRequest != null)
+		{
+			if (gameplayRequest.isAnyJustPressed(keys)) return true;
+		}
+		return false;
+	}
+	
+	public function hitboxJustReleased(keys:Array<FlxMobileInputID>):Bool
+	{
+		if (keys != null && gameplayRequest != null)
+		{
+			if (gameplayRequest.isAnyJustReleased(keys)) return true;
+		}
+		return false;
+	}
+	
+	@:noCompletion
+	private function get_gameplayRequest():Dynamic
+	{
+		if (funkin.backend.MusicBeatState.instance != null && funkin.backend.MusicBeatState.instance.hitbox != null)
+			return funkin.backend.MusicBeatState.instance.hitbox;
+		return null;
+	}
+	#end
 }

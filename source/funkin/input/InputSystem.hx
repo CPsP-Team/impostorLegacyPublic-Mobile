@@ -6,6 +6,10 @@ import flixel.input.FlxInput.FlxInputState;
 import flixel.input.actions.FlxActionInput;
 import flixel.input.actions.FlxAction.FlxActionDigital;
 
+#if mobile
+import mobile.backend.flixel.input.FlxMobileInputID;
+#end
+
 import openfl.events.EventType;
 import openfl.events.EventDispatcher;
 
@@ -143,7 +147,7 @@ class InputSystem implements flixel.util.IFlxDestroyable extends EventDispatcher
 	 */
 	public function inputPressed(noteData:Int)
 	{
-		return pressedActions[noteData].check();
+		return pressedActions[noteData].check() #if mobile || controls.hitboxPressed(getMobileKeysForNote(noteData)) #end;
 	}
 	
 	/**
@@ -152,7 +156,7 @@ class InputSystem implements flixel.util.IFlxDestroyable extends EventDispatcher
 	 */
 	public function inputJustPressed(noteData:Int)
 	{
-		return justPressedActions[noteData].check();
+		return justPressedActions[noteData].check() #if mobile || controls.hitboxJustPressed(getMobileKeysForNote(noteData)) #end;
 	}
 	
 	/**
@@ -161,8 +165,21 @@ class InputSystem implements flixel.util.IFlxDestroyable extends EventDispatcher
 	 */
 	public function inputJustReleased(noteData:Int)
 	{
-		return justReleasedActions[noteData].check();
+		return justReleasedActions[noteData].check() #if mobile || controls.hitboxJustReleased(getMobileKeysForNote(noteData)) #end;
 	}
+	
+	#if mobile
+	private function getMobileKeysForNote(noteData:Int):Array<FlxMobileInputID>
+	{
+		return switch(noteData) {
+			case 0: [noteLEFT];  // NOTE_LEFT
+			case 1: [noteDOWN];  // NOTE_DOWN
+			case 2: [noteUP];    // NOTE_UP
+			case 3: [noteRIGHT]; // NOTE_RIGHT
+			default: [];
+		};
+	}
+	#end
 	
 	/**
 	 * Dispatches all awaiting input events
@@ -170,6 +187,23 @@ class InputSystem implements flixel.util.IFlxDestroyable extends EventDispatcher
 	@:nullSafety(Off)
 	public function update():Void
 	{
+	    #if mobile
+		for (i in 0...ACTION_LIST.length)
+		{
+			var keys = getMobileKeysForNote(i);
+			
+			if (controls.hitboxJustPressed(keys))
+			{
+				awaitingEvents.push(new InputEvent(InputEvent.INPUT_PRESSED, false, true, i, Keys, -1, System.getTimer()));
+			}
+			
+			if (controls.hitboxJustReleased(keys))
+			{
+				awaitingEvents.push(new InputEvent(InputEvent.INPUT_RELEASED, false, true, i, Keys, -1, System.getTimer()));
+			}
+		}
+		#end
+		
 		while (awaitingAxisEvents.length > 0)
 		{
 			final info = awaitingAxisEvents.shift();

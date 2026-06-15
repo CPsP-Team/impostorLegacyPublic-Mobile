@@ -821,6 +821,11 @@ class PlayState extends MusicBeatState
 		addSongScripts('songs/${Paths.sanitize(SONG.song)}/');
 		addSongScripts('songs/${Paths.sanitize(SONG.song)}/scripts/');
 		
+		#if mobile
+		addMobileControls(false);
+	    hitbox.visible = false;
+		#end
+		
 		scripts.call('preNoteGeneration', []);
 		
 		if (genNotesBeforeCountdown) generatePlayfields();
@@ -1192,6 +1197,10 @@ class PlayState extends MusicBeatState
 		}
 		
 		inCutscene = false;
+		
+		#if mobile
+		hitbox.visible = true;
+		#end
 		
 		if (!ScriptConstants.stopping(scripts.call('onStartCountdown')))
 		{
@@ -1881,7 +1890,7 @@ class PlayState extends MusicBeatState
 		
 		if (generatedMusic && !endingSong && !isCameraOnForcedPos) moveCameraSection();
 		
-		if (controls.PAUSE && startedCountdown && canPause)
+		if (controls.PAUSE #if android || FlxG.android.justReleased.BACK #end && startedCountdown && canPause)
 		{
 			if (!ScriptConstants.stopping(scripts.call('onPause'))) openPauseMenu();
 		}
@@ -2804,6 +2813,10 @@ class PlayState extends MusicBeatState
 		camZooming = false;
 		inCutscene = false;
 		updateTime = false;
+		
+		#if mobile
+		hitbox.visible = false;
+		#end
 		
 		deathCounter = 0;
 		seenCutscene = false;
