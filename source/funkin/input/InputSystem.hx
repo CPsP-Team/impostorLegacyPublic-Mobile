@@ -73,7 +73,8 @@ class InputSystem implements flixel.util.IFlxDestroyable extends EventDispatcher
 	var justReleasedGamepadInputs:Array<Array<FlxActionInput>> = [];
 	
 	// cleared out every frame
-	// var awaitingEvents:Array<InputEvent> = [];
+	var awaitingEvents:Array<InputEvent> = [];
+	
 	#if FLX_GAMEINPUT_API
 	var awaitingAxisEvents:Array<{id:FlxGamepadInputID, gamepad:FlxGamepad, timer:Float}> = [];
 	
@@ -210,8 +211,8 @@ class InputSystem implements flixel.util.IFlxDestroyable extends EventDispatcher
 			if (info.gamepad.checkStatus(info.id, JUST_PRESSED)) onInputEvent(InputEvent.INPUT_PRESSED, Gamepad(info.gamepad.id), info.id, info.timer);
 			else if (info.gamepad.checkStatus(info.id, JUST_RELEASED)) onInputEvent(InputEvent.INPUT_RELEASED, Gamepad(info.gamepad.id), info.id, info.timer);
 		}
-		// while (awaitingEvents.length > 0)
-		// 	dispatchEvent(awaitingEvents.shift());
+		while (awaitingEvents.length > 0)
+		    dispatchEvent(awaitingEvents.shift());
 	}
 	
 	public function destroy():Void
