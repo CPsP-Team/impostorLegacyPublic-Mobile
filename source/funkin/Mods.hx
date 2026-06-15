@@ -249,7 +249,7 @@ class Mods
 		
 		var write:Bool = false;
 		
-		for (mod in CoolUtil.coolTextFile('modsList.txt'))
+		for (mod in CoolUtil.coolTextFile(#if mobile MobileUtil.getDirectory() + #end 'modsList.txt'))
 		{
 			final dat:Array<String> = mod.split('|');
 			final folder:String = dat[0], modEnabled:Bool = (dat[1] == '1');
