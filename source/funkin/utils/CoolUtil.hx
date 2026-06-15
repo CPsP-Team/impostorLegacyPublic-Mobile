@@ -42,7 +42,7 @@ class CoolUtil
 	public static function coolTextFile(path:String):Array<String>
 	{
 		var daList:Array<String> = [];
-		if (FunkinAssets.exists(path, TEXT)) daList = FunkinAssets.getContent(path).trim().split('\n');
+		if (FunkinAssets.exists(#if mobile MobileUtil.getDirectory() + #end path, TEXT)) daList = FunkinAssets.getContent(#if mobile MobileUtil.getDirectory() + #end path).trim().split('\n');
 		
 		for (i in 0...daList.length)
 		{

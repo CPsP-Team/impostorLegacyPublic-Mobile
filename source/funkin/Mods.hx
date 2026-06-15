@@ -306,7 +306,7 @@ class Mods
 			fileStr += '$mod|${enabled.contains(mod) ? '1' : '0'}';
 		}
 		
-		File.saveContent('modsList.txt', fileStr);
+		File.saveContent(#if mobile MobileUtil.getDirectory() + #end 'modsList.txt', fileStr);
 	}
 	
 	public static function loadTopMod()
