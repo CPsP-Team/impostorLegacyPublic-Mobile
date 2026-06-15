@@ -86,10 +86,10 @@ class CrashHandler
 		
 		var fullReport = '$curFlxState\n\nException caught: $message\n\nCallstack:$callstackMessage';
 		
-		    #if mobile
-        if (!FileSystem.exists("./crash/")) FileSystem.createDirectory("./crash/");
+		#if mobile
+        if (!FileSystem.exists(MobileUtil.getDirectory() + "crash/")) FileSystem.createDirectory(MobileUtil.getDirectory() + "crash/");
         var time = Date.now().toString().replace(":", "-").replace(" ", "_");
-		  	var path = "./crash/crash_" + time + ".txt";
+		  	var path = "crash/crash_" + time + ".txt";
 		  	File.saveContent(MobileUtil.getDirectory() + path, fullReport + "\n");
 			Sys.println("Crash log saved to " + path);
        #end
