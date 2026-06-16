@@ -114,7 +114,10 @@ class GameOverSubstate extends MusicBeatSubstate
 		add(bottomControls);
 		
 		super.create();
-		
+
+    #if mobile
+    addVirtualPad(NONE, A_B);
+    #end
 		PlayState.instance?.scripts.call('onGameOverPost', []);
 	}
 	
