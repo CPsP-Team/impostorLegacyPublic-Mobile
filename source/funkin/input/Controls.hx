@@ -158,51 +158,51 @@ class Controls extends FlxActionSet
 	
 	public var UI_UP(get, never):Bool;
 	
-	inline function get_UI_UP() return _ui_up.check();
+	inline function get_UI_UP() return _ui_up.check() #if mobile || mobilePadPressed([UP]) #end;
 	
 	public var UI_LEFT(get, never):Bool;
 	
-	inline function get_UI_LEFT() return _ui_left.check();
+	inline function get_UI_LEFT() return _ui_left.check() #if mobile || mobilePadPressed([LEFT]) #end;
 	
 	public var UI_RIGHT(get, never):Bool;
 	
-	inline function get_UI_RIGHT() return _ui_right.check();
+	inline function get_UI_RIGHT() return _ui_right.check() #if mobile || mobilePadPressed([RIGHT]) #end;
 	
 	public var UI_DOWN(get, never):Bool;
 	
-	inline function get_UI_DOWN() return _ui_down.check();
+	inline function get_UI_DOWN() return _ui_down.check() #if mobile || || mobilePadPressed([DOWN]) #end;
 	
 	public var UI_UP_P(get, never):Bool;
 	
-	inline function get_UI_UP_P() return _ui_upP.check();
+	inline function get_UI_UP_P() return _ui_upP.check() #if mobile || mobilePadJustPressed([UP]) #end;
 	
 	public var UI_LEFT_P(get, never):Bool;
 	
-	inline function get_UI_LEFT_P() return _ui_leftP.check();
+	inline function get_UI_LEFT_P() return _ui_leftP.check() #if mobile || mobilePadJustPressed([LEFT]) #end;
 	
 	public var UI_RIGHT_P(get, never):Bool;
 	
-	inline function get_UI_RIGHT_P() return _ui_rightP.check();
+	inline function get_UI_RIGHT_P() return _ui_rightP.check() #if mobile || mobilePadJustPressed([RIGHT]) #end;
 	
 	public var UI_DOWN_P(get, never):Bool;
 	
-	inline function get_UI_DOWN_P() return _ui_downP.check();
+	inline function get_UI_DOWN_P() return _ui_downP.check() #if mobile || mobilePadJustPressed([DOWN]) #end;
 	
 	public var UI_UP_R(get, never):Bool;
 	
-	inline function get_UI_UP_R() return _ui_upR.check();
+	inline function get_UI_UP_R() return _ui_upR.check() #if mobile || mobilePadJustReleased([UP]) #end;
 	
 	public var UI_LEFT_R(get, never):Bool;
 	
-	inline function get_UI_LEFT_R() return _ui_leftR.check();
+	inline function get_UI_LEFT_R() return _ui_leftR.check() #if mobile || mobilePadJustReleased([LEFT]) #end;
 	
 	public var UI_RIGHT_R(get, never):Bool;
 	
-	inline function get_UI_RIGHT_R() return _ui_rightR.check();
+	inline function get_UI_RIGHT_R() return _ui_rightR.check() #if mobile || mobilePadJustReleased([RIGHT]) #end;
 	
 	public var UI_DOWN_R(get, never):Bool;
 	
-	inline function get_UI_DOWN_R() return _ui_downR.check();
+	inline function get_UI_DOWN_R() return _ui_downR.check() #if mobile || mobilePadJustReleased([DOWN]) #end;
 	
 	public var NOTE_UP(get, never):Bool;
 	
@@ -254,11 +254,11 @@ class Controls extends FlxActionSet
 	
 	public var ACCEPT(get, never):Bool;
 	
-	inline function get_ACCEPT() return _accept.check();
+	inline function get_ACCEPT() return _accept.check() #if mobile || mobilePadJustPressed([A]) #end;
 	
 	public var BACK(get, never):Bool;
 	
-	inline function get_BACK() return _back.check();
+	inline function get_BACK() return _back.check() #if mobile || mobilePadJustPressed([B]) #end;
 	
 	public var PAUSE(get, never):Bool;
 	
@@ -694,7 +694,36 @@ class Controls extends FlxActionSet
 	}
 	
 	#if mobile
+	public var isInSubstate:Bool = false;
+	public var requested(get, never):Dynamic; 
 	public var gameplayRequest(get, never):Dynamic; 
+	
+	public function mobilePadPressed(keys:Array<FlxMobileInputID>):Bool
+	{
+		if (keys != null && requested != null && requested.virtualPad != null)
+		{
+			if (requested.virtualPad.isAnyPressed(keys) == true) return true;
+		}
+		return false;
+	}
+	
+	public function mobilePadJustPressed(keys:Array<FlxMobileInputID>):Bool
+	{
+		if (keys != null && requested != null && requested.virtualPad != null)
+		{
+			if (requested.virtualPad.isAnyJustPressed(keys) == true) return true;
+		}
+		return false;
+	}
+	
+	public function mobilePadJustReleased(keys:Array<FlxMobileInputID>):Bool
+	{
+		if (keys != null && requested != null && requested.virtualPad != null)
+		{
+			if (requested.virtualPad.isAnyJustReleased(keys) == true) return true;
+		}
+		return false;
+	}
 	
 	public function hitboxPressed(keys:Array<FlxMobileInputID>):Bool
 	{
@@ -721,6 +750,15 @@ class Controls extends FlxActionSet
 			if (gameplayRequest.isAnyJustReleased(keys)) return true;
 		}
 		return false;
+	}
+	
+	@:noCompletion
+	private function get_requested():Dynamic
+	{	
+		if (isInSubstate)
+			return funkin.backend.MusicBeatSubstate.instance;
+		else
+			return funkin.backend.MusicBeatState.instance;
 	}
 	
 	@:noCompletion

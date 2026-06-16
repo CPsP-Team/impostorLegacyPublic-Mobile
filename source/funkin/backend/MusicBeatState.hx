@@ -17,6 +17,7 @@ import funkin.scripts.*;
 #if mobile
 import flixel.group.FlxGroup;
 import mobile.controls.MobileHitbox;
+import mobile.controls.MobileVirtualPad;
 #end
 
 class MusicBeatState extends FlxUIState
@@ -51,8 +52,43 @@ class MusicBeatState extends FlxUIState
 	
 	#if mobile
 	public var hitbox:MobileHitbox;
+	public var virtualPad:MobileVirtualPad;
 
+	public var virtualPadCam:FlxCamera;
 	public var hitboxCam:FlxCamera;
+
+    public function addVirtualPad(DPad:MobileDPadMode, Action:MobileActionMode)
+	{
+		virtualPad = new MobileVirtualPad(DPad, Action);
+		add(virtualPad);
+	}
+	
+	public function addVirtualPadCamera(DefaultDrawTarget:Bool = false)
+	{
+		if (virtualPad != null)
+		{
+			virtualPadCam = new FlxCamera();
+			virtualPadCam.bgColor.alpha = 0;
+			FlxG.cameras.add(virtualPadCam, DefaultDrawTarget);
+			
+			virtualPad.cameras = [virtualPadCam];
+		}
+	}
+
+	public function removeVirtualPad()
+	{
+		if (virtualPad != null)
+		{
+			remove(virtualPad);
+			virtualPad = FlxDestroyUtil.destroy(virtualPad);
+		}
+
+		if(virtualPadCam != null)
+		{
+			FlxG.cameras.remove(virtualPadCam);
+			virtualPadCam = FlxDestroyUtil.destroy(virtualPadCam);
+		}
+	}
 
 	public function addMobileControls(DefaultDrawTarget:Bool = false)
 	{
@@ -380,6 +416,7 @@ class MusicBeatState extends FlxUIState
 		super.destroy();
 		
 		#if mobile
+		removeVirtualPad();
 		removeMobileControls();
 		#end
 	}
