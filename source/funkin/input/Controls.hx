@@ -170,7 +170,7 @@ class Controls extends FlxActionSet
 	
 	public var UI_DOWN(get, never):Bool;
 	
-	inline function get_UI_DOWN() return _ui_down.check() #if mobile || || mobilePadPressed([DOWN]) #end;
+	inline function get_UI_DOWN() return _ui_down.check() #if mobile || mobilePadPressed([DOWN]) #end;
 	
 	public var UI_UP_P(get, never):Bool;
 	
