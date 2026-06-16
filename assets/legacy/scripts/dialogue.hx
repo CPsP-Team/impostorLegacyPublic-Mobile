@@ -514,7 +514,7 @@ function dialogueUpdate(elapsed:Float)
 		swagDialogue.skip();
 		goodBialogue();
 	}
-	if (controls.ACCEPT)
+	if (controls.ACCEPT || FlxG.mouse.justPressed)
 	{
 		if (dialogueEnded)
 		{
