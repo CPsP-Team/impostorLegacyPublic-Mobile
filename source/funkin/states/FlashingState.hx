@@ -31,7 +31,6 @@ You may change this anytime in the Options menu.
 		add(warnText);
     #if mobile
     addVirtualPad(NONE, A_B);
-    addVirtualPadCamera(false);
     #end
 	}
 	
