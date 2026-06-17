@@ -94,6 +94,32 @@ class AmongControls extends FlxSpriteGroup
 		
 		if (showBlackBox) insert(0, new FlxSprite(0, controlY).makeScaledGraphic(FlxG.width + 1, 42, FlxColor.BLACK));
 	}
+
+	public function justReleasedControl(index:Int):Bool
+	{
+		if (index < 0 || index >= inputs.length) return false;
+
+		var offset:Int = showBlackBox ? 1 : 0;
+		var icon:FlxSprite = cast members[offset + index * 2];
+		var label:FlxSprite = cast members[offset + index * 2 + 1];
+
+		return justReleasedObject(icon) || justReleasedObject(label);
+	}
+
+	function justReleasedObject(obj:FlxSprite):Bool
+	{
+		if (obj == null || !obj.exists || !obj.visible) return false;
+		if (FlxG.mouse.justReleased && FlxG.mouse.overlaps(obj, camera)) return true;
+
+		#if mobile
+		for (touch in FlxG.touches.list)
+		{
+			if (touch.justReleased && touch.overlaps(obj, camera)) return true;
+		}
+		#end
+
+		return false;
+	}
 	
 	function getInputVisual(str:String):FlxGraphicAsset
 	{

@@ -58,6 +58,7 @@ class GameOverSubstate extends MusicBeatSubstate
 	var startedDeath:Bool = false;
 	
 	var camCTRL:FlxCamera;
+	var bottomControls:AmongControls;
 	
 	/**
 	 * Resets gameover character values
@@ -106,7 +107,7 @@ class GameOverSubstate extends MusicBeatSubstate
 		camCTRL.bgColor = 0x0;
 		FlxG.cameras.add(camCTRL, false);
 		
-		var bottomControls:AmongControls = new AmongControls([
+		bottomControls = new AmongControls([
 			['enter', 'restartsong'], // conf
 			['esc', 'backtomenu'] // back
 		], false);
@@ -114,10 +115,6 @@ class GameOverSubstate extends MusicBeatSubstate
 		add(bottomControls);
 		
 		super.create();
-
-    #if mobile
-    addVirtualPad(NONE, A_B);
-    #end
 		PlayState.instance?.scripts.call('onGameOverPost', []);
 	}
 	
@@ -154,12 +151,12 @@ class GameOverSubstate extends MusicBeatSubstate
 		PlayState.instance?.scripts.call('onUpdate', [elapsed]);
 		super.update(elapsed);
 		
-		if (controls.ACCEPT && !isEnding)
+		if ((controls.ACCEPT || bottomControls.justReleasedControl(0)) && !isEnding)
 		{
 			if (PlayState.instance?.scripts.call('onGameOverConfirm', []) != ScriptConstants.STOP_FUNC) endBullshit();
 		}
 		
-		if (controls.BACK)
+		if (controls.BACK || bottomControls.justReleasedControl(1))
 		{
 			if (PlayState.instance?.scripts.call('onGameOverCancel', []) != ScriptConstants.STOP_FUNC)
 			{
