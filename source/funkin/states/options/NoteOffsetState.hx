@@ -117,7 +117,9 @@ class NoteOffsetState extends MusicBeatState
 		
 		Conductor.bpm = 100.0;
 		FunkinSound.playMusic(Paths.music('offsetSong'), 1, true);
-		
+		#if mobile
+    addVirtualPad(LEFT_RIGHT, A_B_C);
+    #end
 		super.create();
 	}
 	
@@ -154,7 +156,7 @@ class NoteOffsetState extends MusicBeatState
 			updateNoteDelay();
 		}
 		
-		if (controls.RESET)
+		if (controls.RESET #if mobile || virtualPad.buttonC.justPressed #end)
 		{
 			holdTime = 0;
 			barPercent = 0;
