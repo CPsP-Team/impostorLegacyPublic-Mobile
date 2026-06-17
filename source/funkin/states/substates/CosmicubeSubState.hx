@@ -61,6 +61,10 @@ class CosmicubeSubState extends MusicBeatSubstate
 	var dragging:Bool = false;
 	var dragPos:FlxPoint = FlxPoint.get();
 	var mousePos:FlxPoint = FlxPoint.get();
+	var touchMidpoint:FlxPoint = FlxPoint.get();
+	var lastPinchDistance:Float = -1;
+	var touchingCube:Bool = false;
+	var touchDragged:Bool = false;
 	
 	public function new(id:String):Void
 	{
@@ -296,15 +300,26 @@ class CosmicubeSubState extends MusicBeatSubstate
 			{
 				closeTween();
 			}
+
+			#if mobile
+			var handledTouch:Bool = handleTouchInput();
+			#else
+			var handledTouch:Bool = false;
+			#end
 			
 			var cubeFocus:Bool = (FlxG.mouse.x >= cubeCamera.x && FlxG.mouse.y >= cubeCamera.y
 				&& FlxG.mouse.x < (cubeCamera.x + cubeCamera.width) && FlxG.mouse.y < (cubeCamera.y + cubeCamera.height));
 				
-			if (dragging || cubeFocus)
+			if (!handledTouch && (dragging || cubeFocus))
 			{
-				if (FlxG.mouse.justPressed) dragging = true;
-				
-				if (dragging)
+				if (FlxG.mouse.justPressed)
+				{
+					dragging = true;
+					dragged = false;
+					dragDist = 0;
+					dragPos.set(mousePos.x, mousePos.y);
+				}
+				else if (dragging)
 				{
 					final deltaX:Float = (mousePos.x - dragPos.x), deltaY:Float = (mousePos.y - dragPos.y);
 					
@@ -343,7 +358,11 @@ class CosmicubeSubState extends MusicBeatSubstate
 				dragPos.set(mousePos.x, mousePos.y);
 			}
 			
-			if (selectedNode != null && (controls.ACCEPT || (FlxG.mouse.justReleased && equipButton.alive && FlxG.mouse.overlaps(equipButton, overlayCamera))))
+			var buyReleased:Bool = (FlxG.mouse.justReleased && equipButton.alive && FlxG.mouse.overlaps(equipButton, overlayCamera));
+			#if mobile
+			buyReleased = buyReleased || touchJustReleasedObject(equipButton, overlayCamera);
+			#end
+			if (selectedNode != null && (controls.ACCEPT || buyReleased))
 			{
 				equipNode(selectedNode);
 			}
@@ -377,6 +396,196 @@ class CosmicubeSubState extends MusicBeatSubstate
 		super.destroy();
 		
 		dragPos.put();
+		touchMidpoint.put();
+	}
+
+	#if mobile
+	function handleTouchInput():Bool
+	{
+		if (touchJustReleasedObject(menuBackButton, overlayCamera))
+		{
+			closeTween();
+			return true;
+		}
+
+		var activeTouches:Array<Dynamic> = [];
+		for (touch in FlxG.touches.list)
+		{
+			if (touch.pressed || touch.justPressed || touch.justReleased)
+				activeTouches.push(touch);
+		}
+
+		var cubeTouches:Array<Dynamic> = [];
+		for (touch in activeTouches)
+		{
+			if (touchInCube(touch) || touchingCube)
+			{
+				cubeTouches.push(touch);
+				if (cubeTouches.length >= 2) break;
+			}
+		}
+
+		if (cubeTouches.length >= 2)
+		{
+			var first = cubeTouches[0];
+			var second = cubeTouches[1];
+			var firstX:Float = touchScreenX(first);
+			var firstY:Float = touchScreenY(first);
+			var secondX:Float = touchScreenX(second);
+			var secondY:Float = touchScreenY(second);
+			var midX:Float = (firstX + secondX) * .5;
+			var midY:Float = (firstY + secondY) * .5;
+			var deltaTouchX:Float = firstX - secondX;
+			var deltaTouchY:Float = firstY - secondY;
+			var distance:Float = Math.sqrt(deltaTouchX * deltaTouchX + deltaTouchY * deltaTouchY);
+			var worldMidpoint:FlxPoint = screenToCubeWorld(midX, midY, touchMidpoint);
+
+			if (lastPinchDistance > 0)
+			{
+				var nextZoom:Float = FlxMath.bound(cubeCamera.zoom * (distance / lastPinchDistance), .2, 1.75);
+				zoomCubeCamera(nextZoom, worldMidpoint, midX, midY);
+			}
+
+			lastPinchDistance = distance;
+			touchingCube = true;
+			touchDragged = true;
+			dragDist = 0;
+			dragging = dragged = false;
+			if (selectedNode != null) selectNode(null);
+
+			return true;
+		}
+
+		lastPinchDistance = -1;
+
+		if (cubeTouches.length == 1)
+		{
+			var touch = cubeTouches[0];
+
+			if (touch.justPressed)
+			{
+				if (!touchInCube(touch)) return false;
+				touchingCube = true;
+				touchDragged = false;
+				dragDist = 0;
+				dragging = dragged = false;
+				return true;
+			}
+
+			if (touchingCube && touch.pressed)
+			{
+				var deltaX:Float = touch.deltaViewX;
+				var deltaY:Float = touch.deltaViewY;
+
+				cubeCamera.scroll.x -= deltaX / cubeCamera.zoom;
+				cubeCamera.scroll.y -= deltaY / cubeCamera.zoom;
+				dragDist += Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+
+				if (dragDist > 8)
+				{
+					if (selectedNode != null) selectNode(null);
+					touchDragged = true;
+				}
+
+				return true;
+			}
+
+			if (touchingCube && touch.justReleased)
+			{
+				if (!touchDragged)
+				{
+					var node:CosmicubeNode = getTouchedNode(maze, touch);
+					if (node == null) node = getClickedNode(maze);
+					if (selectedNode != node) selectNode(node);
+				}
+
+				touchingCube = false;
+				touchDragged = false;
+				dragDist = 0;
+				lastPinchDistance = -1;
+
+				return true;
+			}
+		}
+
+		if (activeTouches.length == 0)
+		{
+			touchingCube = false;
+			touchDragged = false;
+			dragDist = 0;
+			lastPinchDistance = -1;
+		}
+
+		return false;
+	}
+
+	function getTouchedNode(parent:CosmicubeNode, touch:Dynamic):CosmicubeNode
+	{
+		var touchedNode:CosmicubeNode = null;
+
+		if (parent.parent == null && touch.overlaps(parent.bg, cubeCamera)) return parent;
+
+		for (n in parent.attachedNodes)
+		{
+			if (n == null) continue;
+			var node:CosmicubeNode = cast n;
+			if (node.bg == null || !node.bg.visible || !node.bg.active) continue;
+
+			if (touch.overlaps(node.bg, cubeCamera)) return node;
+
+			touchedNode ??= getTouchedNode(node, touch);
+		}
+
+		return touchedNode;
+	}
+
+	inline function screenPointInCube(x:Float, y:Float):Bool
+	{
+		return (x >= cubeCamera.x && y >= cubeCamera.y && x < cubeCamera.x + cubeCamera.width && y < cubeCamera.y + cubeCamera.height);
+	}
+
+	inline function touchScreenX(touch:Dynamic):Float
+	{
+		return touch.gameX;
+	}
+
+	inline function touchScreenY(touch:Dynamic):Float
+	{
+		return touch.gameY;
+	}
+
+	inline function touchInCube(touch:Dynamic):Bool
+	{
+		return screenPointInCube(touch.gameX, touch.gameY)
+			|| screenPointInCube(touch.viewX, touch.viewY)
+			|| screenPointInCube(touch.x, touch.y);
+	}
+
+	function touchJustReleasedObject(obj:FlxBasic, camera:FlxCamera):Bool
+	{
+		for (touch in FlxG.touches.list)
+		{
+			if (touch.justReleased && touch.overlaps(obj, camera)) return true;
+		}
+
+		return false;
+	}
+
+	function screenToCubeWorld(x:Float, y:Float, point:FlxPoint):FlxPoint
+	{
+		point.set(
+			cubeCamera.scroll.x + cubeCamera.viewMarginX + ((x - cubeCamera.x) / cubeCamera.zoom),
+			cubeCamera.scroll.y + cubeCamera.viewMarginY + ((y - cubeCamera.y) / cubeCamera.zoom)
+		);
+		return point;
+	}
+	#end
+
+	function zoomCubeCamera(nextZoom:Float, focus:FlxPoint, screenX:Float, screenY:Float):Void
+	{
+		cubeCamera.zoom = nextZoom;
+		cubeCamera.scroll.x = focus.x - cubeCamera.viewMarginX - ((screenX - cubeCamera.x) / nextZoom);
+		cubeCamera.scroll.y = focus.y - cubeCamera.viewMarginY - ((screenY - cubeCamera.y) / nextZoom);
 	}
 	
 	public function move(direction:NodeDirection):Void
