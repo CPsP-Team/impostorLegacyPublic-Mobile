@@ -30,6 +30,7 @@ import hxvlc.flixel.*;
 #if mobile
 import mobile.*;
 import mobile.backend.*;
+import lime.system.JNI;
 #end
 
 import Init;
