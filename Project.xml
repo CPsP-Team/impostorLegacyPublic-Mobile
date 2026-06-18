@@ -177,6 +177,9 @@
 		<config:android permission="android.permission.CAPTURE_AUDIO_OUTPUT" />
 		
 		<certificate path="legacy.keystore" password="legacy" alias="legacy" alias-password="legacy"/>
+
+        <android extension="mobile.backend.java.FileUtils" />
+        <java path="source" if="android"/>
     </section>
 
 	<!-- _________________________________ Custom _______________________________ -->
