@@ -505,6 +505,10 @@ class ChartEditorState extends MusicBeatState
 		lastSong = currentSongName;
 		
 		updateGrid();
+
+        #if mobile
+		addVirtualPad(CHART_EDITOR, CHART_EDITOR);
+		#end
 		
 		super.create();
 	}
@@ -1650,10 +1654,8 @@ class ChartEditorState extends MusicBeatState
 	var metronomeStepper:FlxUINumericStepper;
 	var metronomeOffsetStepper:FlxUINumericStepper;
 	var disableAutoScrolling:FlxUICheckBox;
-	#if desktop
 	var waveformUseInstrumental:FlxUICheckBox;
 	var waveformUseVoices:FlxUICheckBox;
-	#end
 	var instVolume:FlxUINumericStepper;
 	var voicesVolume:FlxUINumericStepper;
 	var opponentvoicesVolume:FlxUINumericStepper;
@@ -1663,7 +1665,6 @@ class ChartEditorState extends MusicBeatState
 		var tab_group_chart = new FlxUI(null, UI_box);
 		tab_group_chart.name = 'Charting';
 		
-		#if desktop
 		if (FlxG.save.data.chart_waveformInst == null) FlxG.save.data.chart_waveformInst = false;
 		if (FlxG.save.data.chart_waveformVoices == null) FlxG.save.data.chart_waveformVoices = false;
 		
@@ -1684,7 +1685,6 @@ class ChartEditorState extends MusicBeatState
 			FlxG.save.data.chart_waveformVoices = waveformUseVoices.checked;
 			updateWaveform();
 		};
-		#end
 		
 		check_mute_inst = new FlxUICheckBox(10, 310, null, null, "Mute Instrumental (in editor)", 100);
 		check_mute_inst.checked = false;
@@ -1797,10 +1797,8 @@ class ChartEditorState extends MusicBeatState
 		
 		tab_group_chart.add(metronome);
 		tab_group_chart.add(disableAutoScrolling);
-		#if desktop
 		tab_group_chart.add(waveformUseInstrumental);
 		tab_group_chart.add(waveformUseVoices);
-		#end
 		tab_group_chart.add(instVolume);
 		tab_group_chart.add(voicesVolume);
 		tab_group_chart.add(opponentvoicesVolume);
@@ -2258,7 +2256,7 @@ class ChartEditorState extends MusicBeatState
 				changeNoteSustain(-Conductor.stepCrotchet);
 			}
 			
-			if (FlxG.keys.justPressed.BACKSPACE)
+			if (FlxG.keys.justPressed.BACKSPACE #if mobile || virtualPad.buttonB.justPressed #end)
 			{
 				PlayState.chartingMode = false;
 				FlxG.switchState(funkin.states.editors.MasterEditorMenu.new);
@@ -2266,23 +2264,23 @@ class ChartEditorState extends MusicBeatState
 				return;
 			}
 			
-			if (FlxG.keys.justPressed.Z && FlxG.keys.pressed.CONTROL)
+			if (FlxG.keys.justPressed.Z && FlxG.keys.pressed.CONTROL #if mobile || virtualPad.buttonV.justPressed #end)
 			{
 				undo();
 			}
 			
-			if (FlxG.keys.justPressed.Z && curZoom > 0 && !FlxG.keys.pressed.CONTROL)
+			if (FlxG.keys.justPressed.Z && curZoom > 0 && !FlxG.keys.pressed.CONTROL #if mobile || virtualPad.buttonZ.justPressed #end)
 			{
 				--curZoom;
 				updateZoom();
 			}
-			if (FlxG.keys.justPressed.X && curZoom < zoomList.length - 1)
+			if (FlxG.keys.justPressed.X #if mobile || virtualPad.buttonD.justPressed #end && curZoom < zoomList.length - 1)
 			{
 				curZoom++;
 				updateZoom();
 			}
 			
-			if (FlxG.keys.justPressed.ESCAPE && FlxG.keys.pressed.SHIFT)
+			if (FlxG.keys.justPressed.ESCAPE && FlxG.keys.pressed.SHIFT #if mobile || virtualPad.buttonC.justPressed #end)
 			{
 				if (startTime == 0) playSongFromTimestamp(FlxG.sound.music.time);
 				else playSongFromTimestamp(startTime);
@@ -2308,7 +2306,7 @@ class ChartEditorState extends MusicBeatState
 				}
 			}
 			
-			if (FlxG.keys.justPressed.SPACE && FlxG.sound.music.time < (FlxG.sound.music.length - endOffset)) togglePause();
+			if (FlxG.keys.justPressed.SPACE  #if mobile || virtualPad.buttonX.justPressed #end && FlxG.sound.music.time < (FlxG.sound.music.length - endOffset)) togglePause();
 			
 			if (!FlxG.keys.pressed.ALT && FlxG.keys.justPressed.R)
 			{
@@ -2327,7 +2325,7 @@ class ChartEditorState extends MusicBeatState
 			
 			// ARROW VORTEX SHIT NO DEADASS
 			
-			if (FlxG.keys.pressed.W || FlxG.keys.pressed.S)
+			if ((FlxG.keys.pressed.W || FlxG.keys.pressed.S) #if mobile || (virtualPad.buttonUp.pressed || virtualPad.buttonDown.pressed) #end)
 			{
 				resetLittleFriends();
 				toggleMusic(false);
@@ -2383,8 +2381,8 @@ class ChartEditorState extends MusicBeatState
 			var shiftThing:Int = 1;
 			if (FlxG.keys.pressed.SHIFT) shiftThing = 4;
 			
-			if (FlxG.keys.justPressed.D) changeSection(curSec + shiftThing);
-			if (FlxG.keys.justPressed.A) changeSection(curSec - shiftThing);
+			if (FlxG.keys.justPressed.D #if mobile || virtualPad.buttonRight.justPressed #end) changeSection(curSec + shiftThing);
+	    	if (FlxG.keys.justPressed.A #if mobile || virtualPad.buttonLeft.justPressed #end) changeSection(curSec - shiftThing);
 			
 			if (vortex && !blockInput)
 			{
@@ -2403,7 +2401,7 @@ class ChartEditorState extends MusicBeatState
 				stretchNotes();
 			}
 		}
-		else if (FlxG.keys.justPressed.ENTER)
+		else if (FlxG.keys.justPressed.ENTER #if mobile || virtualPad.buttonA.justPressed #end)
 		{
 			for (i in 0...blockPressWhileTypingOn.length)
 			{
@@ -2450,7 +2448,7 @@ class ChartEditorState extends MusicBeatState
 		strumLineNotes.visible = quant.visible = vortex;
 		
 		// PLAYBACK SPEED CONTROLS //
-		var holdingShift = FlxG.keys.pressed.SHIFT;
+		var holdingShift = FlxG.keys.pressed.SHIFT #if mobile || virtualPad.buttonY.pressed #end;
 		var holdingLB = FlxG.keys.pressed.LBRACKET;
 		var holdingRB = FlxG.keys.pressed.RBRACKET;
 		var pressedLB = FlxG.keys.justPressed.LBRACKET;

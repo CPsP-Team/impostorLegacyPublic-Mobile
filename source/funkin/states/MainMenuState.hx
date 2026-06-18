@@ -177,7 +177,7 @@ class MainMenuState extends MusicBeatState
 		scriptGroup.call('onCreatePost', []);
 
         #if mobile
-		addVirtualPad(UP_DOWN, A);
+		addVirtualPad(NONE, A);
 		#end
 	}
 	
