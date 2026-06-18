@@ -823,7 +823,8 @@ class PlayState extends MusicBeatState
 		
 		#if mobile
 		addMobileControls(false);
-	    hitbox.visible = false;
+		hitbox.visible = false;
+		hitbox.active = false;
 		#end
 		
 		scripts.call('preNoteGeneration', []);
@@ -1199,7 +1200,8 @@ class PlayState extends MusicBeatState
 		inCutscene = false;
 		
 		#if mobile
-		hitbox.visible = true;
+		hitbox.visible = ClientPrefs.mobileControlMode == 'Hitbox';
+		hitbox.active = hitbox.visible;
 		#end
 		
 		if (!ScriptConstants.stopping(scripts.call('onStartCountdown')))
@@ -2816,6 +2818,7 @@ class PlayState extends MusicBeatState
 		
 		#if mobile
 		hitbox.visible = false;
+		hitbox.active = false;
 		#end
 		
 		deathCounter = 0;
@@ -3188,7 +3191,8 @@ class PlayState extends MusicBeatState
 				if (daNote.isSustainNote && !daNote.blockHit && !daNote.tooLate && !daNote.playField.autoPlayed
 					&& daNote.playField.inControl && daNote.playField.playerControls)
 				{
-					final holding:Bool = input.inputPressed(daNote.noteData);
+					final holding:Bool = input.inputPressed(daNote.noteData)
+						|| (ClientPrefs.mobileControlMode == 'Vanilla' && scripts.call('isVanillaLaneHeld', [daNote.noteData]) == true);
 					
 					if (daNote.wasGoodHit)
 					{

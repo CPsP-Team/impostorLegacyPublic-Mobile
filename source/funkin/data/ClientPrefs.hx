@@ -160,6 +160,8 @@ class ClientPrefs
 	@saveVar public static var middleScroll:Bool = false;
 	
 	@saveVar public static var opponentStrums:Bool = true;
+
+	@saveVar public static var mobileControlMode:String = 'Hitbox';
 	
 	@saveVar public static var ghostTapping:Bool = true;
 	
