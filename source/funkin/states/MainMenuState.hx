@@ -176,9 +176,9 @@ class MainMenuState extends MusicBeatState
 		
 		scriptGroup.call('onCreatePost', []);
 
-        #if mobile
+    /*    #if mobile
 		addVirtualPad(NONE, A);
-		#end
+		#end*/
 	}
 	
 	var backpanel:FlxSprite;
@@ -423,7 +423,7 @@ class MainMenuState extends MusicBeatState
 		starBG.x -= 4.5 * elapsed;
 		starFG.x -= 9 * elapsed;
 		
-		if (FlxG.keys.justPressed.SEVEN #if mobile || virtualPad.buttonA.justPressed #end) FlxG.switchState(new MasterEditorMenu());
+		if (FlxG.keys.justPressed.SEVEN /*#if mobile || virtualPad.buttonA.justPressed #end*/) FlxG.switchState(new MasterEditorMenu());
 		
 		if (FlxG.keys.firstJustPressed() != FlxKey.NONE) mouseMode = false;
 		if (FlxG.mouse.justMoved) mouseMode = true;
