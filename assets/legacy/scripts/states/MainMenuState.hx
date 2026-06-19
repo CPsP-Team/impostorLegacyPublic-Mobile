@@ -15,7 +15,7 @@ function onLoad()
 {
 	if (!ClientPrefs.inDevMode) return;
  debugText = new FlxText(0, 0, 1280,
-		'content/scripts/states/MainMenuState.hx\nPress 9 to go to credits roll sequence\nPress 7 to toggle Finale Endgame Sequence\nPress 6 to Force unlock Cosmicube requirements\nPress 5 to delete Cosmicube unlocks\nPress 4 to toggle Force Unlock for freeplay and story mode\nPress 3 to delete bought songs\nPress 2 to give a lot of moneys\nPress 1 to set money to 0',
+		'content/scripts/states/MainMenuState.hx\nPress 9 to go to credits roll sequence\nPress 7 to toggle Finale Endgame Sequence\nPress 6 to Force unlock Cosmicube requirements\nPress 5 to delete Cosmicube unlocks\nPress 4 to toggle Force Unlock for freeplay and story mode\nPress 3 to delete bought songs\nPress 2 to give a lot of moneys\nPress 1 to set money to 0\nPress E to open Editors Menu',
 		12.5);
 	debugText.alignment = 'right';
 	add(debugText);
@@ -89,4 +89,6 @@ function onUpdate()
 		ClientPrefs.flush();
 		trace('no money :(');
 	}
+  if (FlxG.keys.justPressed.E)
+    FlxG.switchState(new MasterEditorMenu());
 }
