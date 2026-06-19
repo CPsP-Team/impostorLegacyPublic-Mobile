@@ -114,7 +114,7 @@ public function videoCutscene(?vid:String = 'sussus-moogus', ?dAfter:Bool, ?canS
 	dialogueAfter = (dAfter ?? true);
 	
 	if (!dialogueAfter) PlayState.seenCutscene = true;
-	
+  
 	blackYnot = new FlxSprite().makeScaledGraphic(FlxG.width + 3, FlxG.height, FlxColor.BLACK);
 	blackYnot.camera = camOther;
 	add(blackYnot);
@@ -564,7 +564,7 @@ function onUpdate(elapsed)
 			if (controls.UI_LEFT_P) video.time = Math.min(video.time - 5, 0);
 		}
 		
-		if (controls.BACK && skippableVideo)
+		if (controls.BACK || FlxG.mouse.justPressed && skippableVideo)
 		{
 			video.kill();
 			video.bitmap.onEndReached.dispatch();
