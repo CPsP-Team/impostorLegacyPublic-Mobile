@@ -55,7 +55,7 @@ function onUpdate()
 			if (idklmaowhattsis >= acts.length) idklmaowhattsis = 0;
 			updateDebugText();
 		}
-		else if (FlxG.mouse.x <= FlxG.width / 2)
+		else if (FlxG.mouse.x <= FlxG.width / 4)
 		{
 			triggerAction(acts[idklmaowhattsis]);
 		}
