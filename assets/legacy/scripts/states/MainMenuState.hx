@@ -4,62 +4,63 @@ import funkin.data.CosmicubeData;
 import funkin.states.TitleState;
 import funkin.states.editors.MasterEditorMenu;
 
-import openfl.text.TextField;
-import openfl.text.TextFieldType;
-import openfl.events.TextEvent;
-import openfl.Lib;
-
 import flixel.text.FlxText;
 import flixel.FlxG;
 
 using StringTools;
 
 var debugText:FlxText;
-var hiddenField:TextField;
+var idklmaowhattsis:Int = 0;
 
-var inputBuffer:String = "";
+var acts:Array<String> = ["9", "7", "6", "5", "4", "3", "2", "1", "E"]; 
+var texts:Array<String> = [
+	"Go to Credits Roll Sequence (9)", 
+	"Toggle Finale Endgame Sequence (7)", 
+	"Force unlock Cosmicube requirements (6)", 
+	"Delete Cosmicube Unlocks (5)", 
+	"Toggle Freeplay/Story Unlock (4)", 
+	"Delete Bought Songs (3)", 
+	"Give a lot of money!!! (2)", 
+	"Set Money to 0 (1)", 
+	"Open Editors Menu (E)"
+];
 
 function onLoad()
 {
 	if (!ClientPrefs.inDevMode) return;
 	
-	debugText = new FlxText(0, 0, 1280, 'content/scripts/states/MainMenuState.hx\nPress 9 to go to credits roll sequence\nPress 7 to toggle Finale Endgame Sequence\nPress 6 to Force unlock Cosmicube requirements\nPress 5 to delete Cosmicube unlocks\nPress 4 to toggle Force Unlock for freeplay and story mode\nPress 3 to delete bought songs\nPress 2 to give a lot of moneys\nPress 1 to set money to 0\nPress E to open Editors Menu',
-		12.5);
-	debugText.alignment = 'right';
-	add(debugText);
+	updateDebugText();
+}
 
-  #if mobile
-	Lib.current.stage.addEventListener(TextEvent.TEXT_INPUT, onTextInput);
+function updateDebugText()
+{
+	if (debugText == null) {
+		debugText = new FlxText(0, 0, 1280, '', 14);
+		debugText.alignment = 'right';
+		add(debugText);
+	}
 
-	#if ios
-	hiddenField = new TextField();
-	hiddenField.type = TextFieldType.INPUT;
-	hiddenField.visible = false;
-	Lib.current.stage.addChild(hiddenField);
-	#end
-	#end
+	debugText.text = 'content/scripts/states/MainMenuState.hx\n\nTap this text to change action:\nCURRENT: ' + texts[idklmaowhattsis] + '\n\nTap the LEFT side of the screen to trigger it.';
 }
 
 function onUpdate()
 {
 	if (!ClientPrefs.inDevMode) return;
 
-	#if mobile
-	if (FlxG.mouse.justPressed && FlxG.mouse.overlaps(debugText))
+	if (FlxG.mouse.justPressed)
 	{
-		#if android
-		if (Lib.current.stage.window != null) {
-			Lib.current.stage.window.textInput = true;
+		if (FlxG.mouse.overlaps(debugText))
+		{
+			idklmaowhattsis++;
+			if (idklmaowhattsis >= acts.length) idklmaowhattsis = 0;
+			updateDebugText();
 		}
-		#elseif ios
-		if (hiddenField != null) {
-			Lib.current.stage.focus = hiddenField;
+		else if (FlxG.mouse.x <= FlxG.width / 2)
+		{
+			triggerAction(acts[idklmaowhattsis]);
 		}
-		#end
 	}
-	#end
 
-	if (FlxG.keys.justPressed.ZERO)  triggerAction("0");
 	if (FlxG.keys.justPressed.ONE)   triggerAction("1");
 	if (FlxG.keys.justPressed.TWO)   triggerAction("2");
 	if (FlxG.keys.justPressed.THREE) triggerAction("3");
@@ -71,26 +72,8 @@ function onUpdate()
 	if (FlxG.keys.justPressed.E)     triggerAction("E");
 }
 
-#if mobile
-function onTextInput(e:TextEvent)
-{
-	if (!ClientPrefs.inDevMode) return;
-	triggerAction(e.text.toUpperCase());
-
-	#if android
-	if (Lib.current.stage.window != null) Lib.current.stage.window.textInput = true;
-	#end
-}
-#end
-
 function triggerAction(char:String)
 {
-	inputBuffer += char;
-
-	if (inputBuffer.length > 4) {
-		inputBuffer = inputBuffer.substr(inputBuffer.length - 4);
-	}
-
 	switch (char)
 	{
 		case "7":
