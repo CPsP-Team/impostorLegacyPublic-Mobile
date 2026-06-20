@@ -118,6 +118,6 @@ function triggerAction(char:String)
 			trace('no money :(');
 			
 		case "E":
-			FlxG.switchState(new editors.MasterEditorMenu());
+			FlxG.switchState(new MasterEditorMenu());
 	}
 }
