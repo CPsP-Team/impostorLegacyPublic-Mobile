@@ -578,6 +578,9 @@
 		"opt_backgroundStrumlines_desc": "If enabled, additional characters' strumlines will be shown on screen whenever applicable.",
 		"opt_discord": "Discord Rich Presence",
 		"opt_discord_desc": "If enabled, the game will show up in your Discord Activity Status while playing.",
+		// mobile
+		"opt_mobilecontrols": "Mobile Controls",
+		"opt_mobilecontrols_desc": "Changes the mobile note controls style.",
 		
 		// options choices
 		
@@ -603,6 +606,9 @@
 		"choice_laneUnderlayStyle_b": "Behind Score Text",
 		"choice_laneUnderlayStyle_c": "Behind Health Bar",
 		"choice_laneUnderlayStyle_d": "Fade",
+		// mobile
+		"choice_mobilecontrols_hitboxmode": "Hitbox Mode",
+		"choice_mobilecontrols_vanillamode": "Vanilla Mode",
 		
 		// some new misc menu stuff
 		"rand": "Random",

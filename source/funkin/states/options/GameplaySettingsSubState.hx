@@ -22,7 +22,7 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 			Lang.str('opt_middlescroll_desc', "it dcroll middle"), 'middleScroll', 'bool', false);
 		addOption(option);
 
-		var mobileOption:Option = new Option('Mobile Controls', 'Changes the mobile note controls style.', 'mobileControlMode', 'string', 'Hitbox', ['Hitbox Mode', 'Vanilla Mode'], ['Hitbox', 'Vanilla']);
+		var mobileOption:Option = new Option(Lang.str('opt_mobilecontrols', 'Mobile Controls'), Lang.str('opt_mobilecontrols_desc', 'Changes the mobile note controls style.'), 'mobileControlMode', 'string', 'Hitbox', [Lang.str('choice_mobilecontrols_hitboxmode', 'Hitbox Mode'), Lang.str('choice_mobilecontrols_vanillamode', 'Vanilla Mode')], ['Hitbox', 'Vanilla']);
 		mobileOption.onChange = onChangeMobileControls;
 		addOption(mobileOption);
 

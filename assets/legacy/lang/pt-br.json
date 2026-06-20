@@ -578,6 +578,9 @@
 		"opt_backgroundStrumlines_desc": "Se marcado, as strumlines de personagens adicionais serão mostradas na tela quando aplicável.",
 		"opt_discord": "Discord Rich Presence",
 		"opt_discord_desc": "Se marcado, o jogo irá mostrar o seu Status de Atividade no Discord enquanto joga.",
+		// mobile
+		"opt_mobilecontrols": "Controles Mobile",
+		"opt_mobilecontrols_desc": "Altera o estilo dos controles do mobile",
 		
 		// options choices
 		
@@ -603,6 +606,9 @@
 		"choice_laneUnderlayStyle_b": "Atrás do Texto de Pontuação",
 		"choice_laneUnderlayStyle_c": "Atrás da Barra de Vida",
 		"choice_laneUnderlayStyle_d": "Desaparecendo",
+		// mobile
+		"choice_mobilecontrols_hitboxmode": "Modo Hitbox",
+		"choice_mobilecontrols_vanillamode": "Modo Vanilla",
 
         // some new misc menu stuff
         "rand": "Aleatório",
