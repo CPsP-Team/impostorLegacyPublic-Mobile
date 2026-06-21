@@ -16,7 +16,7 @@ class Main extends Sprite
 	public static final PSYCH_VERSION:String = '0.5.2h';
 	public static final NMV_VERSION:String = '1.0';
 	public static final FUNKIN_VERSION:String = '0.2.7';
-	public static final LEGACY_VERSION:String = '1.1.0';
+	public static final LEGACY_VERSION:String = '1.1.1b';
 	
 	public static final startMeta =
 		{
@@ -103,7 +103,7 @@ class Main extends Sprite
 			#end
 			
 			Sys.println('GOOD BYE CRUEL WORLD');
-
+			
 			Sys.exit(0);
 		});
 		#end
