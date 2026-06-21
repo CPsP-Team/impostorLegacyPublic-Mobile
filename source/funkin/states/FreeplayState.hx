@@ -138,7 +138,7 @@ class FreeplayState extends AmongUIState
 	var cutscenePhase:UnlockAnimPhase = NONE;
 	
 	var menuWeekSelect:FlxSprite;
-	
+	var bottomControls:AmongControls;
 	var turboGroup:TurboControlGroup;
 	var controlDOWN:TurboControl = TurboControl.fromControl('ui_down');
 	var controlUP:TurboControl = TurboControl.fromControl('ui_up');
@@ -215,7 +215,7 @@ class FreeplayState extends AmongUIState
 		add(infoText);
 		
 		// look mom! new controls system!
-		var bottomControls:AmongControls = new AmongControls([
+	  bottomControls = new AmongControls([
 			['arrow', 'select'], // select
 			['enter', 'conf'], // conf
 			['esc', 'back'], // back
@@ -597,7 +597,7 @@ class FreeplayState extends AmongUIState
 	{
 		if (!lockMovement && cutscenePhase == NONE)
 		{
-			if (FlxG.keys.justPressed.TAB || FlxG.gamepads.anyJustPressed(X))
+			if (FlxG.keys.justPressed.TAB || bottomControls.justReleasedControl(3) || FlxG.gamepads.anyJustPressed(X))
 			{
 				lockMovement = true;
 				FlxG.sound.play(Paths.sound('scrollMenu'), 0.6);
@@ -610,7 +610,7 @@ class FreeplayState extends AmongUIState
 				openSubState(new WeekPickerSubstate(this, curMonth));
 			}
 			
-			if (controls.RESET) resetScorePrompt();
+			if (controls.RESET || bottomControls.justReleasedControl(4)) resetScorePrompt();
 			
 			if (FlxG.sound.music.volume < 0.7)
 			{
