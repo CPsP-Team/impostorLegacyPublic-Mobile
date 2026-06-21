@@ -1,5 +1,7 @@
 #pragma header
 
+precision mediump float;
+
 uniform float block;
 uniform float phase;
 uniform float rand;
@@ -15,13 +17,17 @@ void main() {
 	
 	vec2 coord = floor(openfl_TextureCoordv * px) / px;
 	coord.x += (sin(coord.y * 32.0 * step(hash22(vec2(phase + rand, coord.y)).x, 0.5)) * hash22(vec2(phase - rand, coord.y)).x * 10.0 / openfl_TextureSize.x);
-	coord.y += pow(sin(coord.y * 3.14) * 0.75, 2.0) * (step(hash22(vec2(phase - rand, 0.0)).y, 0.03) * vec2(phase + rand, coord.y).x * 0.02);
+	coord.y += pow(sin(coord.y * 3.14) * 0.75, 2.0) * (step(hash22(vec2(phase - rand, 0.0)).y, 0.03) * (phase + rand) * 0.02);
 	
 	vec4 color = flixel_texture2D(bitmap, coord);
 	float wave = (cos(coord.y * openfl_TextureSize.y * 0.3 - phase * 32.0) * 0.15);
 	
 	color.g += (color.a * 0.125);
-	color.rba *= 0.75 + wave;
+
+	float waveMult = 0.75 + wave;
+	color.r *= waveMult;
+	color.b *= waveMult;
+	color.a *= waveMult;
 	
 	gl_FragColor = color;
 }
