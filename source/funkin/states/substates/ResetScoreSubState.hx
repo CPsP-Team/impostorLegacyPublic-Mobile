@@ -91,14 +91,14 @@ class ResetScoreSubState extends MusicBeatSubstate
 		yesText = new FlxText(0, titleText.y + 150, 0, Lang.str('choice_generic_yes'), 36);
 		yesText.setFormat(Paths.font('liber.ttf'), 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		yesText.setBorderStyle(FlxTextBorderStyle.OUTLINE, FlxColor.BLACK, 2);
-		yesButton = new FlxSprite(0, 0, Paths.image('menu/freeplay/resetyesbutton'));
+		yesButton = new FlxSprite(0, 0, Paths.image('menu/freeplay/resetYesButton'));
 		yesButton.scrollFactor.set();
 		add(yesButton);
 		add(yesText);
 		noText = new FlxText(0, titleText.y + 150, 0, Lang.str('choice_generic_no'), 36);
 		noText.setFormat(Paths.font('liber.ttf'), 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		noText.setBorderStyle(FlxTextBorderStyle.OUTLINE, FlxColor.BLACK, 2);
-		noButton = new FlxSprite(0, 0, Paths.image('menu/freeplay/resetnobutton'));
+		noButton = new FlxSprite(0, 0, Paths.image('menu/freeplay/resetNoButton'));
 		noButton.scrollFactor.set();
 		add(noButton);
 		add(noText);
