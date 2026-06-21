@@ -28,10 +28,12 @@ The DLC is an example mod made for VS. Impostor Legacy. For a grounded guide to 
 # CHANGELOG
 Current version: **1.1.1b**
 
-## 1.1.1 (june 21 2026)
+## 1.1.1b (june 21 2026)
 
 ### Changes
 - Mini Grey pet has correct requirements.
+- Speaker Black no longer tweaks out in Don't Lied.
+- Speaker Black's position while using Noob49 fixed.
 
 ## 1.1.1 (june 21 2026)
 

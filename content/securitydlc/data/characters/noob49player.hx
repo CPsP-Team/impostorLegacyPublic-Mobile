@@ -52,12 +52,7 @@ function onCreatePost()
 	{
 		petBoard.visible = true;
 	}
-	if (curSong == 'Turbulence')
-	{
-		pet.alpha = 0.001;
-		iconP1.changeIcon('noob49alone');
-	}
-	if (curSong == 'Triple Threat')
+	if (curSong == 'Triple Threat' || curSong == 'Turbulence' || gf.curCharacter == "triplespeaker")
 	{
 		pet.alpha = 0.001;
 		iconP1.changeIcon('noob49alone');
@@ -69,13 +64,5 @@ function onCreatePost()
 	if (curSong == 'Sauces Moogus')
 	{
 		gray.alpha = 0.001;
-	}
-	if (gf != null)
-	{
-		if (gf.curCharacter == "triplespeaker")
-		{
-			pet.alpha = 0.001;
-			iconP1.changeIcon('noob49alone');
-		}
 	}
 }
