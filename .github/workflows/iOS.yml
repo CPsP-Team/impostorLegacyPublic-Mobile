@@ -45,6 +45,11 @@ jobs:
           PY
           cd ../../../
           haxelib run lime rebuild mac -arm64 -nocolor -eval -D HXCPP_ARM64
+          haxelib run lime rebuild ios -arm64 -nocolor -D HXCPP_ARM64
+          cd "$(haxelib libpath lime)ndll/iPhone"
+          if [ -f liblime.iphoneos-arm64.a ] && [ ! -e liblime.iphoneos.a ]; then
+            ln -s liblime.iphoneos-arm64.a liblime.iphoneos.a
+          fi
 
       - name: Compile iOS
         run: haxelib run lime build ios -release
