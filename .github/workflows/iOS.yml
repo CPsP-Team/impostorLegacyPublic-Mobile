@@ -18,6 +18,14 @@ jobs:
           haxelib install hxpkg --quiet
           haxelib run hxpkg install --force
 
+      - name: Build Lime Native Binaries
+        run: |
+          cd .haxelib/lime/git
+          git submodule sync --recursive
+          git submodule update --init --recursive --force
+          cd ../../../
+          haxelib run lime rebuild cpp -release
+
       - name: Compile iOS
         run: haxelib run lime build ios -release
 
