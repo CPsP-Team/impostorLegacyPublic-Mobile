@@ -3,7 +3,7 @@ on: workflow_dispatch
 
 jobs:
   Build:
-    runs-on: macos-14
+    runs-on: macos-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -17,18 +17,6 @@ jobs:
         run: |
           haxelib install hxpkg --quiet
           haxelib run hxpkg install --force
-          cd ./.haxelib/hxcpp/git/tools/hxcpp/
-          haxe compile.hxml
-          cd ../../../../../
-
-      - name: Rebuild Lime
-        run: |
-          cd ./.haxelib/lime/git/
-          git submodule init
-          git submodule sync
-          git submodule update
-          cd ../../../
-          haxelib run lime rebuild macos
 
       - name: Compile iOS
         run: haxelib run lime build ios -release
