@@ -28,7 +28,7 @@ jobs:
           git submodule sync
           git submodule update
           cd ../../../
-          haxelib run lime rebuild cpp
+          haxelib run lime rebuild macos
 
       - name: Compile iOS
         run: haxelib run lime build ios -release
