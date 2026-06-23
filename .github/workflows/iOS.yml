@@ -52,11 +52,11 @@ jobs:
           fi
 
       - name: Compile iOS
-        run: haxelib run lime build ios -release
+        run: haxelib run lime build ios -release -nosign
 
       - name: Create Ipa
         run: |
-          cd export/release/ios/build/*-ios
+          cd export/release/ios/build/Release-iphoneos
           mkdir -p Payload
           mv *.app Payload
           zip -r sus.ipa Payload
@@ -65,5 +65,5 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: iOS-Release
-          path: export/release/ios/build/Release-ios/*.ipa
+          path: export/release/ios/build/Release-iphoneos/*.ipa
           if-no-files-found: error
