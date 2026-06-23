@@ -5,6 +5,13 @@ import openfl.filters.ShaderFilter;
 import flixel.addons.display.FlxBackdrop;
 import flixel.addons.text.FlxTypeText;
 
+#if mobile
+import openfl.events.TextEvent;
+import openfl.events.KeyboardEvent;
+import openfl.text.TextField;
+import openfl.text.TextFieldType;
+#end
+
 import funkin.backend.FunkinShader.FunkinRuntimeShader;
 import funkin.FunkinAssets;
 import funkin.video.FunkinVideoSprite;
@@ -23,6 +30,10 @@ class FNAFState extends MusicBeatState
 	var clickCooldown:Float = 0;
 	var screenZooming:Bool = false;
 	
+    #if mobile
+	var hiddenInput:TextField;
+	#end
+
 	// dialogue
 	var dialogueLines:Array<String>;
 	var postDialogueLines:Array<String>;
@@ -103,6 +114,50 @@ class FNAFState extends MusicBeatState
 	override function create()
 	{
 		super.create();
+
+        #if mobile
+		hiddenInput = new TextField();
+		hiddenInput.type = INPUT;
+		hiddenInput.needsSoftKeyboard = true;
+		hiddenInput.text = "";
+		hiddenInput.x = -1000;
+		hiddenInput.y = -1000;
+		FlxG.stage.addChild(hiddenInput);
+
+		hiddenInput.addEventListener(KeyboardEvent.KEY_DOWN, function(e:KeyboardEvent) {
+			if (!passwordActive || inputCooldown > 0) return;
+			
+			if (e.keyCode == 8 && enteredCode.length > 0)
+			{
+				FlxG.sound.play(Paths.sound('type'));
+				enteredCode = enteredCode.substr(0, enteredCode.length - 1);
+				inputCooldown = 0.06;
+				cursorTimer = 0;
+				cursorVisible = true;
+			}
+			else if (e.keyCode == 13)
+			{
+				submitCode();
+				inputCooldown = 0.08;
+				cursorTimer = 0;
+				cursorVisible = true;
+			}
+		});
+		
+		hiddenInput.addEventListener(TextEvent.TEXT_INPUT, function(e:TextEvent) {
+			if (!passwordActive || inputCooldown > 0) return;
+			var char = e.text.toUpperCase();
+			var code = char.charCodeAt(0);
+			if ((code >= 65 && code <= 90) || (code >= 48 && code <= 57))
+			{
+				appendChar(char);
+				inputCooldown = 0.06;
+				cursorTimer = 0;
+				cursorVisible = true;
+			}
+			hiddenInput.text = "";
+		});
+		#end
 		
 		if (ClientPrefs.fnafHintCode == '')
 		{
@@ -471,6 +526,11 @@ class FNAFState extends MusicBeatState
 	function openComputer()
 	{
 		if (passwordActive) return;
+
+        #if mobile
+		FlxG.stage.focus = hiddenInput;
+		hiddenInput.requestSoftKeyboard();
+		#end
 		
 		FlxG.sound.play(Paths.sound('computerOpen'));
 		crossfadeMusic('cpu', 0.35, 0.6);
@@ -538,6 +598,10 @@ class FNAFState extends MusicBeatState
 	
 	function closeComputer()
 	{
+        #if mobile
+		FlxG.stage.focus = null;
+		#end
+
 		FlxG.sound.play(Paths.sound('computerclose'));
 		crossfadeMusic('amb', 0.35, 0.6);
 		passwordActive = false;
@@ -584,6 +648,10 @@ class FNAFState extends MusicBeatState
 	
 	function pauseComputer()
 	{
+        #if mobile
+		FlxG.stage.focus = null;
+		#end
+        
 		passwordActive = false;
 		enteredCode = "";
 		
@@ -814,6 +882,14 @@ class FNAFState extends MusicBeatState
 	function handlePasswordInput()
 	{
 		if (!passwordActive) return;
+
+        #if mobile
+		if (FlxG.mouse.justPressed)
+		{
+			FlxG.stage.focus = hiddenInput;
+			hiddenInput.requestSoftKeyboard();
+		}
+		#end
 		
 		cursorTimer += FlxG.elapsed;
 		if (cursorTimer >= 0.45)
@@ -901,6 +977,10 @@ class FNAFState extends MusicBeatState
 	
 	function submitCode()
 	{
+        #if mobile
+		FlxG.stage.focus = null;
+		#end
+
 		var code = enteredCode.toUpperCase();
 		FlxTween.cancelTweensOf(compStatus);
 		compStatus.alpha = 1;
