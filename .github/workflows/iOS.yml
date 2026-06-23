@@ -1,60 +1,36 @@
 name: iOS Build
-on:
-  workflow_dispatch:
+on: workflow_dispatch
+
 jobs:
-  iOS:
+  Build:
     runs-on: macos-14
     steps:
       - name: Checkout
-        uses: actions/checkout@v6.0.2
+        uses: actions/checkout@v6
 
       - name: Setup Haxe
-        uses: krdlab/setup-haxe@v2.1.0
+        uses: krdlab/setup-haxe@v2
         with:
           haxe-version: 4.3.7
 
-      - name: Prepare iOS Lime rebuild
-        env:
-          CC: gcc-13
-          CXX: g++-13
+      - name: Install Libraries
         run: |
-          set -euo pipefail
-          haxelib setup ~/haxelib
-          haxelib install hxcpp > /dev/null --quiet
           haxelib install hxpkg --quiet
-          haxelib run hxpkg install
-          rm -rf .haxelib/lime
-          git clone https://github.com/FunkinCrew/lime .haxelib/lime/git
-          git -C .haxelib/lime/git checkout 6421de16b9dfa4fb55c19f12db65d392a57585c8
-          git -C .haxelib/lime/git submodule update --init --recursive --force
-          haxelib dev lime .haxelib/lime/git
+          haxelib run hxpkg install --force
 
-      - name: Rebuild iOS Lime a
-        env:
-          CC: gcc-13
-          CXX: g++-13
+      - name: Compile iOS
+        run: haxelib run lime build ios -release
+
+      - name: Create Ipa
         run: |
-          haxelib run lime rebuild ios -release
-          if [ ! -f .haxelib/lime/git/ndll/iPhone/liblime.iphoneos-64.a ]; then
-            echo "ERROR: Missing Liblime 64 a"
-            exit 1
-          fi
-          
-      - name: Compile
-        run: haxelib run lime build ios -clean -nosign -D DLC
+          cd export/release/ios/build/*-ios
+          mkdir -p Payload
+          mv *.app Payload
+          zip -r sus.ipa Payload
 
-      - name: Making ipa file
-        run: |
-          brew install ldid
-          cd export/release/ios/build/Release-iphoneos/ImpostorLegacy.app
-          ldid -S../../../ImpostorLegacy/ImpostorLegacy.entitlements ImpostorLegacy
-          cd ..
-          mkdir Payload
-          mv ImpostorLegacy.app Payload
-          zip -r ImpostorLegacy.ipa Payload
-
-      - name: Uploading artifact (entire build)
-        uses: actions/upload-artifact@v4
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v7
         with:
-          name: Impostor Legacy (iOS)
-          path: export/release/ios/build/Release-iphoneos/*.ipa
+          name: iOS-Release
+          path: export/release/ios/build/Release-ios/*.ipa
+          if-no-files-found: error
