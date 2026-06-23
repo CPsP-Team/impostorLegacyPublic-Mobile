@@ -19,8 +19,6 @@ jobs:
       - name: Install Libraries
         run: |
           haxelib install hxpkg --quiet
-          haxelib install format --quiet
-          haxelib install hxp --quiet
           haxelib run hxpkg install --force
 
       - name: Build Lime Native Binaries
