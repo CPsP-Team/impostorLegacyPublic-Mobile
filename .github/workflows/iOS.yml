@@ -26,6 +26,23 @@ jobs:
           cd .haxelib/lime/git
           git submodule sync --recursive
           git submodule update --init --recursive --force
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path("project/lib/sdl_image-files.xml")
+          text = path.read_text()
+          flag = '<compilerflag value="-DSDL_IMAGE_USE_COMMON_BACKEND" />'
+          marker = '<compilerflag value="-DUSE_STBIMAGE" />'
+
+          if flag not in text:
+              if marker not in text:
+                  raise SystemExit("Could not find SDL_image compiler flag insertion point")
+              text = text.replace(
+                  marker,
+                  marker + '\n\t\t\t<compilerflag value="-DSDL_IMAGE_USE_COMMON_BACKEND" />'
+              )
+              path.write_text(text)
+          PY
           cd ../../../
           haxelib run lime rebuild mac -arm64 -nocolor -eval -D HXCPP_ARM64
 
