@@ -13,6 +13,9 @@ jobs:
         with:
           haxe-version: 4.3.7
 
+      - name: Set HAXEPATH
+        run: echo "HAXEPATH=$HAXE_STD_PATH/.." >> $GITHUB_ENV
+
       - name: Install Libraries
         run: |
           haxelib install hxpkg --quiet
@@ -24,7 +27,7 @@ jobs:
           git submodule sync --recursive
           git submodule update --init --recursive --force
           cd ../../../
-          haxelib run lime rebuild cpp -release
+          haxelib run lime rebuild mac -arm64 -nocolor -eval -D HXCPP_ARM64
 
       - name: Compile iOS
         run: haxelib run lime build ios -release
