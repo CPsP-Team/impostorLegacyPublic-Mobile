@@ -3,6 +3,7 @@ package funkin.utils;
 #if macro
 import haxe.macro.Expr;
 import haxe.macro.Context;
+import haxe.io.Path;
 
 using haxe.macro.Tools;
 
@@ -11,6 +12,26 @@ using Lambda;
 
 class MacroUtil
 {
+	#if macro
+	static function resolveCompileTimePath(path:String):Null<String>
+	{
+		if (sys.FileSystem.exists(path)) return path;
+
+		var current = sys.FileSystem.fullPath(".");
+		while (current != null && current.length > 0)
+		{
+			var candidate = current + "/" + path;
+			if (sys.FileSystem.exists(candidate)) return candidate;
+
+			var parent = Path.directory(current);
+			if (parent == current || parent.length == 0) break;
+			current = parent;
+		}
+
+		return null;
+	}
+	#end
+
 	/**
 	 * enforces the use of haxe 4.3.4
 	 */
@@ -76,12 +97,13 @@ class MacroUtil
 	public static macro function getPrecompliedContent(path:String)
 	{
 		#if !display
-		if (!sys.FileSystem.exists(path))
+		final resolvedPath = resolveCompileTimePath(path);
+		if (resolvedPath == null)
 		{
 			Context.fatalError('could not find content at $path', Context.currentPos());
 		}
 		
-		final ret = sys.io.File.getContent(path);
+		final ret = sys.io.File.getContent(resolvedPath);
 		
 		return macro $v{ret};
 		#end
