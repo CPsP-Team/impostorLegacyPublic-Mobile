@@ -9,7 +9,7 @@ class Native
 	 */
 	public static function getTaskMemory()
 	{
-		#if cpp
+		#if (cpp && !ios)
 		return external.memory.Memory.getCurrentUsage();
 		#else
 		return 0.0;
