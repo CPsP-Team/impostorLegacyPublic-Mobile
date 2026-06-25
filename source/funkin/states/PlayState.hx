@@ -789,6 +789,15 @@ class PlayState extends MusicBeatState
 		
 		playHUD.insert(playHUD.underlayOrder, underlays);
 		
+		#if ios
+		var pauseButton = new mobile.backend.PauseButton(0, 0, function()
+		{
+			if (!ScriptConstants.stopping(scripts.call('onPause'))) openPauseMenu();
+		});
+		add(pauseButton);
+		pauseButton.cameras = [camOther];
+		#end
+		
 		meta = Metadata.getSong();
 		
 		modManager = new ModManager(this);
