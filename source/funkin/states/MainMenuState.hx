@@ -29,6 +29,7 @@ class MainMenuState extends MusicBeatState
 	
 	static var curMenuItem:Int = 0;
 	static var lastSmallBtn:Int = 3;
+	
 	var menuButtons:Array<FlxSprite> = [];
 	var menuLabels:Array<FlxText> = [];
 	var menuLabelBaseSizes:Array<Int> = [];
@@ -154,10 +155,8 @@ class MainMenuState extends MusicBeatState
 		
 		Conductor.bpm = 102;
 		Conductor.bpmChangeMap.resize(0);
-
-    #if !ios
+		
 		FlxG.mouse.visible = true;
-    #end
 		
 		super.create();
 		
@@ -174,13 +173,14 @@ class MainMenuState extends MusicBeatState
 		updateMenuSelection();
 		
 		var shinies:Int = ProgressionUtil.getShinies();
-		for (i => shiny in menuShinies) shiny.visible = (i < shinies);
-		
+		for (i => shiny in menuShinies)
+			shiny.visible = (i < shinies);
+			
 		scriptGroup.call('onCreatePost', []);
-
-        /*#if mobile
-		addVirtualPad(NONE, A);
-		#end*/
+		
+		/*#if mobile
+			addVirtualPad(NONE, A);
+			#end */
 	}
 	
 	var backpanel:FlxSprite;
