@@ -86,7 +86,7 @@ class TitleState extends MusicBeatState
 		
 		super.create();
 		
-		#if ASSET_REDIRECT
+		#if (ASSET_REDIRECT && !ios)
 		if (Paths.fileExists('images/cursor.png'))
 			FlxG.mouse.load(openfl.display.BitmapData.fromFile(Paths.getPath('images/cursor.png')));
 		#else
