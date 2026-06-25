@@ -60,7 +60,7 @@ jobs:
           fi
           git -C .haxelib/lime/git checkout 6421de16b9dfa4fb55c19f12db65d392a57585c8
           git -C .haxelib/lime/git submodule update --init --recursive --force
-          haxelib dev lime .haxelib/lime/git
+          haxelib dev lime .haxelib/lime/git --force
           
       - name: Rebuild Linux Lime ndll
         env:

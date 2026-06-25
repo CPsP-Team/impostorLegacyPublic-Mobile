@@ -69,6 +69,12 @@ var rtlFullText:String = "";
 // dialogue portraits
 var portrait:Array<FlxSprite> = [];
 
+function setGameplayCameraVisible(value:Bool):Void
+{
+	final targetCam = game?.camGame ?? FlxG.camera;
+	if (targetCam != null) targetCam.visible = value;
+}
+
 function onCreatePost()
 {
 	final PADDING = 15;
@@ -85,7 +91,7 @@ function onVidEnd()
 	
 	video.destroy();
 	vidPlaying = false;
-	camGame.visible = true;
+	setGameplayCameraVisible(true);
 	skipText.visible = false;
 	// ^ for windowed fullscreen
 	if (dialogueAfter && (PlayState.isStoryMode || !videoCheckStory))
@@ -129,7 +135,7 @@ public function videoCutscene(?vid:String = 'sussus-moogus', ?dAfter:Bool, ?canS
 		video.antialiasing = ClientPrefs.globalAntialiasing;
 		video.updateHitbox();
 		video.screenCenter();
-		camGame.visible = false;
+		setGameplayCameraVisible(false);
 		// ^ for windowed fullscreen
 		textFade();
 	});
