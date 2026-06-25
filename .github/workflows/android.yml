@@ -14,21 +14,6 @@ jobs:
         with:
           haxe-version: 4.3.7
 
-      - name: Cache Haxe and Gradle
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.haxelib
-            ~/haxelib
-            .haxelib
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-            export/release/android/.gradle
-            export/release/android/bin/.gradle
-          key: android-build-${{ runner.os }}-${{ hashFiles('.hxpkg', 'Project.xml', '.github/workflows/android.yml') }}
-          restore-keys: |
-            android-build-${{ runner.os }}-
-
       - name: Install Linux system deps
         run: |
           sudo apt-get update
@@ -49,29 +34,21 @@ jobs:
         run: |
           set -euo pipefail
           haxelib setup ~/haxelib
-          haxelib path hxcpp > /dev/null 2>&1 || haxelib install hxcpp > /dev/null --quiet
-          haxelib path hxpkg > /dev/null 2>&1 || haxelib install hxpkg --quiet
+          haxelib install hxcpp > /dev/null --quiet
+          haxelib install hxpkg --quiet
           haxelib run hxpkg install
-          if [ ! -d .haxelib/lime/git/.git ]; then
-            rm -rf .haxelib/lime
-            git clone https://github.com/FunkinCrew/lime .haxelib/lime/git
-          else
-            echo "Using cached FunkinCrew Lime checkout"
-          fi
+          rm -rf .haxelib/lime
+          git clone https://github.com/FunkinCrew/lime .haxelib/lime/git
           git -C .haxelib/lime/git checkout 6421de16b9dfa4fb55c19f12db65d392a57585c8
           git -C .haxelib/lime/git submodule update --init --recursive --force
-          haxelib dev lime .haxelib/lime/git --force
+          haxelib dev lime .haxelib/lime/git
           
       - name: Rebuild Linux Lime ndll
         env:
           CC: gcc-13
           CXX: g++-13
         run: |
-          if [ ! -f .haxelib/lime/git/ndll/Linux64/lime.ndll ]; then
-            haxelib run lime rebuild cpp -release
-          else
-            echo "Using cached Linux64 lime.ndll"
-          fi
+          haxelib run lime rebuild cpp -release
           if [ ! -f .haxelib/lime/git/ndll/Linux64/lime.ndll ]; then
             echo "ERROR: Missing Lime ndll"
             exit 1
@@ -90,11 +67,7 @@ jobs:
           CC: gcc-13
           CXX: g++-13
         run: |
-          if [ ! -f .haxelib/lime/git/ndll/Android/liblime-64.so ]; then
-            haxelib run lime rebuild android -release
-          else
-            echo "Using cached Android liblime-64.so"
-          fi
+          haxelib run lime rebuild android -release
           if [ ! -f .haxelib/lime/git/ndll/Android/liblime-64.so ]; then
             echo "ERROR: Missing Liblime 64 so"
             exit 1
