@@ -81,7 +81,10 @@ class Main extends Sprite
 		#if android
 		FlxG.android.preventDefaultKeys = [BACK];
 		#end
-		
+		#if ios
+		FlxG.mouse.visible = false;
+		#end
+
 		DebugDisplay.init();
 		
 		FlxG.signals.gameResized.add(onResize);

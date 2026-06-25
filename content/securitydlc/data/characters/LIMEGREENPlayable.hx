@@ -38,6 +38,8 @@ function onUpdate(elapsed:Float)
 
     if (FlxG.mouse.justPressed && FlxG.mouse.overlaps(boyfriend))
     {
+        FlxG.sound.play(Paths.sound('effects/fart', null, PathsTestMode.LOOSE));
+        
 		boyfriend.animation.play('ou', true);
         boyfriend.specialAnim = true;
 
@@ -79,6 +81,9 @@ function onUpdate(elapsed:Float)
     }
     if (FlxG.mouse.justPressed && FlxG.mouse.overlaps(pet))
     {
+        
+        FlxG.sound.play(Paths.sound('effects/squeakpet', null, PathsTestMode.LOOSE));
+
         draggingpet = true;
 
         dragOffsetX = pet.x - FlxG.mouse.x;
@@ -125,11 +130,13 @@ function onUpdate(elapsed:Float)
 
         if (boyfriend.x < leftWall)
         {
+            FlxG.sound.play(Paths.sound('effects/boing', null, PathsTestMode.LOOSE));
             boyfriend.x = leftWall;
             velX *= -0.8;
         }
         if (boyfriend.x > rightWall)
         {
+            FlxG.sound.play(Paths.sound('effects/boing', null, PathsTestMode.LOOSE));
             boyfriend.x = rightWall;
             velX *= -0.8;
         }
@@ -138,6 +145,7 @@ function onUpdate(elapsed:Float)
         velY *= 1;
         if (boyfriend.y > floorY)
         {
+            
             boyfriend.y = floorY;
             velY *= -0.75;
             velX *= 0.95;
@@ -158,6 +166,7 @@ function onUpdate(elapsed:Float)
 
     if (FlxG.mouse.justPressedRight && FlxG.mouse.overlaps(boyfriend))
     {
+        FlxG.sound.play(Paths.sound('effects/fart', null, PathsTestMode.LOOSE));
 		boyfriend.animation.play('ou', true);
         boyfriend.specialAnim = true;
 
@@ -166,7 +175,7 @@ function onUpdate(elapsed:Float)
         
         if (scaleTween != null) scaleTween.cancel();
 
-        boyfriend.scale.set(baseX * 1.5, baseY * 0.75);
+        boyfriend.scale.set(baseX * 0.01, baseY * 1.25);
 
         scaleTween = FlxTween.tween(boyfriend.scale, {x: baseX, y: baseY}, 1, {
             ease: FlxEase.elasticOut

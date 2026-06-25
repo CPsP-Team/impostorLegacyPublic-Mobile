@@ -1,4 +1,4 @@
-// Made by Dechis (dx7405), inspired from FNF Official mobile controls by FunkinCrew
+// Made by Dechis (dx7405), MaysLastPlay, inspired from FNF Official mobile controls by FunkinCrew
 
 var mobileNoteX:Array<Float> = [249, 415, 738, 904];
 var desktopNoteX:Array<Float> = [898, 985, 1075, 1163];
@@ -56,7 +56,16 @@ function noteFix():Void
 		ratingY = isMobileTouch() ? 260 : 160;
 	}
 	
-	noteScale = isMobileTouch() ? 0.70 : 0.82;
+	var isPixel:Bool = (PlayState.isPixelStage != null && PlayState.isPixelStage);
+	
+	if (isPixel) 
+	{
+		noteScale = 6.0;
+	} 
+	else 
+	{
+		noteScale = isMobileTouch() ? 0.70 : 0.82;
+	}
 	
 	for (playField in playFields)
 	{
@@ -74,6 +83,12 @@ function noteFix():Void
 			strum.x = noteX[i];
 			strum.y = laneY;
 			strum.downScroll = downscroll;
+			
+			if (isPixel)
+			{
+				strum.scale.set(noteScale, noteScale);
+				strum.updateHitbox();
+			}
 			
 			if (isPlayerField)
 			{
