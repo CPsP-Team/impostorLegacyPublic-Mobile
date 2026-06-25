@@ -154,8 +154,10 @@ class MainMenuState extends MusicBeatState
 		
 		Conductor.bpm = 102;
 		Conductor.bpmChangeMap.resize(0);
-		
+
+    #if !ios
 		FlxG.mouse.visible = true;
+    #end
 		
 		super.create();
 		
