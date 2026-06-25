@@ -138,6 +138,119 @@ class FlxMacro
 			
 		return fields;
 	}
+
+	public static macro function buildFlxPointer():Array<Field>
+	{
+		var fields:Array<Field> = Context.getBuildFields();
+
+		for (field in fields)
+		{
+			if (field.name != 'setRawPositionUnsafe') continue;
+
+			switch (field.kind)
+			{
+				case FFun(fun):
+					fun.expr = macro
+					{
+						#if ios
+						final window = flixel.FlxG.stage?.window;
+						final retinaScale = (window != null && window.scale > 0) ? window.scale : 1;
+						x *= retinaScale;
+						y *= retinaScale;
+						#end
+
+						_rawX = x / flixel.FlxG.scaleMode.scale.x;
+						_rawY = y / flixel.FlxG.scaleMode.scale.y;
+
+						updatePositions();
+					}
+				default:
+					throw "Invalid field";
+			}
+		}
+
+		return fields;
+	}
+
+	public static macro function buildFlxMouse():Array<Field>
+	{
+		var fields:Array<Field> = Context.getBuildFields();
+
+		for (field in fields)
+		{
+			if (field.name != 'update') continue;
+
+			switch (field.kind)
+			{
+				case FFun(fun):
+					fun.expr = macro
+					{
+						calculateVelocity();
+						_prevX = x;
+						_prevY = y;
+						_prevViewX = viewX;
+						_prevViewY = viewY;
+
+						#if FLX_UNIT_TEST
+						setRawPositionUnsafe(0, 0);
+						#else
+						final mouseX = flixel.FlxG.game.mouseX;
+						final mouseY = flixel.FlxG.game.mouseY;
+
+						setRawPositionUnsafe(mouseX, mouseY);
+
+						if (visible)
+						{
+							#if ios
+							final window = flixel.FlxG.stage?.window;
+							final retinaScale = (window != null && window.scale > 0) ? window.scale : 1;
+							cursorContainer.x = mouseX * retinaScale;
+							cursorContainer.y = mouseY * retinaScale;
+							#else
+							cursorContainer.x = mouseX;
+							cursorContainer.y = mouseY;
+							#end
+						}
+						#end
+
+						_leftButton.update();
+						#if FLX_MOUSE_ADVANCED
+						_middleButton.update();
+						_rightButton.update();
+						#end
+
+						if (!_wheelUsed)
+						{
+							wheel = 0;
+						}
+						_wheelUsed = false;
+						if (justPressed)
+						{
+							_startX = viewX;
+							_startY = viewY;
+						}
+
+						#if FLX_POINTER_INPUT
+						if (justReleased)
+						{
+							flickManager.initFlick(velocity);
+						}
+
+						if (pressed)
+						{
+							flickManager.destroy();
+						}
+
+						flickManager.update(flixel.FlxG.elapsed);
+						#end
+					}
+				default:
+					throw "Invalid field";
+			}
+		}
+
+		return fields;
+	}
 	
 	public static macro function buildFlxCamera():Array<Field>
 	{
