@@ -560,7 +560,7 @@
       "opt_subtitles":"Phụ đề",
       "opt_subtitles_desc":"Phụ đề sẽ xuất hiện trên màn hình khi chiếu các cắt cảnh và đoạn animation của bài hát.",
       "opt_unlockedFramerate":"Mở khóa Tốc Độ Khung Hình",
-      "opt_unlockedFramerate_desc":"Mở khóa tốc độ khung hình của trò chơi. Sử dụng nhiều hơn sức mạnh CPU nhưng có thể giúp giảm độ trễ của đầu vào.",
+      "opt_unlockedFramerate_desc":"Mở khóa tốc độ khung hình của trò chơi. Sử dụng nhiều sức mạnh CPU hơn nhưng có thể giúp giảm độ trễ của đầu vào.",
       "opt_vsyncMode":"VSync",
       "opt_vsyncMode_desc":"Đồng bộ tốc độ khung hình của trò chơi với tần số làm mới của màn hình để ngăn chặn hiện tượng xé hình.",
       "opt_backgroundStrumlines":"Đường Gân",

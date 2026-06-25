@@ -52,7 +52,7 @@ function onCreatePost()
 	{
 		petBoard.visible = true;
 	}
-	if (curSong == 'Triple Threat' || curSong == 'Turbulence' || gf.curCharacter == "triplespeaker")
+	if (curSong == 'Triple Threat' || curSong == 'Turbulence' || gf?.curCharacter == "triplespeaker")
 	{
 		pet.alpha = 0.001;
 		iconP1.changeIcon('noob49alone');

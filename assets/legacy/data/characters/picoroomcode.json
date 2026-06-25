@@ -127,7 +127,7 @@
 	"gameover_confirm_sound": "Jorsawsee_End",
 	"healthicon": "pico",
 	"afterimages": true,
-	"gameover_character": "picolobby-death",
+	"gameover_character": "picoroomcode-death",
 	"vslice_sustains": true,
 	"flip_x": true,
 	"healthbar_colour": -4728747,
