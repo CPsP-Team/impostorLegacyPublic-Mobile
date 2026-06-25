@@ -71,7 +71,7 @@ jobs:
           fi
 
       - name: Compile iOS
-        run: haxelib run lime build ios -release -nosign
+        run: haxelib run lime build ios -release -nosign -D DLC
 
       - name: Create Ipa
         run: |
