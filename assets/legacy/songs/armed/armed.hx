@@ -34,7 +34,7 @@ function onLoad()
 			endingVideo.antialiasing = ClientPrefs.globalAntialiasing;
 		});
 		endingVideo.onEnd(endSong);
-		endingVideo.load(Paths.video('henry/henryEnd'));
+		endingVideo.load(Paths.video('henry/henryend'));
 		add(endingVideo);
 		endingVideo.visible = false;
 		
