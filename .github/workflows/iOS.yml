@@ -13,12 +13,23 @@ jobs:
         with:
           haxe-version: 4.3.7
 
+      - name: Cache Haxe libraries
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.haxelib
+            ~/haxelib
+            .haxelib
+          key: ios-haxe-${{ runner.os }}-${{ hashFiles('.hxpkg', 'Project.xml', '.github/workflows/iOS.yml') }}
+          restore-keys: |
+            ios-haxe-${{ runner.os }}-
+
       - name: Set HAXEPATH
         run: echo "HAXEPATH=$HAXE_STD_PATH/.." >> $GITHUB_ENV
 
       - name: Install Libraries
         run: |
-          haxelib install hxpkg --quiet
+          haxelib path hxpkg > /dev/null 2>&1 || haxelib install hxpkg --quiet
           haxelib run hxpkg install --force
 
       - name: Build Lime Native Binaries
@@ -44,8 +55,16 @@ jobs:
               path.write_text(text)
           PY
           cd ../../../
-          haxelib run lime rebuild mac -arm64 -nocolor -eval -D HXCPP_ARM64
-          haxelib run lime rebuild ios -arm64 -nocolor -D HXCPP_ARM64
+          if [ ! -f .haxelib/lime/git/ndll/MacArm64/lime.ndll ]; then
+            haxelib run lime rebuild mac -arm64 -nocolor -eval -D HXCPP_ARM64
+          else
+            echo "Using cached MacArm64 lime.ndll"
+          fi
+          if [ ! -f .haxelib/lime/git/ndll/iPhone/liblime.iphoneos-arm64.a ]; then
+            haxelib run lime rebuild ios -arm64 -nocolor -D HXCPP_ARM64
+          else
+            echo "Using cached iPhone liblime.iphoneos-arm64.a"
+          fi
           cd "$(haxelib libpath lime)ndll/iPhone"
           if [ -f liblime.iphoneos-arm64.a ] && [ ! -e liblime.iphoneos.a ]; then
             ln -s liblime.iphoneos-arm64.a liblime.iphoneos.a
