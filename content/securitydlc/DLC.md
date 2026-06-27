@@ -24,6 +24,7 @@ The DLC is an example mod made for VS. Impostor Legacy. For a grounded guide to 
 - Greek
 - Lithuanian
 - Vietnamese
+- Indonesian
 
 # CHANGELOG
 Current version: **1.1.1b**
@@ -33,6 +34,7 @@ Current version: **1.1.1b**
 ### Changes
 - Playable Noob49 error fixed.
 - Playable JADS has learned to speak.
+- Grey's cutscene in Triple Threat now gets forced to end on time. (Allows to skip it without being blocked by the video)
 
 ## 1.1.1b (june 21 2026)
 

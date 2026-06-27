@@ -1,0 +1,158 @@
+{
+	"addon": true,
+	"lang": {
+		"cutscene_dontlied0": "*terkikih-kikih*",
+		"cutscene_dontlied1": "Kau tidak akan bisa menangkapku hari ini!",
+		"cutscene_dontlied2": "Pecundaaang!",
+		
+		"yellowspeaker_name": "Speaker Kuning",
+		"yellowspeaker_hint": "Selesaikan tugas-tugasmu!",
+		"yellowspeaker_desc": "Pls, serius dong!",
+		"blackspeaker_name": "Speaker Hitam",
+		"blackspeaker_hint": "Ancaman bagi nyawamu",
+		"blackspeaker_desc": "Mimpi terburuk mereka (hanya bagi sebagian).",
+		"whitespeaker_name": "Speaker Putih",
+		"whitespeaker_hint": "Aura baru.",
+		"whitespeaker_desc": "Sebaiknya dia gak usah sembunyi dibalik itu.",
+		"triplespeaker_name": "Speaker Triple Trouble",
+		"triplespeaker_hint": "Dapat dibuka dengan mendapatkan peringkat A atau lebih tinggi di Triple Threat.",
+		"triplespeaker_desc": "Sepertinya kamu tidak mengerti.",
+		"speakermungus_name": "Speaker Mungus & Jorsawsee",
+		"speakermungus_hint": "Bantal ternyaman.",
+		"speakermungus_desc": "Dilengkapi dengan pemain basket terkenal!",
+		"alien_name": "Alien", //alien homimid reference
+		"alien_hint": "Spesies invasif.",
+		"alien_desc": "Spesies bipedal berkulit kuning yang sangat misterius dari planet yang tidak dikenal.",
+		"aquarium_name": "Aquarium", //fish in an aquarium
+		"aquarium_hint": "Layanan Penyelamatan", //because the fish got saved
+		"aquarium_desc": "Hirup kehidupan baru!",
+		"bfweird_name": "BF Aneh",
+		"bfweird_hint": "Skin ekslusif DLC",
+		"bfweird_desc": "Ada beberapa hal terkait UPDOG di sini....", //reference to UPDOG
+		"gfweird_name": "GF Aneh",
+		"gfweird_hint": "Skin ekslusif DLC",
+		"gfweird_desc": "Penampilan Segar",
+		"birdpostor_name": "Birdpostor",
+		"birdpostor_hint": "Jangan membiarkannya mematukmu.",
+		"birdpostor_desc": "Bukankah menyenangkan, sekadar keluar dan memberi makan burung-burung!",
+		"blake_name": "Blake",
+		"blake_hint": "Astaga.",
+		"blake_desc": "Suruh orang ini naik treadmill!!",
+		"bobby_name": "Bobby",
+		"bobby_hint": "Dia jelas bukan penipu!", //https://www.youtube.com/watch?v=KByREO4gB0M&list=RDKByREO4gB0M&start_radio=1
+		"bobby_desc": "Sekalipun dia memang begitu, dia bukanlah salah satu dari mereka, karena dia memang bukan salah satu dari mereka!",
+		"chefplayable_name": "Chef",
+		"chefplayable_hint": "Terbuka setelah mendapatkan peringkat A atau lebih tinggi di Sauces Moogus.",
+		"chefplayable_desc": "Koki Kelas A.",
+		"deadnoob49_name": "Noob49 Mati",
+		"deadnoob49_hint": "Buang saja ke belakang.",
+		"deadnoob49_desc": "Orang hilang, sudah tidak hilang lagi!",
+		"detectiveplayer_name": "Detektif",
+		"detectiveplayer_hint": "Terbuka setelah mendapatkan peringkat A atau lebih tinggi pada Suspect.",
+		"detectiveplayer_desc": "Mendapatkan pengakuan dari \"rekan kru\" itu merupakan sebuah tantangan.", //reference to Crewmate Challenge (cancelled mod)
+		"evilbf_name": "BF JAHAT",
+		"evilbf_hint": "Betapa JAHATNYA seseorang?",
+		"evilbf_desc": "Astaga! Dia punya pisau!.. Itu aja.",
+		"fatogus_name": "Fatogus",
+		"fatogus_hint": "Brruuuup.",
+		"fatogus_desc": "Maap...",
+		"yellow-ghost_name": "Kuning Hantu,
+		"yellow-ghost_hint": "Bagaimana kalau kamu menyelesaikan tugas-tugasmu saja???",
+		"yellow-ghost_desc": "Mengapa dia terus mati?!",
+		"twin_name": "Kembar",
+		"twin_hint": "Sahabat karib.",
+		"twin_desc": "Selama-lamanya!",
+		"tuesdayplayable_name": "Tomongus",
+		"tuesdayplayable_hint": "Mereka membuat DIA bisa dimainkan?!",
+		"tuesdayplayable_desc": "AWWWWW",
+		"tawny_name": "Tawny",
+		"tawny_hint": "Jangan sampai tertipu.", //reference to a mod Fakeout!
+		"tawny_desc": "Begitu banyak penyiksaan.", //because i drew tawny getting tortured a lot
+		"suslet_name": "Suslet", //pokemon Wiglet
+		"suslet_hint": "Astaga, astaga",
+		"suslet_desc": "Ini adalah cacing, tetapi memiliki kaki, hanya saja sebenarnya tidak memiliki kaki.", //doesnt mean anything
+		"sneep_name": "Sneep",
+		"sneep_hint": "Anda pasti tidak ingin tahu apa yang telah dia lakukan.",
+		"sneep_desc": "Satu-satunya karakter berwarna Sneep!",
+		"shit_name": "Shit",
+		"shit_hint": "Dapat dibuka dengan mendapatkan peringkat F atau lebih tinggi di Triple Threat.",
+		"shit_desc": "Dia bukan orang yang bisa dianggap remeh.", //refence to a mod TRIFFLE
+		"rgbpet_name": "RGBPet",
+		"rgbpet_hint": "Kustomisasi? Di zaman sekarang ini?",
+		"rgbpet_desc": "Disesuaikan dengan warna karakter Anda atau warna bar kesehatan Anda.",
+		"noob49player_name": "Noob49",
+		"noob49player_hint": "Terbuka setelah menyelesaikan Pekan DLC.",
+		"noob49player_desc": "Singkirkan saja orang itu dari rekannya melalui pemungutan suara.",
+		"looksie_name": "Looksie",
+		"looksie_hint": "Mari kita lihat.",
+		"looksie_desc": "Aku akan melihat.", //both are gibberish
+		"longusgang_name": "Longus' Gang",
+		"longusgang_hint": "Datang dalam jumlah banyak.",
+		"longusgang_desc": "Tahukah kamu bahwa ketiga orang ini berpacaran selama ini?",
+		"littlermungus_name": "Littler Mungus",
+		"littlermungus_hint": "Ukurannya semakin kecil setiap kali.",
+		"littlermungus_desc": "Hari ini juga ulang tahunnya!",
+		"LIMEGREENPlayable_name": "JADSPOSTOR",
+		"LIMEGREENPlayable_hint": "HIJAU LIMAU APA???",
+		"LIMEGREENPlayable_desc": "JADS.",
+		"kickflip_name": "David Pummel",
+		"kickflip_hint": "Vontastic!", //reference to a person named Von
+		"kickflip_desc": "Luar biasa! Keren! Sempurna!", //because it does kickflips
+		"gumpymando_name": "Gumpy dan Yarlowmando",
+		"gumpymando_hint": "Jumlahnya terlalu banyak! Hentikan!!",
+		"gumpymando_desc": "Yang pertama bernama Gumpy dan yang kedua bernama Yarlowmando.",
+		"gruntus_name": "Gruntus", //grunt from madness combat
+		"gruntus_hint": "Pertarungan Kekacauan!", //madness combat
+		"gruntus_desc": "Saya- umm... Itu sudah cukup dekat... kan?",
+		"greypet_name": "Mini Kru Abu",
+		"greypet_hint": "Terbuka dengan mendapatkan peringkat A atau lebih tinggi pada 49.",
+		"greypet_desc": "Apakah itu... berpotensi menjadi pembunuh?",
+		"goldennug_name": "Nug Emas",
+		"goldennug_hint": "Buset.",
+		"goldennug_desc": "Kenapa.", //the pet costs 42000 beans
+		"tinyhenry_name": "Henry Stickmin",
+		"tinyhenry_hint": "Perampok itu, lenyap seketika.", //reference to Flash games
+		"tinyhenry_desc": "Jangan gagal!",
+		"bfblack_name": "SUSfriend", //black impostor in a bf cap playable
+		"bfblack_hint": "Itulah yang paling mendekati aslinya!",
+		"bfblack_desc": "Lari!",
+		
+		// dialogue
+		"dialogue_490": "jadi itu DLC-nya!",
+		"dialogue_491": "tolong tolong aku <:(",
+		"dialogue_492": "dimana anakku? apakah kamu melihat anakku?!??",
+		"dialogue_493": "dia disitu",
+		"dialogue_494": "Tau, bercanda aja.",
+		"dialogue_495": "tunggu",
+		"dialogue_496": "ANAK BRENGSEKMU MEMBUNUHKU",
+		"dialogue_497": "DUA KALI",
+		"dialogue_498": "Omong kosong, dia tidak akan pernah melakukan hal seperti itu!",
+		"dialogue_499": "aku tidak pernah melakukan itu.",
+		"dialogue_4910": "Itu kan?",
+		"dialogue_4911": " : (",
+		"dialogue_4912": "Tapi bisakah kamu percaya! aku mendapatkan lagu dan week sendiri!",
+		"dialogue_4913": "Sepenuhnya untuk diriku sendiri!",
+		"dialogue_4914": "Ya, semoga sukses, kawan.",
+		"dialogue_dontlied0": "whew!! Aku bersyukur bisa lolos dari Black Impostor tepat pada waktunya.",
+		"dialogue_dontlied1": "tunggu..............",
+		"dialogue_dontlied2": "Astaga!",
+		"dialogue_dontlied3": "ada Ungu!!",
+		"dialogue_dontlied4": "Aku Ungu.",
+		"dialogue_dontlied5": "aku mencintaimu Ungu",
+		"dialogue_suspect0": "Ini adalah pembantaian.", //this dialogue is unused, but might get readded in the future
+		"dialogue_suspect1": "jadi...",
+		"dialogue_suspect2": "kamu yang melakukannya?",
+		"dialogue_suspect3": "Apa?",
+		"dialogue_suspect4": "'Tentu saja tidak.",
+		"dialogue_suspect5": "Baiklah bos, lalu siapa pelakunya?",
+		"dialogue_suspect6": "Aku ada ide.",
+		"dialogue_suspect7": "Saya rasa Black yang membunuh mereka.", //black impostor
+		"dialogue_suspect8": "tapi kamu hitam", //both detective and black impostor are black among us characters
+		"dialogue_suspect9": "Hm...",
+		"dialogue_detective": "Detektif",
+		"dialogue_minigrey": "Abu Kecil",
+		"dialogue_noob49": "Noob49",
+		"dialogue_pico": "Pico",
+		"dialogue_purple": "Ungu" //gender neutral if you can (or plural yeah)
+	}
+}

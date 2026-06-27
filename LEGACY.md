@@ -44,6 +44,13 @@ Current version: **1.1.1b**
 ### Bugfixes
 - Roomcode Pico sprite has a correct gameover sprite.
 - RHM's Z-value is fixed in the greenhouse stage.
+- Polus Boyfriend's windy variant now has correct looped poses.
+- Maroon's poses are now looped.
+- Parasite Maroon's healthbar color changed for effect.
+- Fixed inconsistency with Identity Crisis doppelgänger notes. (GitHub pull)
+- Grey given a correct healthbar color.
+- A bunch of offsets were fixed.
+- Pink's Pretender death animation was fixed up.
 
 ## 1.1.1b (june 21 2026)
   

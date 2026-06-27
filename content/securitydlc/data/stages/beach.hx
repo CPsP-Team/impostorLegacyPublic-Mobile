@@ -267,7 +267,7 @@ function onCreatePost()
 	intro.onEnd(() -> {
 		camGame.alpha = 1;
 		camHUD.alpha = 1;
-		camGame.flash(0xFFFFFFFF, 0.35);
+		camGame.flash(0xFFFFFFFF, 0.4);
 		intro.kill();
 	});
 	intro.antialiasing = ClientPrefs.globalAntialiasing;
@@ -335,6 +335,14 @@ function onEvent(n, v1, v2)
 						default:
 							camCurTarget = null;
 					}
+				case 'killintro':
+					if (intro != null)
+					{
+						camGame.alpha = 1;
+						camHUD.alpha = 1;
+						intro.kill();
+						camGame.flash(FlxColor.WHITE, 0.4);
+					}
 			}
 	}
 }
@@ -400,7 +408,7 @@ if (curSong == 'Triple Threat') {
 			heartEmitter.emitting = false;
 			maroon.revive();
 			maroon.shader = rimlights.get(maroon);
-			FlxTween.tween(maroon, {x: dad.x - 150}, 1, {ease: FlxEase.quadOut});
+			FlxTween.tween(maroon, {x: maroon.x + 430}, 1, {ease: FlxEase.quadOut});
 			dad.animation.play('wow', true);
 			dad.specialAnim = true;
 			FlxTween.tween(dad, {x: dad.x + 150}, 1, {ease: FlxEase.quadOut});
@@ -416,12 +424,13 @@ if (curSong == 'Triple Threat') {
 			camSpecialThing([300, 660], [450, 660]);
 			grey.revive();
 			FlxTween.tween(dad, {x: dad.x + 75}, 1, {ease: FlxEase.quadOut});
-			maroon.x = -60;
-			maroon.y = 405;
+			maroon.x = maroon.x + 100;
+			maroon.y = maroon.y - 10;
 			grey.shader = rimlights.get(grey);
 			if (gf.curCharacter == 'gfweird'){
 	    	PlayState.instance.triggerEventNote("Change Character", "gf", "gfweird-2");}
 		case 808:
+			triggerEventNote('Legacy', 'killintro', '');
 			triggerEventNote('Alt Idle Animation', 'Dad', '-alt');
 			iconP2.changeIcon('tt2');
 			camGame.flash(ClientPrefs.flashing ? FlxColor.WHITE : FlxColor.BLACK, 0.5);
@@ -441,7 +450,6 @@ if (curSong == 'Triple Threat') {
 			if (boilingFilter != null) camGame.filters.push(boilingFilter);
 			maroon.animation.play('shift', true);
 			maroon.specialAnim = true;
-			maroon.y = maroon.y - 57;
 		case 1304:
 			boyfriend.animation.play('hey', true);
 			boyfriend.specialAnim = true;
