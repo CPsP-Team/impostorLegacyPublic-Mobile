@@ -51,6 +51,7 @@ Current version: **1.1.1b**
 - A bunch of offsets were fixed.
 - Pink's Pretender death animation was re-exported to fix effects.
 - Black's Defeat sprite was re-exported to fix effects.
+- White's halo effect was fixed.
 
 ### Changes
 - The "VICTORY" text in Victory is now translatable and in higher quality.
