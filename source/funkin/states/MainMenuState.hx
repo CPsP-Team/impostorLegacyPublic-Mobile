@@ -29,6 +29,7 @@ class MainMenuState extends MusicBeatState
 	
 	static var curMenuItem:Int = 0;
 	static var lastSmallBtn:Int = 3;
+	
 	var menuButtons:Array<FlxSprite> = [];
 	var menuLabels:Array<FlxText> = [];
 	var menuLabelBaseSizes:Array<Int> = [];
@@ -172,13 +173,14 @@ class MainMenuState extends MusicBeatState
 		updateMenuSelection();
 		
 		var shinies:Int = ProgressionUtil.getShinies();
-		for (i => shiny in menuShinies) shiny.visible = (i < shinies);
-		
+		for (i => shiny in menuShinies)
+			shiny.visible = (i < shinies);
+			
 		scriptGroup.call('onCreatePost', []);
-
-    /*    #if mobile
-		addVirtualPad(NONE, A);
-		#end*/
+		
+		/*#if mobile
+			addVirtualPad(NONE, A);
+			#end */
 	}
 	
 	var backpanel:FlxSprite;
@@ -424,22 +426,22 @@ class MainMenuState extends MusicBeatState
 		starFG.x -= 9 * elapsed;
 		
 		if (FlxG.keys.justPressed.SEVEN /*#if mobile || virtualPad.buttonA.justPressed #end*/) FlxG.switchState(new MasterEditorMenu());
-		
 		if (FlxG.keys.firstJustPressed() != FlxKey.NONE) mouseMode = false;
-		if (FlxG.mouse.justMoved) mouseMode = true;
+		#if desktop if (FlxG.mouse.justMoved) mouseMode = true; #end
 		
-		if (!lockMovement && !introActive && mouseMode)
+		if (!lockMovement && !introActive #if desktop && mouseMode #end )
 		{
 			for (i in 0...menuButtons.length)
 			{
-				if (FlxG.mouse.overlaps(menuButtons[i]))
+				if (TouchInput.justPressed(menuButtons[i]))
 				{
 					if (curMenuItem != i)
 					{
 						curMenuItem = i;
 						updateMenuSelection();
 					}
-					if (FlxG.mouse.justPressed) select();
+					/*if (FlxG.mouse.justPressed)*/
+          select();
 					break;
 				}
 			}

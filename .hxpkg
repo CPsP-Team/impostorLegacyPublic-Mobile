@@ -26,6 +26,14 @@
                 "version": "2.6.0"
             },
             {
+                "name": "format",
+                "version": "3.8.0"
+            },
+            {
+                "name": "hxp",
+                "version": "1.3.1"
+            },
+            {
                 "name": "hscript-iris",
                 "link": "https://github.com/pisayesiwsi/hscript-iris",
                 "branch": "62d828b5f9100867bb30becd5c9fa251b138ba1a"

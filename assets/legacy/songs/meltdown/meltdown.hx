@@ -63,5 +63,5 @@ function meltEnd()
 function meltdownVid()
 {
 	if (ClientPrefs.lowQuality) return;
-	if (video.load(Paths.video(Paths.sanitize('week1/meltdownEnd')))) video.delayAndStart();
+	if (video.load(Paths.video(Paths.sanitize('week1/meltdownend')))) video.delayAndStart();
 }

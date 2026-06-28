@@ -1,6 +1,7 @@
 package funkin.states.substates;
 
 import funkin.backend.MusicBeatSubstate;
+import funkin.objects.menu.AmongControls;
 
 class MissCounterSubstate extends MusicBeatSubstate
 {
@@ -16,7 +17,7 @@ class MissCounterSubstate extends MusicBeatSubstate
 	
 	var MISSES:Int;
 	var MISS_LIMIT:Int = 5;
-	
+	var bottomControls:AmongControls;
 	public var canMove = false;
 	public var onConfirm:Int->Void = null;
 	
@@ -74,7 +75,7 @@ class MissCounterSubstate extends MusicBeatSubstate
 		changeSelection(0);
 		openDeath();
 		
-		var bottomControls = new funkin.objects.menu.AmongControls([
+		bottomControls = new AmongControls([
 			['arrow', 'select'], // select
 			['enter', 'conf'], // conf
 			['esc', 'back'] // back
@@ -145,7 +146,7 @@ class MissCounterSubstate extends MusicBeatSubstate
 			}
 			
 			if (controls.ACCEPT) confirm();
-			if (controls.BACK)
+			if (controls.BACK || bottomControls.justReleasedControl(2))
 			{
 				FlxG.sound.play(Paths.sound('cancelMenu'), 0.5);
 				cancel();

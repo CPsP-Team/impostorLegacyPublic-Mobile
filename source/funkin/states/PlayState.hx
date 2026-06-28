@@ -789,6 +789,15 @@ class PlayState extends MusicBeatState
 		
 		playHUD.insert(playHUD.underlayOrder, underlays);
 		
+		#if ios
+		var pauseButton = new mobile.backend.PauseButton(0, 0, function()
+		{
+			if (!ScriptConstants.stopping(scripts.call('onPause'))) openPauseMenu();
+		});
+		add(pauseButton);
+		pauseButton.cameras = [camOther];
+		#end
+		
 		meta = Metadata.getSong();
 		
 		modManager = new ModManager(this);
@@ -3261,7 +3270,8 @@ class PlayState extends MusicBeatState
 			if (daNote.isSustainNote && !daNote.blockHit && !daNote.tooLate && !daNote.playField.autoPlayed
 				&& daNote.playField.inControl && daNote.playField.playerControls)
 			{
-				final holding:Bool = input.inputPressed(daNote.noteData);
+				final holding:Bool = input.inputPressed(daNote.noteData)
+					|| (ClientPrefs.mobileControlMode == 'Vanilla' && scripts.call('isVanillaLaneHeld', [daNote.noteData]) == true);
 				
 				if (daNote.wasGoodHit)
 				{

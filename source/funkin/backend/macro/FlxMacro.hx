@@ -138,7 +138,128 @@ class FlxMacro
 			
 		return fields;
 	}
-	
+
+	public static macro function buildFlxMouse():Array<Field>
+	{
+		var fields:Array<Field> = Context.getBuildFields();
+
+		for (field in fields)
+		{
+			if (field.name != 'update') continue;
+
+			switch (field.kind)
+			{
+				case FFun(fun):
+					final originalExpr = fun.expr;
+					fun.expr = macro
+					{
+						#if ios
+						calculateVelocity();
+						_prevX = x;
+						_prevY = y;
+						_prevViewX = viewX;
+						_prevViewY = viewY;
+
+						final rawMouseX:Float = flixel.FlxG.stage.mouseX - flixel.FlxG.scaleMode.offset.x;
+						final rawMouseY:Float = flixel.FlxG.stage.mouseY - flixel.FlxG.scaleMode.offset.y;
+						setRawPositionUnsafe(rawMouseX, rawMouseY);
+
+						if (visible)
+						{
+							cursorContainer.x = rawMouseX;
+							cursorContainer.y = rawMouseY;
+						}
+
+						_leftButton.update();
+						#if FLX_MOUSE_ADVANCED
+						_middleButton.update();
+						_rightButton.update();
+						#end
+
+						if (!_wheelUsed)
+						{
+							wheel = 0;
+						}
+						_wheelUsed = false;
+						if (justPressed)
+						{
+							_startX = viewX;
+							_startY = viewY;
+						}
+
+						#if FLX_POINTER_INPUT
+						if (justReleased)
+						{
+							flickManager.initFlick(velocity);
+						}
+
+						if (pressed)
+						{
+							flickManager.destroy();
+						}
+
+						flickManager.update(flixel.FlxG.elapsed);
+						#end
+						#else
+						$originalExpr;
+						#end
+					}
+				default:
+					throw "Invalid field";
+			}
+		}
+
+		return fields;
+	}
+
+	public static macro function buildFlxTouch():Array<Field>
+	{
+		var fields:Array<Field> = Context.getBuildFields();
+
+		for (field in fields)
+		{
+			if (field.name != 'setXY') continue;
+
+			switch (field.kind)
+			{
+				case FFun(fun):
+					final originalExpr = fun.expr;
+					fun.expr = macro
+					{
+						#if ios
+						calculateVelocity();
+
+						if (!updatePrev)
+						{
+							_prevX = x;
+							_prevY = y;
+							_prevViewX = viewX;
+							_prevViewY = viewY;
+						}
+
+						final rawTouchX:Float = X - flixel.FlxG.scaleMode.offset.x;
+						final rawTouchY:Float = Y - flixel.FlxG.scaleMode.offset.y;
+						setRawPositionUnsafe(rawTouchX, rawTouchY);
+
+						if (updatePrev)
+						{
+							_prevX = x;
+							_prevY = y;
+							_prevViewX = viewX;
+							_prevViewY = viewY;
+						}
+						#else
+						$originalExpr;
+						#end
+					}
+				default:
+					throw "Invalid field";
+			}
+		}
+
+		return fields;
+	}
+
 	public static macro function buildFlxCamera():Array<Field>
 	{
 		var fields:Array<Field> = Context.getBuildFields();

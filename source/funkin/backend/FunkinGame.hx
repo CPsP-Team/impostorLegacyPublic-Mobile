@@ -17,7 +17,10 @@ class FunkinGame extends flixel.FlxGame
 		_customSoundTray = funkin.objects.FunkinSoundTray;
 		
 		super.create(_);
-		
+    #if ios
+		FlxG.scaleMode = new flixel.system.scaleModes.RatioScaleMode();
+   FlxG.resizeGame(openfl.Lib.current.stage.stageWidth, openfl.Lib.current.stage.stageHeight);
+    #end
 		#if FLX_SOUND_SYSTEM
 		untyped FlxG.sound = new FunkinSoundFrontEnd();
 		#end
