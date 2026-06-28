@@ -101,5 +101,4 @@ jobs:
           prerelease: false
           automatic_release_tag: 'v1.0.0'
           title: 'Impostor Legacy Mobile Port'
-          # Use a wildcard to find the APK no matter what folder it is in or its exact name
           files: ${{github.workspace}}/**/*.apk
