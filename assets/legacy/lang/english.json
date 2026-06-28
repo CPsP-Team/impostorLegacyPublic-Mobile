@@ -282,6 +282,7 @@
         "o20":"WHAT",
         "o21":"WHAT THE",
         "o22":"WHAT THE F-",
+		"victory":"VICTORY",
 		
 		// cutscene
 		"cutscene_moogus0": "*splatter*",

@@ -142,6 +142,7 @@ function onCreatePost()
 	lightoverlay.blend = BlendMode.ADD;
 	lightoverlay.antialiasing = ClientPrefs.globalAntialiasing;
 	lightoverlay.zIndex = 3;
+	lightoverlay.alpha = 0.6;
 	add(lightoverlay);
 	
 	redscreen.zIndex = 3;
@@ -426,6 +427,7 @@ function onEvent(eventName, value1, value2)
 					FlxTween.tween(edgeglow1, {alpha: 0.5}, 0.7, {ease: FlxEase.quadInOut});
 					FlxTween.tween(edgeglow2, {alpha: 0.5}, 0.7, {ease: FlxEase.quadInOut});
 					FlxTween.tween(subtract, {alpha: 1}, 0.7, {ease: FlxEase.quadInOut});
+					FlxTween.tween(lightoverlay, {alpha: 0.7}, 0.7, {ease: FlxEase.quadInOut});
 				case 1:
 					FlxTween.tween(bodies, {alpha: 0}, 0.7, {ease: FlxEase.quadInOut});
 					FlxTween.tween(bodies2, {alpha: 0}, 0.7, {ease: FlxEase.quadInOut});
@@ -433,6 +435,7 @@ function onEvent(eventName, value1, value2)
 					FlxTween.tween(edgeglow1, {alpha: 0}, 0.7, {ease: FlxEase.quadInOut});
 					FlxTween.tween(edgeglow2, {alpha: 0}, 0.7, {ease: FlxEase.quadInOut});
 					FlxTween.tween(subtract, {alpha: 0}, 0.7, {ease: FlxEase.quadInOut});
+					FlxTween.tween(lightoverlay, {alpha: 0}, 0.7, {ease: FlxEase.quadInOut});
 			}
 	}
 }

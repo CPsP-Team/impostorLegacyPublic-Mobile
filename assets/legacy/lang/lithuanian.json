@@ -286,9 +286,10 @@
         "o20":"KAS",
         "o21":"KAS PER",
         "o22":"KAS PER Š-",
+		"victory":"LAIMĖJIMAS",
 		
 		// cutscene
-		"cutscene_moogus0": "*splatter*",
+		"cutscene_moogus0": "*aptaškymas*",
 		
 		"cutscene_polusending0": "MIRTAS",
 		"cutscene_polusending1": "kur",
@@ -417,10 +418,10 @@
 		"dialogue_lights2": "jums tiesiog patinka sugriauti mano planus hm..",
 		"dialogue_lights3": "jo lol pasiduok nevykeli?",
 		"dialogue_lights4": "ok tada negalesi manes atsikratyti nebent susauksi susirinkima",
-		"dialogue_lights5": "and your dumbass wants to sing your little beep boop songs instead of do anything useful",
+		"dialogue_lights5": "ir tu debile nori dainuoti savo mazas beep boop daineles uzuot dares ka nors naudingo",
 		"dialogue_lights6": "tai lengva pergale man tada",
 		"dialogue_lights7": "as dainuoju geriau nei tu",
-		"dialogue_lights8": "O NE TU SUDAS NU GANA",
+		"dialogue_lights8": "O NE SUDAI NU GANA",
 		"dialogue_mando0": "omg sveiki draugai!!",
 		"dialogue_mando1": "em sveiki..?",
 		"dialogue_mando2": "labas??",

@@ -1,7 +1,7 @@
 {
 	"lang": {
 		"cutscene_dontlied0": "*sbeffeggia*",
-		"cutscene_dontlied1": "Non mi prenderai oggi!",
+		"cutscene_dontlied1": "Non mi prenderai mai!",
 		"cutscene_dontlied2": "Sfigatoo!",
 		
 		"yellowspeaker_name": "Giallo su Casse",
@@ -38,8 +38,8 @@
         "blake_hint": "Hakuna matata ragazzi!",
         "blake_desc": "Questo Ciccio non è un Gamer.",
         "bobby_name": "Bobby",
-        "bobby_hint": "100% innocente.", //https://www.youtube.com/watch?v=KByREO4gB0M&list=RDKByREO4gB0M&start_radio=1
-        "bobby_desc": "E se non lo fosse, lo sarebbe, perchè è innocente!",
+        "bobby_hint": "E se non lo fosse, lo sarebbe, perchè è innocente!", //https://www.youtube.com/watch?v=KByREO4gB0M&list=RDKByREO4gB0M&start_radio=1
+        "bobby_desc": "100% innocente.",
         "chefplayable_name": "Chef",
         "chefplayable_hint": "Sbloccato ricevendo un voto pari o migliore di A in Sauces Moogus.",
         "chefplayable_desc": "Dieci!",
@@ -88,7 +88,7 @@
         "longusgang_name": "La Gang di Longus",
         "longusgang_hint": "Non acquistabili separatamente.",
         "longusgang_desc": "Sapevi che questi tre sono in un triangolo amoroso?",
-        "littlermungus_name": "Ancor più piccolo Mongus",
+        "littlermungus_name": "Ancor più piccolo Mongo",
         "littlermungus_hint": "Crescono così in fretta... o no.",
         "littlermungus_desc": "Buon compleanno!",
         "LIMEGREENPlayable_name": "JADSPOSTOR",

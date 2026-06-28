@@ -131,7 +131,7 @@ function onLoad()
 	bggreen.alpha = 0;
 	greentower.alpha = 0;
 	
-	platform = new FlxSprite(1340, 1090);
+	platform = new FlxSprite(1340, 1110);
 	platform.frames = Paths.getSparrowAtlas('stages/common/platform');
 	platform.animation.addByPrefix('bop', 'floating', 24, true);
 	platform.animation.play('bop');
@@ -160,12 +160,14 @@ function onCreatePost()
 	copyPet.x -= (copyPet._petOffset.x * 2);
 	copyPet.setColorTransform(1, 1, 1, 1, -16, -16, -16);
 	
+	if (Paths.fileExists('scripts/vent.hx')) initScript('scripts/vent');
 	add(copyPet);
 	
 	// cache characters
 	preloadVariant('falling');
 	preloadVariant('defeat');
-	
+	preloadVariant('windy');
+
 	addCharacterToList('greenEjected', 1);
 	addCharacterToList('monotone', 1);
 	addCharacterToList('red', 1);
@@ -185,15 +187,14 @@ function onCreatePost()
 				'singLEFT' => 'singRIGHT',
 				'danceLeft' => 'danceRight'
 			];
-			
-			for (anim in dad.animation.getAnimationList())
+			var ogAnims = dad.animation.getNameList().copy();
+			for (animName in ogAnims)
 			{
 				for (name => newName in swapAnims)
 				{
-					if (StringTools.startsWith(anim.name, name))
+					if (StringTools.startsWith(animName, name))
 					{
-						dad.swapAnims(anim.name, newName + anim.name.substr(name.length));
-						break;
+						dad.swapAnims(animName, newName + animName.substr(name.length));
 					}
 				}
 			}
@@ -315,14 +316,13 @@ function onEvent(n, v1, v2)
 					bbg.alpha = 1;
 				case 'green':
 					setVariant('falling');
-					
+					spinPet = true;
 					triggerEventNote('Change Character', 'dad', 'greenEjected');
 					bggreen.alpha = 1;
 					lightoverlay2.alpha = 0.001;
 					greentower.alpha = 1;
 					speedlines.alpha = 0.5;
 					if (hasBfSkin && boyfriend.getFlag('floating') != true) platform.alpha = 1;
-					spinPet = true;
 					greentower.y = 0.001;
 					FlxTween.tween(greentower, {y: -300}, 20);
 					bbg.alpha = 0.001;

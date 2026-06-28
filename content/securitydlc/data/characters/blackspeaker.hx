@@ -8,7 +8,7 @@ var blackkill:Character;
 
 function onGameOverStart()
 {
-	if (boyfriend.curCharacter != "noob49player") {
+	 {
 		blackkill = new Character(PlayState.instance.gf.getScreenPosition().x, PlayState.instance.gf.getScreenPosition().y, gf.curCharacter);
 		blackkill.x += gf.positionArray[0] - PlayState.instance.gf.positionArray[0];
 		blackkill.y += gf.positionArray[1] - PlayState.instance.gf.positionArray[1];
@@ -29,8 +29,11 @@ function onCreatePost()
 	if (ClientPrefs.bfSkin == 'noob49player')
 	{
 		gf.flipX = true;
-		gf.x -= 350;
-		if (curSong == 'Don\'t Lied') gf.flipX = false;
+		if (!stage.getFlag('pixel'))gf.x -= 350;
+		if (curSong == 'Don\'t Lied') {
+			gf.flipX = false;
+			gf.x += 350;
+		}
 	}
 }
 
@@ -38,19 +41,24 @@ var readyToKill = false;
 
 function onUpdatePost()
 {
-	if (health <= 0.6 && !readyToKill)
+	if (boyfriend.curCharacter != "noob49player")
 	{
-		gf.stunned = true;
-		readyToKill = true;
-		gf.playAnim('raiseKnife', true);
-		FlxTimer.wait(1.9, () -> {
-			gf.playAnim('idleKnife', true);
-		});
-	}
-	else if (health > 0.6 && readyToKill)
-	{
-		gf.stunned = false;
-		readyToKill = false;
-		gf.playAnimForDuration('lowerKnife', 0.3, true);
+		if (curSong != 'Don\'t Lied') {
+			if (health <= 0.6 && !readyToKill)
+			{
+				gf.stunned = true;
+				readyToKill = true;
+				gf.playAnim('raiseKnife', true);
+				FlxTimer.wait(1.9, () -> {
+					gf.playAnim('idleKnife', true);
+				});
+			}
+			else if (health > 0.6 && readyToKill)
+			{
+				gf.stunned = false;
+				readyToKill = false;
+				gf.playAnimForDuration('lowerKnife', 0.3, true);
+			}
+		}
 	}
 }
