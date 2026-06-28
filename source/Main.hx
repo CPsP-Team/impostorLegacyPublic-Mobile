@@ -81,10 +81,17 @@ class Main extends Sprite
 		#if android
 		FlxG.android.preventDefaultKeys = [BACK];
 		#end
-		#if ios
-		FlxG.mouse.visible = false;
-		#end
+    #if ios
+    FlxG.mouse.useSystemCursor = true;
+    lime.app.Application.current.window.scale = 1;
 
+    //lets see
+    trace(lime.app.Application.current.window.scale);
+trace(lime.app.Application.current.window.width);
+trace(lime.app.Application.current.window.height);
+trace(openfl.Lib.current.stage.stageWidth);
+trace(openfl.Lib.current.stage.stageHeight);
+    #end
 		DebugDisplay.init();
 		
 		FlxG.signals.gameResized.add(onResize);
