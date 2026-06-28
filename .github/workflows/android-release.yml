@@ -82,7 +82,8 @@ jobs:
           name: ImpostorLegacy (Android)
           path: export/release/android/bin/app/build/outputs/apk/*
           if-no-files-found: error
-     Publish:
+
+   Publish:
     needs: Android
     runs-on: ubuntu-latest
     permissions: write-all
@@ -96,8 +97,9 @@ jobs:
       - name: Publish
         uses: marvinpinto/action-automatic-releases@latest
         with:
-          repo_token: ${{secrets.GITHUB_TOKEN}}
           prerelease: false
-          automatic_release_tag: 'v1.0.0'
-          title: 'Impostor Legacy Mobile Port'
-          files: ${{github.workspace}}/ImpostorLegacy-release.apk       
+          tag_name: 'v1.0.0'
+          name: 'Impostor Legacy Mobile Port'
+          files: ${{github.workspace}}/ImpostorLegacy-release.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
