@@ -62,6 +62,8 @@ Current version: **1.1.1b**
 - Variants used more in characters.
 - The Ejected cutscene is changed if using skins.
 - Meltdown uses a correct icon in the Freeplay menu.
+- FINALE stage was simplified for Low Quality mode.
+- Who given optional captions.
 
 ## 1.1.1b (june 21 2026)
   

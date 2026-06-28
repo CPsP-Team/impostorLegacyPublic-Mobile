@@ -447,7 +447,8 @@ function victory():Void
 {
 	title.kill();
 	portrait.kill();
-	
+	portraitBorder.kill();
+
 	final r:Float = (1280 / 1920 * .9);
 	var black:FunkinSprite = new FunkinSprite().loadAtlas('credits/black');
 	
@@ -501,13 +502,17 @@ function victory():Void
 	add(black);
 	
 	var victory:FlxText = new FlxText(0, 40, 600, 'VICTORY');
-	victory.setFormat(Paths.font('vcr'), 112, 0xff80ffff, 'center');
+	victory.setFormat(Paths.font('vcr.ttf'), 112, 0xff80ffff, 'center');
+	insert(0, victory);
+	victory.text = Lang.str('victory');
 	victory.screenCenter(FlxAxes.X);
 	victory.scrollFactor.set();
 	add(victory);
 	
 	var thanks:FlxText = new FlxText(0, 600, 900, 'Thank you for playing!');
-	thanks.setFormat(Paths.font('vcr'), 56, 0xff80ffff, 'center');
+	thanks.setFormat(Paths.font('vcr.ttf'), 66, 0xff80ffff, 'center');
+	insert(0, thanks);
+	thanks.text = Lang.str('credits_thanks');
 	thanks.screenCenter(FlxAxes.X);
 	thanks.scrollFactor.set();
 	thanks.alpha = 0;
@@ -518,7 +523,7 @@ function victory():Void
 	FlxTween.tween(shadowBlockRight, {x: FlxG.width * .5 + 640}, 3, {ease: FlxEase.quadInOut, startDelay: .5});
 	FlxTween.tween(thanks, {y: 560}, 6, {ease: FlxEase.circOut, startDelay: 1});
 	FlxTween.tween(thanks, {alpha: .7}, 4, {startDelay: 1});
-	FlxTween.tween(victory, {y: 80}, 7, {ease: FlxEase.sineOut});
+	FlxTween.tween(victory, {y: 50}, 7, {ease: FlxEase.sineOut});
 	
 	camCredits.fade(FlxColor.BLACK, 2, true);
 }
