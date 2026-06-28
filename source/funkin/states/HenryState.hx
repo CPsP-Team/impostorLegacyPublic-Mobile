@@ -98,7 +98,7 @@ class HenryState extends MusicBeatState
 		});
 		add(video);
 		video.onEnd(options, true);
-		if (video.load(Paths.video('henry/henryintro'))) video.delayAndStart();
+		if (video.load(Paths.video(Paths.sanitize('henry/henryintro')))) video.delayAndStart();
 		
 		optionsObjs = [mic, sock, stare];
 	}
