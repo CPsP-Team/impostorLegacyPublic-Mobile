@@ -17,7 +17,8 @@ class Main extends Sprite
 	public static final NMV_VERSION:String = '1.0';
 	public static final FUNKIN_VERSION:String = '0.2.7';
 	public static final LEGACY_VERSION:String = '1.1.1b';
-	
+var wa:Float = 1.0;
+  
 	public static final startMeta =
 		{
 			width: 1280,
@@ -47,7 +48,12 @@ class Main extends Sprite
 		Sys.setCwd(MobileUtil.getAssetDirectory());
 		MobileUtil.copyAssets();
         #end
-		
+
+        #if ios
+        wa = lime.app.Application.current.window.scale;
+        openfl.Lib.current.stage.addEventListener(openfl.events.Event.ACTIVATE, onOpened);
+        #end
+          
 		funkin.Mods.updateModList();
 		funkin.Mods.loadTopMod();
 		
@@ -81,21 +87,7 @@ class Main extends Sprite
 		#if android
 		FlxG.android.preventDefaultKeys = [BACK];
 		#end
-    #if ios
-    //FlxG.mouse.useSystemCursor = true;
-@:privateAccess
-lime.app.Application.current.window.__scale = 1;
 
-    /*openfl.Lib.current.stage.scaleMode = openfl.display.StageScaleMode.NO_SCALE;
-openfl.Lib.current.stage.align = openfl.display.StageAlign.TOP_LEFT;*/
-    
-    //lets see
-    trace(lime.app.Application.current.window.scale);
-trace(lime.app.Application.current.window.width);
-trace(lime.app.Application.current.window.height);
-trace(openfl.Lib.current.stage.stageWidth);
-trace(openfl.Lib.current.stage.stageHeight);
-    #end
 		DebugDisplay.init();
 		
 		FlxG.signals.gameResized.add(onResize);
@@ -163,4 +155,17 @@ trace(openfl.Lib.current.stage.stageHeight);
 		haxe.ui.tooltips.ToolTipManager.defaultDelay = 200;
 		#end
 	}
+  #if ios
+    private function onOpened(e:openfl.events.Event):Void {
+
+        @:privateAccess
+        lime.app.Application.current.window.__scale = wa;
+
+        haxe.Timer.delay(function() {
+            if (flixel.FlxG.scaleMode != null && openfl.Lib.current.stage != null) {
+                flixel.FlxG.scaleMode.onMeasure(openfl.Lib.current.stage.stageWidth, openfl.Lib.current.stage.stageHeight);
+            }
+        }, 100);
+    }
+    #end
 }
