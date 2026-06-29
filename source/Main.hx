@@ -83,10 +83,11 @@ class Main extends Sprite
 		#end
     #if ios
     //FlxG.mouse.useSystemCursor = true;
-    //lime.app.Application.current.window.scale = 1;
+@:privateAccess
+lime.app.Application.current.window.__scale = 1;
 
-    openfl.Lib.current.stage.scaleMode = openfl.display.StageScaleMode.NO_SCALE;
-openfl.Lib.current.stage.align = openfl.display.StageAlign.TOP_LEFT;
+    /*openfl.Lib.current.stage.scaleMode = openfl.display.StageScaleMode.NO_SCALE;
+openfl.Lib.current.stage.align = openfl.display.StageAlign.TOP_LEFT;*/
     
     //lets see
     trace(lime.app.Application.current.window.scale);
