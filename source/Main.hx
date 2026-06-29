@@ -82,7 +82,7 @@ class Main extends Sprite
 		FlxG.android.preventDefaultKeys = [BACK];
 		#end
     #if ios
-    FlxG.mouse.useSystemCursor = true;
+    //FlxG.mouse.useSystemCursor = true;
     //lime.app.Application.current.window.scale = 1;
 
     openfl.Lib.current.stage.scaleMode = openfl.display.StageScaleMode.NO_SCALE;
