@@ -141,7 +141,7 @@
 			"flipX": false
 		},
 		{
-			"loop": true,
+			"loop": false,
 			"flipY": false,
 			"offsets": [
 				0,
@@ -154,7 +154,7 @@
 			"flipX": false
 		},
 		{
-			"loop": true,
+			"loop": false,
 			"flipY": false,
 			"offsets": [
 				0,

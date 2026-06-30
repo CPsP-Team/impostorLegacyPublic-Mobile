@@ -265,7 +265,7 @@ class FunkinScript extends IrisEx implements IFlxDestroyable
 		set("FunkinSprite", funkin.objects.FunkinSprite);
 		set("FlxTypedGroup", flixel.group.FlxGroup.FlxTypedGroup);
 		set("FlxSpriteGroup", flixel.group.FlxSpriteGroup);
-		set("FlxCamera", extensions.flixel.FlxCameraEx);
+		set("FlxCamera", flixel.FlxCamera);
 		set("FlxMath", flixel.math.FlxMath);
 		set("FlxTimer", flixel.util.FlxTimer);
 		set("FlxTween", flixel.tweens.FlxTween);
@@ -383,13 +383,10 @@ class FunkinScript extends IrisEx implements IFlxDestroyable
 			set('seenCutscene', PlayState.seenCutscene);
 			set('week', funkin.data.WeekData.weeksList[PlayState.storyMeta.curWeek]);
 			set('difficultyName', funkin.backend.Difficulty.difficulties[PlayState.storyMeta.difficulty]);
-			set('songLength', FlxG.sound.music.length);
 			set('healthGainMult', PlayState.instance.healthGain);
 			set('healthLossMult', PlayState.instance.healthLoss);
-			set('instakillOnMiss', PlayState.instance.instakillOnMiss);
 			set('botPlay', PlayState.instance.cpuControlled);
 			set('practice', PlayState.instance.practiceMode);
-			set('startedCountdown', false);
 			set('mustHitSection', PlayState.SONG?.notes[0]?.mustHitSection ?? false);
 			
 			set("global", PlayState.instance.variables);

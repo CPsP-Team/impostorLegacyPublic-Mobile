@@ -41,7 +41,14 @@ Current version: **1.1.1b**
 
 ## 1.1.2 (? 2026)
 
+### Additions
+- You can now skip time in the Pause menu, while Charting Mode is active.
+- Updated some libraries.
+	- Bumped Lime, OpenFL and Flixel versions.
+		- Seamless camera rotation with `scrollAngle` is now supported.
+
 ### Bugfixes
+- Fixed BPM and Section Beats UI behaving incorrectly in the Chart Editor.
 - Roomcode Pico sprite has a correct gameover sprite.
 - RHM's Z-value is fixed in the greenhouse stage.
 - Polus Boyfriend's windy variant now has correct looped poses.
@@ -51,8 +58,13 @@ Current version: **1.1.1b**
 - A bunch of offsets were fixed.
 - Pink's Pretender death animation was re-exported to fix effects.
 - Black's Defeat sprite was re-exported to fix effects.
+- White's halo effect was fixed.
+- Fixed some variables not working correctly in Hscript.
+- Pets are correctly scaled in Pip Towers stage.
+- Playable Green's scared animation is fixed.
 
 ### Changes
+- HUD no longer cuts off in Ejected, Turbulence and Danger.
 - The "VICTORY" text in Victory is now translatable and in higher quality.
 - Copy Pet in Identity Crisis is now in grayscale instead of an off colored filter.
 - Parasite Maroon's healthbar color changed for effect.
@@ -61,6 +73,8 @@ Current version: **1.1.1b**
 - Variants used more in characters.
 - The Ejected cutscene is changed if using skins.
 - Meltdown uses a correct icon in the Freeplay menu.
+- FINALE stage was simplified for Low Quality mode.
+- Who given optional captions.
 
 ## 1.1.1b (june 21 2026)
   
@@ -69,9 +83,8 @@ Current version: **1.1.1b**
 - Lights Down correctly changes the current character if skins are equipped.
 - Clipping in Voting Time background fixed.
 
-### For developers
-These will only affect those who work on mods for Legacy
-- All events have descriptions to hopefully note what they do.
+### For modders
+- All events now have descriptions about how they work.
 
 ## 1.1.1 (june 21 2026)
 

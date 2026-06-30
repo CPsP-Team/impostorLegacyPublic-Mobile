@@ -3,7 +3,6 @@ package funkin;
 #if !macro
 import flixel.util.FlxDestroyUtil;
 
-import extensions.flixel.FlxCameraEx;
 import extensions.flixel.FlxSoundEx;
 
 import funkin.backend.MusicBeatState;
