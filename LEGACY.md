@@ -62,6 +62,7 @@ Current version: **1.1.1b**
 - Fixed some variables not working correctly in Hscript.
 - Pets are correctly scaled in Pip Towers stage.
 - Playable Green's scared animation is fixed.
+- Dark BF's down pose plays correctly.
 
 ### Changes
 - HUD no longer cuts off in Ejected, Turbulence and Danger.
