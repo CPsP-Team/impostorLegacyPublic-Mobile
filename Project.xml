@@ -29,7 +29,6 @@
 
 	<!--Mobile-specific-->
 	<window if="mobile" orientation="landscape" fullscreen="true" resizable="false"/>
-  <window if="ios" allow-high-dpi="true"/>
 
 	<!--Switch-specific-->
 	<window if="switch" orientation="landscape" fullscreen="true" width="0" height="0" resizable="true" />
@@ -146,6 +145,7 @@
 	<haxedef name="HXCPP_STACK_LINE" if="CRASH_HANDLER"/>
 	<haxedef name="HXCPP_STACK_TRACE" if="CRASH_HANDLER"/>
 	<haxedef name="openfl-enable-handle-error" if="CRASH_HANDLER"/>
+	<haxedef name="openfl_dpi_aware" />
 
 	<!--Disables all tracing abilities. Enable this for a small performance improvement-->
 	<!-- <define name="DISABLE_TRACES" if="desktop release"/> -->
