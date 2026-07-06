@@ -26,7 +26,7 @@ function onLoad()
    whoend = new flixel.addons.text.FlxTypeText();
    whoend.setFormat(Paths.font('vcr.ttf'), 50, 0xFFFFFFFF);
    whoend.antialiasing = false;
-   whoend.resetText("Going2killevery1startingwithU was not the IMPOSTER");
+   whoend.resetText(Lang.str('who-end'));
    whoend.updateHitbox();
    whoend.x = 1100 - (whoend.frameWidth / 2);
    whoend.y = 1120;
