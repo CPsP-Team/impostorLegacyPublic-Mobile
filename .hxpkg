@@ -53,8 +53,8 @@
             },
             {
                 "name": "lime",
-                "link": "https://github.com/FunkinCrew/lime",
-                "branch": "6421de16b9dfa4fb55c19f12db65d392a57585c8"
+                "link": "https://github.com/MaysLastPlays-Stuff/lime",
+                "branch": "master"
             },
             {
                 "name": "openfl",
