@@ -73,12 +73,15 @@ jobs:
       - name: Compile iOS
         run: haxelib run lime build ios -release -nosign -D DLC
 
-      - name: Create Ipa
+      - name: Making ipa file
         run: |
-          cd export/release/ios/build/Release-iphoneos
-          mkdir -p Payload
-          mv *.app Payload
-          zip -r sus.ipa Payload
+          brew install ldid
+          cd export/release/ios/build/Release-iphoneos/ImpostorLegacy.app
+          ldid -S../../../ImpostorLegacy/ImpostorLegacy.entitlements ImpostorLegacy
+          cd ..
+          mkdir Payload
+          mv ImpostorLegacy.app Payload
+          zip -r ImpostorLegacy.ipa Payload
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v7
