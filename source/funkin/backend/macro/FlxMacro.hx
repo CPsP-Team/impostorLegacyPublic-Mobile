@@ -127,7 +127,8 @@ class FlxMacro
 	public static macro function buildFlxBasic():Array<Field>
 	{
 		var fields:Array<Field> = Context.getBuildFields();
-		
+
+   #if (flixel < "6.0.0")
 		fields.push(
 			{
 				name: "zIndex",
@@ -135,7 +136,7 @@ class FlxMacro
 				kind: FVar(macro :Int, macro $v{0}),
 				pos: Context.currentPos(),
 			});
-			
+			#end
 		return fields;
 	}
 
