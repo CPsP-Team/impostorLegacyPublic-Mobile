@@ -114,7 +114,6 @@ function onEvent(eventName, value1, value2)
 								emergency.visible = true;
 							}
 						case 1:
-							FlxG.sound.play(Paths.sound('stage/who_end'), 1);
 							new flixel.util.FlxTimer().start(1.35, function(_) whoend.start());
 							furiousRage.visible = false;
 							emergency.visible = false;
