@@ -48,11 +48,6 @@ var wa:Float = 1.0;
 		Sys.setCwd(MobileUtil.getAssetDirectory());
 		MobileUtil.copyAssets();
         #end
-
-        #if ios
-        wa = lime.app.Application.current.window.scale;
-        openfl.Lib.current.stage.addEventListener(openfl.events.Event.ACTIVATE, onOpened);
-        #end
           
 		funkin.Mods.updateModList();
 		funkin.Mods.loadTopMod();
@@ -155,17 +150,4 @@ var wa:Float = 1.0;
 		haxe.ui.tooltips.ToolTipManager.defaultDelay = 200;
 		#end
 	}
-  #if ios
-    private function onOpened(e:openfl.events.Event):Void {
-
-        @:privateAccess
-        lime.app.Application.current.window.__scale = wa;
-
-        haxe.Timer.delay(function() {
-            if (flixel.FlxG.scaleMode != null && openfl.Lib.current.stage != null) {
-                flixel.FlxG.scaleMode.onMeasure(openfl.Lib.current.stage.stageWidth, openfl.Lib.current.stage.stageHeight);
-            }
-        }, 100);
-    }
-    #end
 }
