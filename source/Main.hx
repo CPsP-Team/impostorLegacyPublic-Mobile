@@ -164,7 +164,6 @@ var wa:Float = 1.0;
     if (FlxG.sound.music != null && FlxG.sound.music.playing) FlxG.sound.music.pause();
   }
 
-  #if ios
   private function onAppOpened(e:openfl.events.Event):Void {
     if (FlxG.sound.music != null && !FlxG.sound.music.playing) FlxG.sound.music.play();
 
