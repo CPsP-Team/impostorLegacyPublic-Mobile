@@ -29,7 +29,7 @@
 
 	<!--Mobile-specific-->
 	<window if="mobile" orientation="landscape" fullscreen="true" resizable="false"/>
-	<window if="ios" allow-high-dpi="false"/>
+	<window if="ios" allow-high-dpi="true"/>
 
 	<!--Switch-specific-->
 	<window if="switch" orientation="landscape" fullscreen="true" width="0" height="0" resizable="true" />
