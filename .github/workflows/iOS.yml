@@ -34,7 +34,7 @@ jobs:
           haxelib remove lime
           haxelib remove openfl
           haxelib git https://github.com/th2l-devs/lime
-          haxelib git https://github.com/th2l-devs/openfl
+          haxelib git https://github.com/th2l-devs/openfl develop
 
       - name: Build Lime Native Binaries
         run: |
