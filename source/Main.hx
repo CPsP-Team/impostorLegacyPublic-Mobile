@@ -163,21 +163,16 @@ var wa:Float = 1.0;
 
     if (FlxG.sound.music != null && FlxG.sound.music.playing) FlxG.sound.music.pause();
   }
-  
-    private function onAppOpened(e:openfl.events.Event):Void {
-    if (FlxG.sound.music != null && !FlxG.sound.music.playing)
-        FlxG.sound.music.play();
+
+  #if ios
+  private function onAppOpened(e:openfl.events.Event):Void {
+    if (FlxG.sound.music != null && !FlxG.sound.music.playing) FlxG.sound.music.play();
 
     haxe.Timer.delay(function() {
-        if (lime.app.Application.current != null && lime.app.Application.current.window != null) {
-    var window = lime.app.Application.current.window;
-
-            @:privateAccess
-            window.__scale = window.get_scale(); 
-
-    if (flixel.FlxG.scaleMode != null && openfl.Lib.current.stage != null) flixel.FlxG.scaleMode.onMeasure(openfl.Lib.current.stage.stageWidth, openfl.Lib.current.stage.stageHeight);
+        if (FlxG.scaleMode != null && openfl.Lib.current.stage != null) {
+            FlxG.scaleMode.onMeasure(openfl.Lib.current.stage.stageWidth, openfl.Lib.current.stage.stageHeight);
         }
-    }, 150);
+    }, 150); 
 }
 #end
 
