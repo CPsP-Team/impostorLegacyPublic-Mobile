@@ -31,6 +31,10 @@ jobs:
         run: |
           haxelib path hxpkg > /dev/null 2>&1 || haxelib install hxpkg --quiet
           haxelib run hxpkg install --force
+          haxelib remove lime
+          haxelib remove openfl
+          haxelib git https://github.com/th2l-devs/lime
+          haxelib git https://github.com/th2l-devs/openfl
 
       - name: Build Lime Native Binaries
         run: |
