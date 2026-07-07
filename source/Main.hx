@@ -48,7 +48,13 @@ var wa:Float = 1.0;
 		Sys.setCwd(MobileUtil.getAssetDirectory());
 		MobileUtil.copyAssets();
         #end
-          
+
+    #if ios
+      openfl.Lib.current.stage.addEventListener(openfl.events.Event.DEACTIVATE, onAppClosed);
+    openfl.Lib.current.stage.addEventListener(openfl.events.Event.ACTIVATE, onAppOpened);
+#end
+
+    
 		funkin.Mods.updateModList();
 		funkin.Mods.loadTopMod();
 		
@@ -150,4 +156,29 @@ var wa:Float = 1.0;
 		haxe.ui.tooltips.ToolTipManager.defaultDelay = 200;
 		#end
 	}
+
+  #if ios
+    private function onAppClosed(e:openfl.events.Event):Void {
+    FlxG.autoPause = true;
+
+    if (FlxG.sound.music != null && FlxG.sound.music.playing) FlxG.sound.music.pause();
+  }
+  
+    private function onAppOpened(e:openfl.events.Event):Void {
+    if (FlxG.sound.music != null && !FlxG.sound.music.playing)
+        FlxG.sound.music.play();
+
+    haxe.Timer.delay(function() {
+        if (lime.app.Application.current != null && lime.app.Application.current.window != null) {
+    var window = lime.app.Application.current.window;
+
+            @:privateAccess
+            window.__scale = window.get_scale(); 
+
+    if (flixel.FlxG.scaleMode != null && openfl.Lib.current.stage != null) flixel.FlxG.scaleMode.onMeasure(openfl.Lib.current.stage.stageWidth, openfl.Lib.current.stage.stageHeight);
+        }
+    }, 150);
+}
+#end
+
 }
