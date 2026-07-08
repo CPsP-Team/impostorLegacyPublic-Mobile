@@ -50,8 +50,10 @@ var wa:Float = 1.0;
         #end
 
     #if ios
-      openfl.Lib.current.stage.addEventListener(openfl.events.Event.DEACTIVATE, onAppClosed);
-    openfl.Lib.current.stage.addEventListener(openfl.events.Event.ACTIVATE, onAppOpened);
+    Lib.current.stage.align = openfl.display.StageAlign.TOP_LEFT;
+    Lib.current.stage.scaleMode = openfl.display.StageScaleMode.NO_SCALE;
+    Lib.current.stage.addEventListener(openfl.events.Event.DEACTIVATE, onAppClosed);
+    Lib.current.stage.addEventListener(openfl.events.Event.ACTIVATE, onAppOpened);
 #end
 
     
