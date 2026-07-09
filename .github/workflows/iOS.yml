@@ -31,7 +31,7 @@ jobs:
         run: |
           haxelib path hxpkg > /dev/null 2>&1 || haxelib install hxpkg --quiet
           haxelib run hxpkg install --force
-          haxelih remove lime
+          haxelib remove lime
           haxelib git lime https://github.com/ShadowEngineTeam/lime
 
       - name: Compile iOS
