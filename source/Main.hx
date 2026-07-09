@@ -54,10 +54,12 @@ Lib.current.stage.addEventListener(openfl.events.Event.ENTER_FRAME, function(_) 
     if (FlxG.touches != null && FlxG.touches.list.length > 0) {
         var ihateios = FlxG.touches.list[0];
         if (FlxG.mouse != null) {
+			@:privateAccess {
             FlxG.mouse.x = ihateios.x;
             FlxG.mouse.y = ihateios.y;
             FlxG.mouse.screenX = ihateios.screenX;
             FlxG.mouse.screenY = ihateios.screenY;
+			}
         }
     }
 });
