@@ -32,7 +32,9 @@ jobs:
           haxelib path hxpkg > /dev/null 2>&1 || haxelib install hxpkg --quiet
           haxelib run hxpkg install --force
           haxelib remove lime
-          haxelib git lime https://github.com/th2l-devs/lime
+          haxelib remove openfl
+          haxelib git lime https://github.com/th2l-devs/lime beta-test
+          haxelib git openfl https://github.com/th2l-devs/openfl beta-test
 
       - name: Compile iOS
         run: haxelib run lime build ios -release -nosign -D DLC
