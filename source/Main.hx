@@ -49,6 +49,19 @@ var wa:Float = 1.0;
 		MobileUtil.copyAssets();
         #end
 
+			#if ios
+Lib.current.stage.addEventListener(openfl.events.Event.ENTER_FRAME, function(_) {
+    if (FlxG.touches != null && FlxG.touches.list.length > 0) {
+        var ihateios = FlxG.touches.list[0];
+        if (FlxG.mouse != null) {
+            FlxG.mouse.x = ihateios.x;
+            FlxG.mouse.y = ihateios.y;
+            FlxG.mouse.screenX = ihateios.screenX;
+            FlxG.mouse.screenY = ihateios.screenY;
+        }
+    }
+});
+#end
     
 		funkin.Mods.updateModList();
 		funkin.Mods.loadTopMod();
