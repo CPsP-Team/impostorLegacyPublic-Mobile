@@ -58,8 +58,7 @@
             },
             {
                 "name": "openfl",
-                "link": "https://github.com/GreenColdTea/openfl",
-                "branch": "develop"
+                "version": "9.2.2"
             },
             {
                 "name": "hxdiscord_rpc",
