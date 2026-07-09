@@ -49,13 +49,6 @@ var wa:Float = 1.0;
 		MobileUtil.copyAssets();
         #end
 
-    #if ios
-    Lib.current.stage.align = openfl.display.StageAlign.TOP_LEFT;
-    Lib.current.stage.scaleMode = openfl.display.StageScaleMode.NO_SCALE;
-    Lib.current.stage.addEventListener(openfl.events.Event.DEACTIVATE, onAppClosed);
-    Lib.current.stage.addEventListener(openfl.events.Event.ACTIVATE, onAppOpened);
-#end
-
     
 		funkin.Mods.updateModList();
 		funkin.Mods.loadTopMod();
@@ -158,23 +151,4 @@ var wa:Float = 1.0;
 		haxe.ui.tooltips.ToolTipManager.defaultDelay = 200;
 		#end
 	}
-
-  #if ios
-    private function onAppClosed(e:openfl.events.Event):Void {
-    FlxG.autoPause = true;
-
-    if (FlxG.sound.music != null && FlxG.sound.music.playing) FlxG.sound.music.pause();
-  }
-
-  private function onAppOpened(e:openfl.events.Event):Void {
-    if (FlxG.sound.music != null && !FlxG.sound.music.playing) FlxG.sound.music.play();
-
-    haxe.Timer.delay(function() {
-        if (FlxG.scaleMode != null && openfl.Lib.current.stage != null) {
-            FlxG.scaleMode.onMeasure(openfl.Lib.current.stage.stageWidth, openfl.Lib.current.stage.stageHeight);
-        }
-    }, 150); 
-}
-#end
-
 }
