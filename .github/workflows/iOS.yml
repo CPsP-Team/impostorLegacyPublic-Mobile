@@ -34,7 +34,7 @@ jobs:
           haxelib remove lime
           haxelib remove flixel-addons
           haxelib git lime https://github.com/th2l-devs/lime beta-test
-          haxelib git openfl https://github.com/th2l-devs/flixel-addons
+          haxelib git flixel-addons https://github.com/th2l-devs/flixel-addons
 
       - name: Compile iOS
         run: haxelib run lime build ios -release -nosign -D DLC
