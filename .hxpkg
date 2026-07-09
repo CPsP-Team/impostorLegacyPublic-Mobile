@@ -58,8 +58,8 @@
             },
             {
                 "name": "openfl",
-                "link": "https://github.com/MaysLastPlays-Stuff/openfl",
-                "branch": "master"
+                "link": "https://github.com/GreenColdTea/openfl",
+                "branch": "develop"
             },
             {
                 "name": "hxdiscord_rpc",
