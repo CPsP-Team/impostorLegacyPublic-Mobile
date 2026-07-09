@@ -188,6 +188,8 @@
         <java path="source" if="android"/>
     </section>
 
+   <dependency name="OpenGLES.framework" if="ios" />
+		
 	<!-- _________________________________ Custom _______________________________ -->
 
 	<icon path="projFiles/icon/icon16.png" size='16'/>
@@ -195,6 +197,3 @@
 	<icon path="projFiles/icon/icon64.png" size='64'/>
 	<icon path="projFiles/icon/iconOG.png" />
 </project>
-
-<dependency name="OpenGLES.framework" if="ios" />
-
