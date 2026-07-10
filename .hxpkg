@@ -59,7 +59,7 @@
             {
                 "name": "openfl",
                 "link": "https://github.com/FunkinCrew/openfl",
-                "branch": "b5565adc75511b3e4c8b384ee25ce7401b11ef32"
+                "branch": "master"
             },
             {
                 "name": "hxdiscord_rpc",
