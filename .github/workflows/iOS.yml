@@ -21,6 +21,44 @@ jobs:
           haxelib path hxpkg > /dev/null 2>&1 || haxelib install hxpkg --quiet
           haxelib run hxpkg install --force
 
+      - name: Build Lime Native Binaries
+        run: |
+          cd .haxelib/lime/git
+          git submodule sync --recursive
+          git submodule update --init --recursive --force
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path("project/lib/sdl_image-files.xml")
+          text = path.read_text()
+          flag = '<compilerflag value="-DSDL_IMAGE_USE_COMMON_BACKEND" />'
+          marker = '<compilerflag value="-DUSE_STBIMAGE" />'
+
+          if flag not in text:
+              if marker not in text:
+                  raise SystemExit("Could not find SDL_image compiler flag insertion point")
+              text = text.replace(
+                  marker,
+                  marker + '\n\t\t\t<compilerflag value="-DSDL_IMAGE_USE_COMMON_BACKEND" />'
+              )
+              path.write_text(text)
+          PY
+          cd ../../../
+          if [ ! -f .haxelib/lime/git/ndll/MacArm64/lime.ndll ]; then
+            haxelib run lime rebuild mac -arm64 -nocolor -eval -D HXCPP_ARM64
+          else
+            echo "Using cached MacArm64 lime.ndll"
+          fi
+          if [ ! -f .haxelib/lime/git/ndll/iPhone/liblime.iphoneos-arm64.a ]; then
+            haxelib run lime rebuild ios -arm64 -nocolor -D HXCPP_ARM64
+          else
+            echo "Using cached iPhone liblime.iphoneos-arm64.a"
+          fi
+          cd "$(haxelib libpath lime)ndll/iPhone"
+          if [ -f liblime.iphoneos-arm64.a ] && [ ! -e liblime.iphoneos.a ]; then
+            ln -s liblime.iphoneos-arm64.a liblime.iphoneos.a
+          fi
+
       - name: Compile iOS
         run: haxelib run lime build ios -release -nosign -D DLC
 
