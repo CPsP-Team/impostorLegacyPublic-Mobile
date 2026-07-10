@@ -13,17 +13,6 @@ jobs:
         with:
           haxe-version: 4.3.7
 
-      - name: Cache Haxe libraries
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.haxelib
-            ~/haxelib
-            .haxelib
-          key: ios-haxe-${{ runner.os }}-${{ hashFiles('.hxpkg', 'Project.xml', '.github/workflows/iOS.yml') }}
-          restore-keys: |
-            ios-haxe-${{ runner.os }}-
-
       - name: Set HAXEPATH
         run: echo "HAXEPATH=$HAXE_STD_PATH/.." >> $GITHUB_ENV
 
@@ -32,12 +21,7 @@ jobs:
           haxelib path hxpkg > /dev/null 2>&1 || haxelib install hxpkg --quiet
           haxelib run hxpkg install --force
           haxelib remove lime
-          haxelib remove flixel-addons
-          haxelib remove openfl
-          haxelib git lime https://github.com/th2l-devs/lime beta-test
-          haxelib git openfl https://github.com/th2l-devs/openfl beta-test
-          haxelib install flixel-addons 3.3.0
-          haxelib set flixel-addons 3.3.0
+          haxelib git lime https://github.com/PsychEngine-report/lime-FOR-NMV master
 
       - name: Compile iOS
         run: haxelib run lime build ios -release -nosign -D DLC
