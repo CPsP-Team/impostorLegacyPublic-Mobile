@@ -211,14 +211,16 @@ class MusicBeatState extends FlxUIState
 			flushPlayTime();
 			stopPlayTimeTracking();
 		});
-		
+
+    #if !ios
 		// pause/flush when alt-tabbed
 		FlxG.signals.focusLost.add(function() {
 			addPlayTimeDelta();
 			flushPlayTime();
 			stopPlayTimeTracking();
 		});
-		
+		#end
+
 		// resume timestamp on refocus
 		FlxG.signals.focusGained.add(beginPlayTimeTracking);
 	}
