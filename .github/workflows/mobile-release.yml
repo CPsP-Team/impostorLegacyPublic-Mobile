@@ -1,28 +1,29 @@
 name: Mobile Release
 
 on: workflow_dispatch
+
 jobs:
   android:
     uses: ./.github/workflows/android.yml
   ios:
     uses: ./.github/workflows/ios.yml
 
- Publish:
+  Publish:
     needs: [android, ios]
     runs-on: ubuntu-latest
     permissions: write-all
     steps:
       - name: Download Android
-        uses: actions/download-artifact@main
+        uses: actions/download-artifact@v4
         with:
-           name: ImpostorLegacy (Android)
-           path: ${{github.workspace}}
+          name: Android-Release
+          path: ${{github.workspace}}
 
       - name: Download iOS
-        uses: actions/download-artifact@main
+        uses: actions/download-artifact@v4
         with:
-           name: iOS-Release
-           path: ${{github.workspace}}
+          name: iOS-Release
+          path: ${{github.workspace}}
 
       - name: Publish
         uses: marvinpinto/action-automatic-releases@latest
@@ -31,4 +32,6 @@ jobs:
           prerelease: false
           automatic_release_tag: 'v1.0.0'
           title: 'Impostor Legacy Mobile Port'
-          files: ${{github.workspace}}/**/*.apk
+          files: |
+            ${{github.workspace}}/**/*.apk
+            ${{github.workspace}}/**/*.ipa
