@@ -185,13 +185,27 @@ class PlayField extends FlxTypedContainer<StrumNote>
 		}
 	}
 	
+	#if mobile
+	function checkArrowDownscroll():Bool {
+	    if (ClientPrefs.mobileControlMode == 'Vanilla') {
+	        return true;
+	    }
+	    
+	    if (ClientPrefs.downScroll == true) {
+	        return true;
+	    }
+	    
+	    return false;
+	}
+	#end
+	
 	public function generateReceptors()
 	{
 		clearReceptors();
 		for (data in 0...keyCount)
 		{
 			var babyArrow:StrumNote = new StrumNote(player, baseX, baseY, data, this);
-			babyArrow.downScroll = ClientPrefs.downScroll || ClientPrefs.mobileControlMode == 'Vanilla';
+			babyArrow.downScroll = #if mobile checkArrowDownscroll() #else ClientPrefs.downScroll #end;
 			babyArrow.alphaMult = alpha;
 			add(babyArrow);
 			babyArrow.postAddedToGroup();
