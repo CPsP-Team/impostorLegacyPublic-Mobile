@@ -16,7 +16,7 @@ class LaneUnderlay extends FlxSprite
 		if (ClientPrefs.laneUnderlayStyle == 'D') // fade thing
 		{
 			loadGraphic(flixel.util.FlxGradient.createGradientBitmapData(1, FlxG.height, [for (i in 0 ... 14) (i == 13 ? 0x30000000 : FlxColor.BLACK)] /* u cant set gradient stops so whatever*/));
-			flipY = ClientPrefs.downScroll;
+			flipY = ClientPrefs.downScroll || ClientPrefs.mobileControlMode == 'Vanilla';
 		}
 		else
 		{

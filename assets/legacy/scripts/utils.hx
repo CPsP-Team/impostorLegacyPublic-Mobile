@@ -187,7 +187,7 @@ function onPopUpScorePost(note, rating)
 		if (ClientPrefs.colorText == 'Enabled DX') ratingGraphic.color = scoreTxt.color;
 		
 		ratingGraphic.x = ((FlxG.width / 2) - (ratingGraphic.width / 2) + comboX);
-		ratingGraphic.y = (ClientPrefs.downScroll ? (FlxG.height - ratingGraphic.height - 50) : 55);
+		ratingGraphic.y = (ClientPrefs.downScroll || ClientPrefs.mobileControlMode == 'Vanilla' ? (FlxG.height - ratingGraphic.height - 50) : 55);
 	}
 	
 	if (ratingNumGroup != null && ratingNumGroup.members != null)
@@ -208,7 +208,7 @@ function onPopUpScorePost(note, rating)
 			if (ClientPrefs.colorText == 'Enabled DX') numScore.color = scoreTxt.color;
 			
 			numScore.x = (xOffset - (numScore.frameWidth + combosPadding) * playHUD.combosScale / 2 /* i call this the Evil factor */ + comboX);
-			numScore.y = (ClientPrefs.downScroll ? (FlxG.height - numScore.height - 117.5) : 122.5);
+			numScore.y = (ClientPrefs.downScroll || ClientPrefs.mobileControlMode == 'Vanilla' ? (FlxG.height - numScore.height - 117.5) : 122.5);
 			xOffset += ((numScore.frameWidth + combosPadding) * playHUD.combosScale);
 			
 			daLoop++;
