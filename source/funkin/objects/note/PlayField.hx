@@ -191,7 +191,7 @@ class PlayField extends FlxTypedContainer<StrumNote>
 		for (data in 0...keyCount)
 		{
 			var babyArrow:StrumNote = new StrumNote(player, baseX, baseY, data, this);
-			babyArrow.downScroll = ClientPrefs.downScroll;
+			babyArrow.downScroll = ClientPrefs.downScroll || ClientPrefs.mobileControlMode == 'Vanilla';
 			babyArrow.alphaMult = alpha;
 			add(babyArrow);
 			babyArrow.postAddedToGroup();
