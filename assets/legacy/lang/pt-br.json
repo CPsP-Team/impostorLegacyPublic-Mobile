@@ -588,7 +588,7 @@
         "opt_antialiasing": "Anti-Aliasing",
         "opt_antialiasing_desc": "Habilita anti-aliasing.",
         "opt_debugdisplaytype": "Tipo de Exibição de Debug",
-        "opt_debugdisplaytype_desc": "Assume que tipo de informação deve mostrar no canto superior esquerdo da sua tela.\nSimple mostra o FPS e Memória, e avançado mostra o mesmo junto com informação debug.\nDisabled desabilita a exibição inteiramente.",
+        "opt_debugdisplaytype_desc": "Assume que tipo de informação deve mostrar no canto superior esquerdo da sua tela.\nSimples mostra o FPS e Memória, e avançado mostra o mesmo junto com informação debug.\nDesabilitado some com a exibição inteiramente.",
         "opt_framerate": "Frames por Segundo",
         "opt_framerate_desc": "Muda o framerate no jogo.",
         "opt_hidehud": "Esconder HUD",
