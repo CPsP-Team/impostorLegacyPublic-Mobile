@@ -1,6 +1,9 @@
 name: Build Android
 
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+  workflow_call:
+  
 jobs:
    Android:
     name: Build Android
