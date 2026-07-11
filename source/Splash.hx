@@ -112,7 +112,7 @@ class Splash extends FlxState
 	
 	function complete()
 	{
-    #if (desktop && android)
+    #if (desktop || android)
 		FlxG.autoPause = _cachedAutoPause;
     #elseif ios
     FlxG.autoPause = false;
