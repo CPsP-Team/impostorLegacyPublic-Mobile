@@ -112,7 +112,11 @@ class Splash extends FlxState
 	
 	function complete()
 	{
+    #if (desktop && android)
 		FlxG.autoPause = _cachedAutoPause;
+    #elseif ios
+    FlxG.autoPause = false;
+    #end
 		FlxG.switchState(() -> Type.createInstance(Main.startMeta.initialState, []));
 	}
 }
