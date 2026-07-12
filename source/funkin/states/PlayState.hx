@@ -823,7 +823,7 @@ class PlayState extends MusicBeatState
 		botplayTxt.setFormat(Paths.DEFAULT_FONT, 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		botplayTxt.borderSize = 1.25;
 		botplayTxt.visible = cpuControlled;
-		if (ClientPrefs.downScroll || ClientPrefs.mobileControlMode == 'Vanilla') botplayTxt.y = FlxG.height - botplayTxt.height - 55;
+		if (ClientPrefs.downScroll) botplayTxt.y = FlxG.height - botplayTxt.height - 55;
 		add(botplayTxt);
 		
 		notes.cameras = [camHUD];

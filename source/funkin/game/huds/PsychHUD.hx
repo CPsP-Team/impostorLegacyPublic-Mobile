@@ -51,7 +51,7 @@ class PsychHUD extends BaseHUD
 		scoreNames = [Lang.str('score'), Lang.str('misses'), Lang.str('accuracy'), Lang.str('rank')];
 		rankStyle = ClientPrefs.hudRankDisplay;
 		
-		healthBar = new Bar(0, FlxG.height * (!ClientPrefs.downScroll || ClientPrefs.mobileControlMode == 'Vanilla' ? 0.89 : 0.11), 'healthBar', function() return healthLerp, parent.healthBounds.min, parent.healthBounds.max);
+		healthBar = new Bar(0, FlxG.height * (!ClientPrefs.downScroll ? 0.89 : 0.11), 'healthBar', function() return healthLerp, parent.healthBounds.min, parent.healthBounds.max);
 		healthBar.screenCenter(X);
 		healthBar.leftToRight = false;
 		healthBar.visible = !ClientPrefs.hideHud;
@@ -83,7 +83,7 @@ class PsychHUD extends BaseHUD
 		timeTxt.alpha = 0;
 		timeTxt.borderSize = 2;
 		timeTxt.visible = parent.updateTime = showTime;
-		if (ClientPrefs.downScroll || ClientPrefs.mobileControlMode == 'Vanilla') timeTxt.y = FlxG.height - 44;
+		if (ClientPrefs.downScroll) timeTxt.y = FlxG.height - 44;
 		if (ClientPrefs.timeBarType == 'Song Name') timeTxt.text = PlayState.SONG.song.toUpperCase();
 		
 		timeBar = new Bar(0, timeTxt.y + (timeTxt.height / 4), 'timeBar', function() return parent.songPercent, 0, 1);

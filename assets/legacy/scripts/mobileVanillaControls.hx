@@ -1,4 +1,4 @@
-// Made by Dechis (dx7405), MaysLastPlay, inspired from FNF Official mobile controls by FunkinCrew
+// Made by Dechis (dx7405), MaysLastPlay, StarNova, inspired from FNF Official mobile controls by FunkinCrew
 
 var mobileNoteX:Array<Float> = [249, 415, 738, 904];
 var desktopNoteX:Array<Float> = [898, 985, 1075, 1163];
@@ -9,9 +9,17 @@ var ratingY:Float = 160;
 var noteScale:Float = 1.0;
 var mobileLayout:Bool = true;
 var playerStrumYDelta:Array<Float> = [0, 0, 0, 0];
+var originalDownscroll:Bool = false;
+var changedDownscroll:Bool = false;
 
 function onCreatePost():Void
 {
+	if (usingVanillaMobileControls())
+	{
+		originalDownscroll = ClientPrefs.downScroll;
+		ClientPrefs.downScroll = true;
+		changedDownscroll = true;
+	}
 	noteFix();
 	createTouchLanes();
 	syncTouchLanesToPlayerStrums();
@@ -43,7 +51,7 @@ function noteFix():Void
 	if (!usingVanillaMobileControls()) return;
 	
 	var noteX:Array<Float> = isMobileTouch() ? mobileNoteX : desktopNoteX;
-	var downscroll:Bool = checkArrowDownscroll();
+	var downscroll:Bool = ClientPrefs.downScroll;
 	
 	if (downscroll)
 	{
@@ -357,19 +365,15 @@ function isMobileTouch():Bool
 	return mobileLayout && usingVanillaMobileControls();
 }
 
-function checkArrowDownscroll():Bool {
-    if (ClientPrefs.mobileControlMode == 'Vanilla') {
-        return true;
-    }
-    
-    if (ClientPrefs.downScroll == true) {
-        return true;
-    }
-    
-    return false;
-}
-
 function usingVanillaMobileControls():Bool
 {
 	return ClientPrefs.mobileControlMode == 'Vanilla';
+}
+
+function onDestroy():Void
+{
+	if (changedDownscroll)
+	{
+		ClientPrefs.downScroll = originalDownscroll;
+	}
 }

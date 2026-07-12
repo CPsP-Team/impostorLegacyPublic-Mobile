@@ -16,7 +16,7 @@ class LaneUnderlay extends FlxSprite
 		if (ClientPrefs.laneUnderlayStyle == 'D') // fade thing
 		{
 			loadGraphic(flixel.util.FlxGradient.createGradientBitmapData(1, FlxG.height, [for (i in 0 ... 14) (i == 13 ? 0x30000000 : FlxColor.BLACK)] /* u cant set gradient stops so whatever*/));
-			flipY = #if mobile checkArrowDownscroll() #else ClientPrefs.downScroll #end;
+			flipY = ClientPrefs.downScroll;
 		}
 		else
 		{
@@ -24,20 +24,6 @@ class LaneUnderlay extends FlxSprite
 			antialiasing = false;
 		}
 	}
-	
-	#if mobile
-	function checkArrowDownscroll():Bool {
-	    if (ClientPrefs.mobileControlMode == 'Vanilla') {
-	        return true;
-	    }
-	    
-	    if (ClientPrefs.downScroll == true) {
-	        return true;
-	    }
-	    
-	    return false;
-	}
-	#end
 	
 	public override function draw():Void
 	{
