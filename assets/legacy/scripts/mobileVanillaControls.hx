@@ -43,7 +43,7 @@ function noteFix():Void
 	if (!usingVanillaMobileControls()) return;
 	
 	var noteX:Array<Float> = isMobileTouch() ? mobileNoteX : desktopNoteX;
-	var downscroll:Bool = ClientPrefs.downScroll;
+	var downscroll:Bool = checkArrowDownscroll();
 	
 	if (downscroll)
 	{
@@ -355,6 +355,18 @@ function touchOverlaps(obj:FlxSprite):Bool
 function isMobileTouch():Bool
 {
 	return mobileLayout && usingVanillaMobileControls();
+}
+
+function checkArrowDownscroll():Bool {
+    if (ClientPrefs.mobileControlMode == 'Vanilla') {
+        return true;
+    }
+    
+    if (ClientPrefs.downScroll == true) {
+        return true;
+    }
+    
+    return false;
 }
 
 function usingVanillaMobileControls():Bool
