@@ -12,7 +12,7 @@ var playerStrumYDelta:Array<Float> = [0, 0, 0, 0];
 var originalDownscroll:Bool = false;
 var changedDownscroll:Bool = false;
 
-function onCreatePost():Void
+function onLoad():Void
 {
 	if (usingVanillaMobileControls())
 	{
@@ -20,6 +20,10 @@ function onCreatePost():Void
 		ClientPrefs.downScroll = true;
 		changedDownscroll = true;
 	}
+}
+
+function onCreatePost():Void
+{
 	noteFix();
 	createTouchLanes();
 	syncTouchLanesToPlayerStrums();
