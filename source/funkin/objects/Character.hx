@@ -318,7 +318,7 @@ class Character extends Bopper implements IFlags
 				specialAnim = false;
 				dance(forceDance);
 			}
-			else if ((getAnimName().endsWith('miss') || getAnimName().endsWith('miss-loop')) && holdTimer >= Conductor.stepCrotchet * 0.002 * singDuration)
+			else if (getAnimName().endsWith('miss') && holdTimer >= Conductor.stepCrotchet * 0.002 * singDuration)
 			{
 				dance(forceDance);
 				finishAnim();
