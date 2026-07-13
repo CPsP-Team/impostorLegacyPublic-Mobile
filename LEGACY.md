@@ -49,6 +49,7 @@ Current version: **1.1.1b**
 		- Seamless camera rotation with `scrollAngle` is now supported.
 
 ### Bugfixes
+- Fixed Reactor chart ending.
 - Updated conductor and section rollback code.
 	- Fixes an issue where chart data ending early resulted in camera zoom jittering.
 - Fixed BPM and Section Beats UI behaving incorrectly in the Chart Editor.
