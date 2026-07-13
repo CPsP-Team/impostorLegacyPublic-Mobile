@@ -24,14 +24,17 @@ class MusicBeatState extends FlxUIState
 	
 	public function new() super();
 	
-	private var curSection:Int = 0;
-	private var stepsToDo:Int = 0;
+	public var curSection:Int = 0;
+	public var curStep:Int = 0;
+	public var curBeat:Int = 0;
 	
-	private var curStep:Int = 0;
-	private var curBeat:Int = 0;
+	public var curSectionStep:Int = 0;
+	public var nextSectionStep:Int = 0;
 	
-	private var curDecStep:Float = 0;
-	private var curDecBeat:Float = 0;
+	public var curDecSection:Float = 0;
+	public var curDecStep:Float = 0;
+	public var curDecBeat:Float = 0;
+	
 	private var controls(get, never):Controls;
 	
 	// poppy playtime (rozebud edition)
@@ -202,20 +205,27 @@ class MusicBeatState extends FlxUIState
 		
 		final oldStep:Int = curStep;
 		
+		curDecSection = Conductor.getSection(Conductor.songPosition - ClientPrefs.noteOffset);
 		updateCurStep();
 		updateBeat();
 		
 		if (curStep > oldStep)
 		{
-			if (curStep >= 0) for (step in oldStep...curStep)
+			for (step in oldStep...curStep)
 			{
 				curStep = step + 1;
+				
 				updateBeat();
-				stepHit();
+				
+				if (curStep >= 0) stepHit();
+				
 				updateSection();
 			}
 		}
-		else if (PlayState.SONG != null) rollbackSection();
+		else if (curStep < oldStep)
+		{
+			updateSection(true);
+		}
 		
 		final scriptArgs = [elapsed];
 		scriptGroup.call('onUpdate', scriptArgs);
@@ -223,49 +233,41 @@ class MusicBeatState extends FlxUIState
 		super.update(elapsed);
 	}
 	
-	private function updateSection():Void
+	inline function updateSection(rollback:Bool = false):Void
 	{
-		if (stepsToDo < 1) stepsToDo = Math.round(getBeatsOnSection() * 4);
-		while (curStep >= stepsToDo)
-		{
-			curSection++;
-			var beats:Float = getBeatsOnSection();
-			stepsToDo += Math.round(beats * 4);
-			sectionHit();
-		}
-	}
-	
-	private function rollbackSection():Void
-	{
-		if (curStep < 0) return;
+		final lastSection:Int = curSection;
 		
-		var lastSection:Int = curSection;
-		curSection = 0;
-		stepsToDo = 0;
-		for (i in 0...PlayState.SONG.notes.length)
+		if (rollback)
 		{
-			if (PlayState.SONG.notes[i] != null)
+			curSection = Math.floor(curDecSection);
+			updateSectionStep();
+			
+			if (curSection != lastSection && curSection >= 0) sectionHit();
+		}
+		else
+		{
+			while (curStep >= nextSectionStep)
 			{
-				stepsToDo += Math.round(getBeatsOnSection() * 4);
-				if (stepsToDo > curStep) break;
+				curSection ++;
+				curSectionStep = nextSectionStep;
+				nextSectionStep += (getBeatsOnSection() * 4);
 				
-				curSection++;
+				if (curSection >= 0) sectionHit();
 			}
 		}
-		
-		if (curSection > lastSection) sectionHit();
 	}
 	
-	private function updateBeat():Void
+	inline function updateSectionStep():Void
 	{
-		curBeat = Math.floor(curStep / 4);
-		curDecBeat = curDecStep / 4;
+		curSectionStep = Math.round(Conductor.getStep(Conductor.sectionToSeconds(curSection)));
+		nextSectionStep = Math.round(Conductor.getStep(Conductor.sectionToSeconds(curSection + 1)));
 	}
 	
-	private function updateCurStep():Void
-	{
-		curStep = Math.floor(curDecStep = Conductor.getStep(Conductor.songPosition - ClientPrefs.noteOffset));
-	}
+	inline function updateBeat():Void curBeat = Math.floor(curDecBeat = curDecStep / 4);
+	
+	inline function updateCurStep():Void curStep = Math.floor(curDecStep = Conductor.getStep(Conductor.songPosition - ClientPrefs.noteOffset));
+	
+	public inline function getBeatsOnSection():Int return (PlayState.SONG?.notes[curSection]?.sectionBeats ?? 4);
 	
 	public static function getState():MusicBeatState
 	{
@@ -281,7 +283,7 @@ class MusicBeatState extends FlxUIState
 	
 	public function stepHit():Void
 	{
-		scriptGroup.call('onStepHit', []);
+		scriptGroup.call('onStepHit', [curStep]);
 		PluginsManager.callOnScripts('onStepHit');
 		
 		if (curStep % 4 == 0) beatHit();
@@ -289,19 +291,14 @@ class MusicBeatState extends FlxUIState
 	
 	public function beatHit():Void
 	{
-		scriptGroup.call('onBeatHit', []);
+		scriptGroup.call('onBeatHit', [curBeat]);
 		PluginsManager.callOnScripts('onBeatHit');
 	}
 	
 	public function sectionHit():Void
 	{
-		scriptGroup.call('onSectionHit', []);
+		scriptGroup.call('onSectionHit', [curSection]);
 		PluginsManager.callOnScripts('onSectionHit');
-	}
-	
-	function getBeatsOnSection():Float
-	{
-		return PlayState.SONG?.notes[curSection]?.sectionBeats ?? 4.0;
 	}
 	
 	override function startOutro(onOutroComplete:() -> Void)

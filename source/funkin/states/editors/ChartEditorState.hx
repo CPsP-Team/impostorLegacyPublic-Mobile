@@ -506,6 +506,13 @@ class ChartEditorState extends MusicBeatState
 		super.create();
 	}
 	
+	override function destroy():Void
+	{
+		Conductor.bpmChangeMap.resize(0);
+		
+		super.destroy();
+	}
+	
 	function createFriends()
 	{
 		// temp
