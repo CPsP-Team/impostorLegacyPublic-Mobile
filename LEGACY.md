@@ -43,11 +43,15 @@ Current version: **1.1.1b**
 
 ### Additions
 - You can now skip time in the Pause menu, while Charting Mode is active.
+- Added `curDecSection`.
 - Updated some libraries.
 	- Bumped Lime, OpenFL and Flixel versions.
 		- Seamless camera rotation with `scrollAngle` is now supported.
 
 ### Bugfixes
+- Fixed Reactor chart ending.
+- Updated conductor and section rollback code.
+	- Fixes an issue where chart data ending early resulted in camera zoom jittering.
 - Fixed BPM and Section Beats UI behaving incorrectly in the Chart Editor.
 - Roomcode Pico sprite has a correct gameover sprite.
 - RHM's Z-value is fixed in the greenhouse stage.

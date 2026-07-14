@@ -3348,6 +3348,8 @@ class PlayState extends MusicBeatState
 		FlxDestroyUtil.destroyArray(NoteUtil.noteskins);
 		NoteUtil.noteskins.resize(0);
 		
+		Conductor.bpmChangeMap.resize(0);
+		
 		super.destroy();
 	}
 	
