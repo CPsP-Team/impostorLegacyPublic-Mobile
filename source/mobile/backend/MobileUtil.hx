@@ -9,11 +9,15 @@ import extension.androidtools.Settings as AndroidSettings;
 import extension.androidtools.Tools as AndroidTools;
 import extension.androidtools.os.Build.VERSION as AndroidVersion;
 import extension.androidtools.os.Build.VERSION_CODES as AndroidVersionCode;
+
+import lime.system.JNI;
 #end
 
 import lime.system.System as LimeSystem;
 import lime.app.Application;
+
 import openfl.Assets;
+
 import haxe.io.Path;
 import haxe.io.Bytes;
 import haxe.Json;
@@ -47,6 +51,8 @@ class MobileUtil
 	public static inline function getStorageTypePath():String
 		return AndroidContext.getExternalFilesDir() + '/storagetype.txt';
 
+	private static var _getFreeSpaceMB:Dynamic = null;
+
 	public static function getCustomStorageDirectories(?doNotSeperate:Bool = false):Array<String>
 	{
 		final curJsonFile:String = getCustomStoragePath();
@@ -75,7 +81,7 @@ class MobileUtil
 		return arrayReturn;
 	}
 
-	public static var currentDirectory:String;
+	public static var currentDirectory:String = null;
 	
 	public static function initDirectory():String {
 		var daPath:String = '';
@@ -207,12 +213,46 @@ class MobileUtil
 		#end
 	}
 
+	public static function getFreeSpace(targetPath:String):Float
+    {
+        #if android
+        if (_getFreeSpaceMB == null) {
+            try {
+                _getFreeSpaceMB = JNI.createStaticMethod("mobile/backend/java/FileUtils", "getFreeSpaceMB", "(Ljava/lang/String;)D");
+            } catch (e:Dynamic) {
+                trace('JNI Error: Could not bind FileUtils.getFreeSpaceMB - $e');
+                return -1.0;
+            }
+        }
+        
+        if (_getFreeSpaceMB != null)
+            return cast _getFreeSpaceMB(targetPath);
+		
+        return -1.0;
+        #else
+        return 9999.0; 
+        #end
+    }
+
 	/**
 	 * Saves a file to the external storage using atomic save (.tmp) to prevent corruption on out-of-memory.
 	 */
 	public static function save(fileName:String = 'Ye', fileExt:String = '.txt', fileData:String = 'Nice try, but you failed, try again!', ?alert:Bool = true):Void
 	{
 		final folder:String = #if android getDirectory() + #else Sys.getCwd() + #end 'saves/';
+
+		final freeSpaceMB = getFreeSpace(folder);
+			if (freeSpaceMB != -1.0 && freeSpaceMB < 5.0) {
+				final errorMsg:String = 'Failed to save "$fileName".\n' + 
+						'Your device has only ${Std.int(freeSpaceMB)} MB of storage space left.';
+				
+				if (alert && Application.current?.window != null)
+					Application.current.window.alert(errorMsg, 'Storage Full!');
+				else
+					trace('ABORTED SAVE: $errorTitle ($freeSpaceMB MB left).');
+					
+				return; 
+			}
 
 		try {
 			if (!FileSystem.exists(folder))
@@ -223,9 +263,8 @@ class MobileUtil
 
 			File.saveContent(tempPath, fileData);
 
-			if (FileSystem.exists(targetPath)) {
+			if (FileSystem.exists(targetPath))
 				FileSystem.deleteFile(targetPath);
-			}
 
 			FileSystem.rename(tempPath, targetPath);
 
