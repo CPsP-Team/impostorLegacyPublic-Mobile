@@ -31,8 +31,23 @@ jobs:
           haxelib run lime config JAVA_HOME $JAVA_HOME_17_X64
           haxelib run lime config ANDROID_SETUP true
 
+      - name: Cache ASTC Textures
+        id: cache-astc
+        uses: actions/cache@v4
+        with:
+          path: astc-textures
+          key: ${{ runner.os }}-astc-${{ hashFiles('astc-compression-data-*.json') }}
+          restore-keys: |
+            ${{ runner.os }}-astc-
+
+      - name: Run ASTC Compressor
+        if: steps.cache-astc.outputs.cache-hit != 'true'
+        run: |
+          if [ -f "./astc-compression-data-assets.json" ]; then haxelib run astc-compressor compress-from-json -json ./astc-compression-data-assets.json; fi
+          if [ -f "./astc-compression-data-content.json" ]; then haxelib run astc-compressor compress-from-json -json ./astc-compression-data-content.json; fi
+
       - name: Compile
-        run: haxelib run lime build android -final -D DLC
+        run: haxelib run lime build android -final -D DLC -D SKIP_ASTC
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v7.0.1
