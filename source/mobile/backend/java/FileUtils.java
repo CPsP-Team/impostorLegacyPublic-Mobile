@@ -18,9 +18,9 @@ import android.util.Log;
 import java.net.HttpURLConnection;
 
 /**
- * * @Authors LumiCoder, (FNF BR) and StarNova, (Cream.BR)
+ * @Authors LumiCoder, (FNF BR) and StarNova, (Cream.BR), JustX
  * 
- * @version: 0.1.6
+ * @version: 0.1.7
  **/
 public class FileUtils extends Extension {
 
@@ -260,6 +260,17 @@ public class FileUtils extends Extension {
                 }
             }
         }).start();
+    }
+
+    public static double getFreeSpaceMB(String path) {
+        try {
+            android.os.StatFs stat = new android.os.StatFs(path);
+            long bytesAvailable = stat.getAvailableBlocksLong() * stat.getBlockSizeLong();
+            return (double) bytesAvailable / (1024.0 * 1024.0);
+        } catch (Exception e) {
+            android.util.Log.e("FileUtils", "Error getting free space: " + e.toString());
+            return -1.0;
+        }
     }
 
     public static boolean downloadFile(String fileURL, String savePath) {
