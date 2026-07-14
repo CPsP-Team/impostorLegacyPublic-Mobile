@@ -107,6 +107,11 @@
                 "name": "extension-androidtools",
                 "link": "https://github.com/LimeExtensions/extension-androidtools",
                 "branch": "main"
+            },
+            {
+                "name": "astc-compressor",
+                "link": "https://github.com/KarimAkra/astc-compressor",
+                "branch": "main"
             }
         ]
     }
