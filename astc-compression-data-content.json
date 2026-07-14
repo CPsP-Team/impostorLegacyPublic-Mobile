@@ -1,0 +1,14 @@
+{
+  "input": "./content",
+  "output": "./astc-textures/",
+  "quality": "thorough",
+  "blocksize": "6x6",
+  "colorprofile": "cs",
+  "custom": [
+    {
+      "asset": "",
+      "blocksize": "4x4"
+    }
+  ],
+  "excludes": []
+}
