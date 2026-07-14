@@ -2,8 +2,10 @@ name: Optimize PNG
 
 on:
   push:
-    branches: [experimental]
-
+    branches:
+      - main
+      - experimental
+      
 jobs:
   optimize:
     runs-on: ubuntu-latest
