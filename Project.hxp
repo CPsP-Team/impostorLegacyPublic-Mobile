@@ -303,13 +303,17 @@ class Project extends HXProject
         // Android APK signature shit
         if (isAndroid())
         {
-            certificate = new Certificate("legacy.keystore", "legacy", "legacy", "legacy");
-            this.sources.push("source");
+            this.config.set("android.keystore.path", "legacy.keystore");
+            this.config.set("android.keystore.alias", "legacy");
+            this.config.set("android.keystore.password", "legacy");
+            this.config.set("android.keystore.alias-password", "legacy");
+            
+            this.sources.push("source"); 
         }
 
         if (isIOS())
         {
-            dependency.push(new Dependency("OpenGLES.framework"));
+            this.dependencies.push(new hxp.Dependency("OpenGLES.framework"));
         }
     }
 
@@ -379,6 +383,11 @@ class Project extends HXProject
     public function isClean():Bool
     {
         return this.command == "clean";
+    }
+
+	public function setHaxedef(name:String, ?value:String)
+    {
+        haxedefs.set(name, value ?? "");
     }
 
     function addAssetRecursive(path:String, rename:String, embed:Bool = false, include:Array<String>, exclude:Array<String>, ?library:String)
