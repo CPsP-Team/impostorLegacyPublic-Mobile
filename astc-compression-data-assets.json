@@ -1,7 +1,7 @@
 {
   "input": "./assets",
   "output": "./astc-textures/",
-  "quality": "medium",
+  "quality": "thorough",
   "blocksize": "6x6",
   "colorprofile": "cs",
   "custom": [
