@@ -1,0 +1,503 @@
+package;
+
+import hxp.*;
+import lime.tools.*;
+import sys.FileSystem;
+import sys.io.File;
+import haxe.io.Path;
+
+using StringTools;
+
+class Project extends HXProject
+{
+    static final TITLE:String = "VS IMPOSTOR LEGACY";
+    static final EXECUTABLE:String = "ImpostorLegacy";
+    static final PACKAGE_NAME:String = "com.motorfrog.impostor";
+    static final VERSION:String = "0.2.7";
+    static final COMPANY:String = "MotorFrog";
+    static final MAIN_CLASS:String = "Main";
+    static final PRELOADER:String = "flixel.system.FlxPreloader";
+
+    static final SWITCH_APP_ID:String = "0x0100f6c013bbc000";
+
+    static final MODS_ALLOWED:FeatureFlag = "MODS_ALLOWED";
+    static final VIDEOS_ALLOWED:FeatureFlag = "VIDEOS_ALLOWED";
+    static final DISCORD_ALLOWED:FeatureFlag = "DISCORD_ALLOWED";
+    static final DLC:FeatureFlag = "DLC";
+    static final FEATURE_COMPRESSED_TEXTURES:FeatureFlag = "FEATURE_COMPRESSED_TEXTURES";
+    static final CRASH_HANDLER:FeatureFlag = "CRASH_HANDLER";
+
+    static var astcExcludes:Array<String> = [];
+
+    public function new()
+    {
+        super();
+
+        configureApp();
+        configureFeatureFlags();
+        configureCompileDefines();
+        configureHaxelibs();
+        configureMacros();
+        configureASTCTextures();
+        configureAssets();
+        configureIcons();
+        configurePlatformSpecific();
+    }
+
+    function configureApp()
+    {
+        this.meta.title = TITLE;
+        this.meta.version = VERSION;
+        this.meta.packageName = PACKAGE_NAME;
+        this.meta.company = COMPANY;
+
+        this.app.main = MAIN_CLASS;
+        this.app.file = EXECUTABLE;
+        this.app.preloader = PRELOADER;
+
+        this.sources.push("source");
+
+        this.window.width = 1280;
+        this.window.height = 720;
+        this.window.fps = 60;
+        this.window.background = 0xFF000000;
+        this.window.hardware = true;
+        this.window.vsync = false;
+        this.window.allowHighDPI = !(isIOS() || isMAC());
+		this.window.fullscreen = false;
+        this.window.resizable = true;
+		this.window.orientation = Orientation.LANDSCAPE;
+
+        if (isMobile())
+        {
+            this.window.fullscreen = true;
+            this.window.resizable = false;
+        }
+
+        if (isSwitch())
+        {
+            this.window.fullscreen = true;
+        }
+    }
+
+    function configureFeatureFlags()
+    {
+        MODS_ALLOWED.apply(this, isDesktop() || isMobile());
+        VIDEOS_ALLOWED.apply(this, isDesktop() || isMobile());
+        DISCORD_ALLOWED.apply(this, isDesktop());
+        DLC.apply(this, isDesktop() || isMobile());
+        CRASH_HANDLER.apply(this, true);
+
+        FEATURE_COMPRESSED_TEXTURES.apply(this, isMobile());
+    }
+
+    function configureCompileDefines()
+    {
+        Sys.putEnv("HAXEPATH", "./");
+
+        setHaxedef("SWF_VERSION", "11.8");
+        setHaxedef("LINC_LUA_RELATIVE_DYNAMIC_LIB");
+
+        setHaxedef("haxeui_dont_impose_base_class");
+        setHaxedef("haxeui_focus_out_on_click");
+        setHaxedef("FLX_NO_HEALTH");
+        setHaxedef("FLX_NO_FOCUS_LOST_SCREEN");
+        setHaxedef("message.reporting", "pretty");
+        setHaxedef("no-deprecation-warnings");
+        setHaxedef("openfl_dpi_aware");
+
+        if (debug)
+        {
+            if (defines.exists("FEATURE_DEBUG_TRACY"))
+            {
+                setHaxedef("HXCPP_TELEMETRY");
+                setHaxedef("HXCPP_TRACY");
+                setHaxedef("HXCPP_TRACY_MEMORY");
+                setHaxedef("HXCPP_TRACY_ON_DEMAND");
+                setHaxedef("absolute-paths");
+            }
+        }
+        else
+        {
+            setHaxedef("analyzer-optimize");
+            setHaxedef("FLX_NO_DEBUG");
+            setHaxedef("NAPE_RELEASE_BUILD");
+        }
+
+        setHaxedef("hscriptPos");
+
+        if (CRASH_HANDLER.isEnabled(this))
+        {
+            setHaxedef("HXCPP_CHECK_POINTER");
+            setHaxedef("HXCPP_STACK_LINE");
+            setHaxedef("HXCPP_STACK_TRACE");
+            setHaxedef("openfl-enable-handle-error");
+        }
+    }
+
+    function configureHaxelibs()
+    {
+        // engine libraries
+        haxelibs.push(new Haxelib("openfl"));
+        haxelibs.push(new Haxelib("flixel"));
+        haxelibs.push(new Haxelib("flixel-addons"));
+        haxelibs.push(new Haxelib("flixel-ui", "2.6.4"));
+        haxelibs.push(new Haxelib("hscript-iris"));
+        haxelibs.push(new Haxelib("flixel-animate"));
+        haxelibs.push(new Haxelib("moonchart"));
+        haxelibs.push(new Haxelib("haxeui-core"));
+        haxelibs.push(new Haxelib("haxeui-flixel"));
+        haxelibs.push(new Haxelib("funkin.vis"));
+        haxelibs.push(new Haxelib("grig.audio"));
+        haxelibs.push(new Haxelib("json2object"));
+        haxelibs.push(new Haxelib("json5hx"));
+
+        if (isAndroid())
+            haxelibs.push(new Haxelib("extension-androidtools"));
+
+        if (DISCORD_ALLOWED.isEnabled(this))
+            haxelibs.push(new Haxelib("hxdiscord_rpc", "1.2.4"));
+
+        if (VIDEOS_ALLOWED.isEnabled(this))
+            haxelibs.push(new Haxelib("hxvlc"));
+    }
+
+    function configureMacros()
+    {
+        haxeflags.push("--macro addMetadata('@:build(funkin.backend.macro.FlxMacro.buildFlxSprite())', 'flixel.FlxSprite')");
+        haxeflags.push("--macro addMetadata('@:build(funkin.backend.macro.FlxMacro.buildFlxBasic())', 'flixel.FlxBasic')");
+        haxeflags.push("--macro addMetadata('@:build(funkin.backend.macro.FlxMacro.buildFlxMouse())', 'flixel.input.mouse.FlxMouse')");
+        haxeflags.push("--macro addMetadata('@:build(funkin.backend.macro.FlxMacro.buildFlxTouch())', 'flixel.input.touch.FlxTouch')");
+        haxeflags.push("--macro addMetadata('@:build(funkin.backend.macro.FlxMacro.buildFlxCamera())', 'flixel.FlxCamera')");
+        haxeflags.push("--macro addMetadata('@:build(funkin.backend.macro.FlxMacro.buildFlxText())', 'flixel.text.FlxText')");
+        haxeflags.push("--macro addMetadata('@:build(funkin.backend.macro.FlxMacro.buildFlxGraphic())', 'flixel.graphics.FlxGraphic')");
+        haxeflags.push("--macro addMetadata('@:build(funkin.backend.macro.FlxMacro.buildFlxDrawBaseItem())', 'flixel.graphics.tile.FlxDrawBaseItem')");
+        haxeflags.push("--macro addMetadata('@:build(funkin.backend.macro.FlxMacro.buildFlxDrawItem())', 'flixel.graphics.tile.FlxDrawQuadsItem')");
+        haxeflags.push("--macro addMetadata('@:build(funkin.backend.macro.FlxMacro.buildFlxDrawItem())', 'flixel.graphics.tile.FlxDrawTrianglesItem')");
+
+        if (VIDEOS_ALLOWED.isEnabled(this))
+            haxeflags.push("--macro addMetadata('@:nullSafety(Off)', 'hxvlc.openfl.Video')");
+
+        haxeflags.push("--macro include('funkin')");
+        haxeflags.push("--macro include('flixel', true, ['flixel.addons.nape.*','flixel.addons.editors.*','flixel.addons.tile.FlxRayCastTilemap','flixel.system.macros'])");
+
+        haxeflags.push("-dce no");
+    }
+
+    function configureAssets()
+    {
+        assets = [];
+
+        function addAssetPath(path:String, rename:String, embed:Bool = false, exclude:Array<String> = null)
+        {
+            if (FileSystem.exists(path))
+                addAssetRecursive(path, rename, embed, ["*"], exclude ?? []);
+        }
+
+        if (FileSystem.exists("LEGACY.md"))
+            assets.push(new Asset("LEGACY.md", "CHANGELOG.md"));
+
+        Sys.println(" INFO : INCLUDING ASSETS!!");
+        if (DLC.isEnabled(this))
+            Sys.println(" INFO : INCLUDING DLC!!");
+
+        if (MODS_ALLOWED.isEnabled(this) && DLC.isEnabled(this))
+            addAssetPath("content/securitydlc", "content/securitydlc", false);
+
+        addAssetPath("assets/embeds", "assets", !isMobile());
+        addAssetPath("assets/legacy", "assets", false);
+        addAssetPath("assets", "assets", false, ["*.ttf", "*.otf", "*.txt"]);
+    }
+
+    function configureASTCTextures()
+    {
+        if (!(isDisplay() || isClean()))
+        {
+            readASTCExclusion();
+            if (FEATURE_COMPRESSED_TEXTURES.isEnabled(this))
+            {
+                runASTCCompressor();
+            }
+        }
+    }
+
+    public function readASTCExclusion():Void
+    {
+        astcExcludes = [];
+        for (jsonFile in ['./astc-compression-data-assets.json', './astc-compression-data-content.json']) {
+            if (FileSystem.exists(jsonFile))
+            {
+                @:nullSafety(Off)
+                var parsedData = haxe.Json.parse(File.getContent(jsonFile));
+                if (parsedData != null && parsedData.excludes != null) {
+                    var excludes:Array<String> = parsedData.excludes;
+                    for (i in 0...excludes.length)
+                        astcExcludes.push(excludes[i].trim());
+                }
+            }
+        }
+    }
+
+    public function isASTCExcluded(file:String):Bool
+    {
+        for (exclusion in astcExcludes)
+        {
+            if (exclusion.endsWith("/"))
+            {
+                var normalizedFilePath = Path.normalize(file);
+                var normalizedExclusion = Path.normalize(exclusion);
+                if (normalizedFilePath.startsWith(normalizedExclusion)) return true;
+            }
+            else if (exclusion.endsWith("/*"))
+            {
+                var normalizedExclusion = Path.normalize(exclusion.substr(0, exclusion.length - 2));
+                var fileDirectory = Path.directory(Path.normalize(file));
+                if (fileDirectory == normalizedExclusion) return true;
+            }
+            else
+            {
+                if (file == exclusion) return true;
+            }
+        }
+        return false;
+    }
+
+    public function runASTCCompressor():Void
+    {
+        Sys.println(' INFO : Compressing ASTC textures...');
+        for (jsonFile in ['./astc-compression-data-assets.json', './astc-compression-data-content.json']) {
+            if (FileSystem.exists(jsonFile)) {
+                Sys.command('haxelib', ['run', 'astc-compressor', 'compress-from-json', '-json', jsonFile]);
+            }
+        }
+        Sys.println(' INFO : Done compressing ASTC textures.');
+    }
+
+    function configureIcons()
+    {
+        if (FileSystem.exists("projFiles/icon/icon16.png"))
+            icons.push(new Icon("projFiles/icon/icon16.png", 16));
+        if (FileSystem.exists("projFiles/icon/icon32.png"))
+            icons.push(new Icon("projFiles/icon/icon32.png", 32));
+        if (FileSystem.exists("projFiles/icon/icon64.png"))
+            icons.push(new Icon("projFiles/icon/icon64.png", 64));
+        if (FileSystem.exists("projFiles/icon/iconOG.png"))
+            icons.push(new Icon("projFiles/icon/iconOG.png"));
+    }
+
+    function configurePlatformSpecific()
+    {
+        var buildDir = "export/release";
+        if (debug)
+            buildDir = "export/debug";
+        if (defines.exists("32bits"))
+            buildDir = "export/32bit";
+        if (defines.exists("FEATURE_DEBUG_TRACY"))
+            buildDir += "-tracy";
+
+        app.path = buildDir;
+
+        if (isSwitch())
+            setHaxedef("APP_ID", SWITCH_APP_ID);
+
+        // Android APK signature shit
+        if (isAndroid())
+        {
+            certificate = new Certificate("legacy.keystore", "legacy", "legacy", "legacy");
+            this.sources.push("source");
+        }
+
+        if (isIOS())
+        {
+            dependency.push(new Dependency("OpenGLES.framework"));
+        }
+    }
+
+    public function isWeb():Bool
+    {
+        return target == Platform.HTML5;
+    }
+
+    public function isDesktop():Bool
+    {
+        return switch (target)
+        {
+            case Platform.WINDOWS, Platform.MAC, Platform.LINUX: true;
+            default: false;
+        }
+    }
+
+    public function isMobile():Bool
+    {
+        return switch (target)
+        {
+            case Platform.ANDROID, Platform.IOS: true;
+            default: false;
+        }
+    }
+
+    public function isSwitch():Bool
+    {
+        return defines.exists("switch");
+    }
+
+    public function isCPP():Bool
+    {
+        return defines.exists("cpp");
+    }
+
+    public function isWindows():Bool
+    {
+        return target == Platform.WINDOWS;
+    }
+
+    public function isLinux():Bool
+    {
+        return target == Platform.LINUX;
+    }
+
+    public function isMac():Bool
+    {
+        return target == Platform.MAC;
+    }
+
+    public function isAndroid():Bool
+    {
+        return target == Platform.ANDROID;
+    }
+
+    public function isIOS():Bool
+    {
+        return target == Platform.IOS;
+    }
+
+    public function isDisplay():Bool
+    {
+        return this.command == "display";
+    }
+
+    public function isClean():Bool
+    {
+        return this.command == "clean";
+    }
+
+    function addAssetRecursive(path:String, rename:String, embed:Bool = false, include:Array<String>, exclude:Array<String>, ?library:String)
+    {
+        for (file in FileSystem.readDirectory(path)) {
+            var fullPath = Path.join([path, file]);
+            var targetPath = Path.join([rename, file]);
+
+            var isDir:Bool = false;
+            try { isDir = FileSystem.isDirectory(fullPath); } catch (e:Dynamic) { continue; }
+
+            if (isDir) {
+                if (filterFile(file, include, exclude))
+                    addAssetRecursive(fullPath, targetPath, embed, include, exclude, library);
+            } else {
+                if (filterFile(file, include, exclude)) {
+                    if (Path.extension(fullPath) == 'png' && FEATURE_COMPRESSED_TEXTURES.isEnabled(this)) {
+                        final astcPath:String = "astc-textures/" + fullPath.substr(0, fullPath.length - 3) + "astc";
+                        if (!isASTCExcluded(fullPath) && FileSystem.exists(astcPath)) {
+                            fullPath = astcPath;
+                            targetPath = targetPath.substr(0, targetPath.length - 3) + "astc";
+                        }
+                    }
+
+                    var asset = new Asset(fullPath, targetPath);
+                    asset.library = library;
+                    asset.embed = embed;
+                    assets.push(asset);
+                }
+            }
+        }
+    }
+
+    function filterFile(file:String, include:Array<String>, exclude:Array<String>):Bool
+    {
+        for (pattern in exclude)
+            if (matchesPattern(file, pattern)) return false;
+        for (pattern in include)
+            if (matchesPattern(file, pattern)) return true;
+        return false;
+    }
+
+    function matchesPattern(file:String, pattern:String):Bool
+    {
+        if (pattern == "*") return true;
+        if (pattern == file) return true;
+
+        if (pattern.indexOf("*") != -1)
+        {
+            var regex = new EReg(StringTools.replace(pattern, ".", "\\.").replace("*", ".*"), "");
+            return regex.match(file);
+        }
+
+        return false;
+    }
+}
+
+abstract FeatureFlag(String) from String to String
+{
+    static final INVERSE_PREFIX:String = "NO_";
+
+    public function new(input:String)
+    {
+        this = input;
+    }
+
+    @:from
+    public static function fromString(input:String):FeatureFlag
+    {
+        return new FeatureFlag(input);
+    }
+
+    public function apply(project:Project, enableByDefault:Bool = false):Void
+    {
+        if (isEnabled(project))
+        {
+            getInverse().disable(project, false);
+        }
+        else if (getInverse().isEnabled(project))
+        {
+            disable(project, false);
+        }
+        else
+        {
+            if (enableByDefault)
+                enable(project, true);
+            else
+                disable(project, true);
+        }
+    }
+
+    public function enable(project:Project, andInverse:Bool = true)
+    {
+        project.haxedefs.set(this, "");
+        if (andInverse)
+            getInverse().disable(project, false);
+    }
+
+    public function disable(project:Project, andInverse:Bool = true)
+    {
+        project.haxedefs.remove(this);
+        if (andInverse)
+            getInverse().enable(project, false);
+    }
+
+    public function isEnabled(project:Project):Bool
+    {
+        return project.haxedefs.exists(this) || project.defines.exists(this);
+    }
+
+    public function isDisabled(project:Project):Bool
+    {
+        return getInverse().isEnabled(project);
+    }
+
+    public function getInverse():FeatureFlag
+    {
+        if (this.startsWith(INVERSE_PREFIX))
+            return this.substring(INVERSE_PREFIX.length);
+        return INVERSE_PREFIX + this;
+    }
+}
