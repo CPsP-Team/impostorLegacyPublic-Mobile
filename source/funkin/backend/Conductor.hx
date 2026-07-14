@@ -65,31 +65,35 @@ class Conductor
 	public static function getCrotchetAtTime(time:Float)
 	{
 		var lastChange = getBPMFromSeconds(time);
-		return lastChange.stepCrotchet * 4;
+		return (lastChange.stepCrotchet * 4);
 	}
 	
 	public static function getBPMFromSeconds(time:Float)
 	{
-		var lastChange:BPMChangeEvent = null;
+		mapBPMFailsafe();
+		
+		var lastChange:BPMChangeEvent = bpmChangeMap[0];
 		
 		for (change in bpmChangeMap) {
 			if (time >= change.songTime || lastChange == null)
 				lastChange = change;
 		}
 		
-		return (lastChange ?? {bpm: Conductor.bpm, stepTime: 0, songTime: 0, sectionBeats: 4, stepCrotchet: calculateCrochet(Conductor.bpm) * .25});
+		return lastChange;
 	}
 	
 	public static function getBPMFromStep(step:Float)
 	{
-		var lastChange:BPMChangeEvent = null;
+		mapBPMFailsafe();
+		
+		var lastChange:BPMChangeEvent = bpmChangeMap[0];
 		
 		for (change in bpmChangeMap) {
 			if (step >= change.stepTime || lastChange == null)
 				lastChange = change;
 		}
 		
-		return (lastChange ?? {bpm: Conductor.bpm, stepTime: 0, songTime: 0, sectionBeats: 4, stepCrotchet: calculateCrochet(Conductor.bpm) * .25});
+		return lastChange;
 	}
 	
 	public static function stepToSeconds(step:Float):Float
@@ -105,6 +109,8 @@ class Conductor
 	}
 	
 	public static function sectionToSeconds(section:Float):Float {
+		mapBPMFailsafe();
+		
 		var curSectionBeats:Int = bpmChangeMap[0].sectionBeats;
 		var curBPM:Float = bpmChangeMap[0].bpm;
 		
@@ -151,7 +157,9 @@ class Conductor
 		return Math.floor(getStepRounded(time) / 4);
 	}
 	
-	public static function getSection(time:Float):Float { // psych's conductor is such a brainfuck
+	public static function getSection(time:Float):Float {
+		mapBPMFailsafe();
+		
 		var curSectionBeats:Int = bpmChangeMap[0].sectionBeats;
 		var curBPM:Float = bpmChangeMap[0].bpm;
 		
@@ -161,14 +169,14 @@ class Conductor
 		for (change in bpmChangeMap) {
 			if (change.songTime >= time) break;
 			
-			lastSection += ((change.songTime - lastTime) / calculateCrochet(curBPM * curSectionBeats));
+			lastSection += ((change.songTime - lastTime) / calculateCrochet(curBPM) / curSectionBeats);
 			lastTime = change.songTime;
 			
 			curBPM = change.bpm;
 			curSectionBeats = change.sectionBeats;
 		}
 		
-		return ((time - lastTime) / calculateCrochet(curBPM * curSectionBeats) + lastSection);
+		return ((time - lastTime) / calculateCrochet(curBPM) / curSectionBeats + lastSection);
 	}
 	
 	public inline static function getSectionRounded(time:Float):Int
@@ -210,7 +218,7 @@ class Conductor
 					stepTime: totalSteps,
 					songTime: totalPos,
 					bpm: curBPM,
-					stepCrotchet: calculateCrochet(curBPM) / 4
+					stepCrotchet: calculateCrochet(curBPM) * .25
 				});
 			}
 
@@ -218,6 +226,12 @@ class Conductor
 			totalSteps += deltaSteps;
 			totalPos += ((60 / curBPM) * 1000 / 4) * deltaSteps;
 		}
+	}
+	
+	public inline static function mapBPMFailsafe():Void
+	{
+		if (bpmChangeMap == null || bpmChangeMap.length == 0)
+			bpmChangeMap = defaultBPMChangeMap(Conductor.bpm);
 	}
 	
 	public inline static function defaultBPMChangeMap(bpm:Float = 100, sectionBeats:Int = 4):Array<BPMChangeEvent> {
@@ -230,23 +244,27 @@ class Conductor
 		}];
 	}
 	
-	static function getSectionBeats(song:Song, section:Int):Int
+	static function getSectionBeats(song:Null<Song>, section:Int):Int
 	{
-		var val:Null<Int> = null;
-		if (song.notes[section] != null) val = song.notes[section].sectionBeats;
-		return (val != null ? val : 4);
+		return (song?.notes[section]?.sectionBeats ?? 4);
 	}
 	
-	inline public static function calculateCrochet(bpm:Float)
+	public inline static function calculateCrochet(bpm:Float)
 	{
 		return (60000 / bpm);
 	}
 	
 	static function set_bpm(value:Float):Float
 	{
+		/* idk probably not var curChange = getBPMFromSeconds(0);
+		if (curChange.bpm == bpm)
+		{
+			curChange.bpm = value;
+			curChange.stepCrotchet = (calculateCrochet(bpm) * .25);
+		}*/
+		
 		bpm = value;
-		crotchet = calculateCrochet(bpm);
-		stepCrotchet = crotchet / 4;
+		stepCrotchet = ((crotchet = calculateCrochet(bpm)) * .25);
 		
 		return bpm;
 	}
