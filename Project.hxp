@@ -307,8 +307,6 @@ class Project extends HXProject
             this.config.set("android.keystore.alias", "legacy");
             this.config.set("android.keystore.password", "legacy");
             this.config.set("android.keystore.alias-password", "legacy");
-
-			this.javaPaths.push("java_stuff");
             
             this.sources.push("source"); 
         }
