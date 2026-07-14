@@ -2,7 +2,7 @@ name: Optimize PNG
 
 on:
   push:
-    branches: [main]
+    branches: [experimental]
 
 jobs:
   optimize:
