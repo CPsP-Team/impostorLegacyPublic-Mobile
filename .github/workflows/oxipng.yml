@@ -1,0 +1,25 @@
+name: Optimize PNG
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  optimize:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: oxipng
+
+      - run: oxipng -o max --strip safe -r .
+
+      - uses: peter-evans/create-pull-request@v7
+        with:
+          commit-message: "Optimize PNG with oxipng"
+          title: "Optimize PNG assets"
+          body: "Automatically optimized PNG images."
+          branch: bot/oxipng
