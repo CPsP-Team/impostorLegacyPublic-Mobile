@@ -311,9 +311,9 @@ class Project extends HXProject
             this.sources.push("source"); 
         }
 
-       if (isIOS())
+        if (isIOS())
         {
-            this.dependencies.push(new lime.tools.Dependency("OpenGLES.framework"));
+            this.dependencies.push(new lime.tools.Dependency("OpenGLES.framework", ""));
         }
     }
 
