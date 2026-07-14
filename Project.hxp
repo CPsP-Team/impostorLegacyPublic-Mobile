@@ -63,7 +63,7 @@ class Project extends HXProject
         this.window.background = 0xFF000000;
         this.window.hardware = true;
         this.window.vsync = false;
-        this.window.allowHighDPI = !(isIOS() || isMAC());
+        this.window.allowHighDPI = !(isIOS() || isMac());
 		this.window.fullscreen = false;
         this.window.resizable = true;
 		this.window.orientation = Orientation.LANDSCAPE;
