@@ -243,11 +243,12 @@ class MobileUtil
 
 		final freeSpaceMB = getFreeSpace(folder);
 			if (freeSpaceMB != -1.0 && freeSpaceMB < 5.0) {
+				final errorTitle:String = 'Storage Full!';
 				final errorMsg:String = 'Failed to save "$fileName".\n' + 
 						'Your device has only ${Std.int(freeSpaceMB)} MB of storage space left.';
 				
 				if (alert && Application.current?.window != null)
-					Application.current.window.alert(errorMsg, 'Storage Full!');
+					Application.current.window.alert(errorMsg, errorTitle);
 				else
 					trace('ABORTED SAVE: $errorTitle ($freeSpaceMB MB left).');
 					
