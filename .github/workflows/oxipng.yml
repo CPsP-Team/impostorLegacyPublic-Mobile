@@ -1,10 +1,6 @@
 name: Optimize PNG
 
-on:
-  push:
-    branches:
-      - main
-      - experimental
+on: workflow_dispatch
       
 jobs:
   optimize:
