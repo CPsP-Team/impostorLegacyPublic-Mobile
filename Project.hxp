@@ -214,7 +214,7 @@ class Project extends HXProject
         if (!(isDisplay() || isClean()))
         {
             readASTCExclusion();
-            if (FEATURE_COMPRESSED_TEXTURES.isEnabled(this))
+            if (FEATURE_COMPRESSED_TEXTURES.isEnabled(this) && !defines.exists("SKIP_ASTC"))
             {
                 runASTCCompressor();
             }
