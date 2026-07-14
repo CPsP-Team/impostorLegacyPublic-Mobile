@@ -12,13 +12,13 @@ import extension.androidtools.os.Build.VERSION_CODES as AndroidVersionCode;
 #end
 
 import lime.system.System as LimeSystem;
-import haxe.io.Path;
-import haxe.Exception;
-
-import lime.system.System;
 import lime.app.Application;
 import openfl.Assets;
+import haxe.io.Path;
 import haxe.io.Bytes;
+import haxe.Json;
+import haxe.Exception;
+
 #if sys
 import sys.FileSystem;
 import sys.io.File;
@@ -28,120 +28,124 @@ import sys.io.Process;
 using StringTools;
 
 /** 
-* @Authors MaysLastPlay, ArkoseLabs, MarioMaster (MasterX-39), Dechis (dx7405)
-* @version: 0.4.0
-**/
-typedef CustomStorageModeData = { modes:Array<ModeData> }
-typedef ModeData = { Name:String, Folder:String }
+ * @Authors MaysLastPlay, ArkoseLabs, MarioMaster (MasterX-39), Dechis (dx7405), JustX
+ * @version 0.4.1
+ **/
+typedef CustomStorageModeData = { final modes:Array<ModeData>; }
+typedef ModeData = { final Name:String; final Folder:String; }
+
 class MobileUtil
 {
 	#if sys
 	public static inline function getAssetDirectory():String
-		return #if android haxe.io.Path.addTrailingSlash("/sdcard/Android/data/com.motorfrog.impostor/files") #elseif ios lime.system.System.documentsDirectory #else Sys.getCwd() #end;
+		return #if android Path.addTrailingSlash("/sdcard/Android/data/com.motorfrog.impostor/files") #elseif ios LimeSystem.documentsDirectory #else Sys.getCwd() #end;
 
 	#if android
 	public static inline function getCustomStoragePath():String
 		return AndroidContext.getExternalFilesDir() + '/storageModes.json';
+		
 	public static inline function getStorageTypePath():String
 		return AndroidContext.getExternalFilesDir() + '/storagetype.txt';
 
-	public static function getCustomStorageDirectories(?doNotSeperate:Bool):Array<String>
+	public static function getCustomStorageDirectories(?doNotSeperate:Bool = false):Array<String>
 	{
-		var curJsonFile:String = getCustomStoragePath();
-		var ArrayReturn:Array<String> = [];
+		final curJsonFile:String = getCustomStoragePath();
+		final arrayReturn:Array<String> = [];
 
 		if (FileSystem.exists(curJsonFile))
 		{
 			try {
-				var rawJson:String = File.getContent(curJsonFile);
-				var parsedData:CustomStorageModeData = haxe.Json.parse(rawJson);
+				final rawJson:String = File.getContent(curJsonFile);
+				final parsedData:CustomStorageModeData = Json.parse(rawJson);
 
-				if (parsedData.modes != null) {
+				if (parsedData?.modes != null) {
 					for (mode in parsedData.modes) {
-						if (mode.Name == null || mode.Folder == null) continue;
+						if (mode?.Name == null || mode?.Folder == null) continue;
 
 						if (doNotSeperate)
-							// Keeping the "Name|Folder" format, so initDirectory() doesn't break
-							ArrayReturn.push(mode.Name + "|" + mode.Folder);
+							arrayReturn.push('${mode.Name}|${mode.Folder}');
 						else
-							ArrayReturn.push(mode.Name);
+							arrayReturn.push(mode.Name);
 					}
 				}
-			} catch (e:haxe.Exception) {
-				trace("Error parsing storage JSON: " + e.message);
+			} catch (e:Exception) {
+				trace('Error parsing storage JSON: ${e.message}');
 			}
 		}
-		return ArrayReturn;
+		return arrayReturn;
 	}
 
-	// always force path due to haxe
 	public static var currentDirectory:String;
+	
 	public static function initDirectory():String {
 		var daPath:String = '';
-		if (!FileSystem.exists(getStorageTypePath()))
-			File.saveContent(getStorageTypePath(), ClientPrefs.storageType);
 
-		var curStorageType:String = File.getContent(getStorageTypePath());
+		try {
+			if (!FileSystem.exists(getStorageTypePath()))
+				File.saveContent(getStorageTypePath(), ClientPrefs.storageType);
+		} catch (e:Exception) {
+			trace('Error saving storage type: ${e.message}');
+		}
 
-		/* Put this there because I don't want to override original paths, also brokes the normal storage system */
+		var curStorageType:String = "EXTERNAL_DATA"; 
+		try {
+			if (FileSystem.exists(getStorageTypePath())) {
+				curStorageType = File.getContent(getStorageTypePath());
+			}
+		} catch (e:Exception) {
+			trace('Error reading storage type: ${e.message}');
+		}
+
 		for (line in getCustomStorageDirectories(true))
 		{
-			if (line.startsWith(curStorageType) && (line != '' || line != null)) {
-				var dat = line.split("|");
-				daPath = dat[1];
+			if (line.startsWith(curStorageType) && line.trim() != '') {
+				final dat = line.split("|");
+				if (dat != null && dat.length > 1) {
+					daPath = dat[1];
+				}
 			}
 		}
 
-		/* Hardcoded Storage Types, these types cannot be changed by Custom Type
-		 * paths using "/sdcard/" location because otherwise engine crashes. -ArkoseLabs
-		 **/
 		switch(curStorageType) {
 			case 'EXTERNAL':
 				daPath = "/sdcard/.ImpostorLegacy";
-			/* obb doesnt work and I dont wanna fix it -ArkoseLabs
-			case 'EXTERNAL_OBB':
-				daPath = "/sdcard/Android/obb/com.yoshman29.codenameengine";
-			*/
 			case 'EXTERNAL_MEDIA':
 				daPath = "/sdcard/Android/media/com.motorfrog.impostor";
 			case 'EXTERNAL_DATA':
 				daPath = "/sdcard/Android/data/com.motorfrog.impostor";
-			default: //technically not needed but here for safety -ArkoseLabs
-				if (daPath == null || daPath == '') daPath = "/sdcard/Android/data/com.motorfrog.impostor/files";
+			default:
+				if (daPath == null || daPath.trim() == '') daPath = "/sdcard/Android/data/com.motorfrog.impostor/files";
 		}
+		
 		daPath = Path.addTrailingSlash(daPath);
 		currentDirectory = daPath;
 
-		try
-		{
-			if (!FileSystem.exists(MobileUtil.getAssetDirectory()))
-				FileSystem.createDirectory(MobileUtil.getAssetDirectory());
-		}
-		catch (e:Dynamic)
-		{
-			Application.current.window.alert("Looks like you doesn't have directory named\n" + MobileUtil.getAssetDirectory() +
-			"\nBut maybe this couldn't be right, android loves to give errors like this\nPress OK & let's see what happens\nCurrent Error You Got:\n" + e, "Warning!");
-			//lime.system.System.exit(1);
+		final safeAlert = function(msg:String, title:String) {
+			if (Application.current?.window != null) {
+				Application.current.window.alert(msg, title);
+			} else {
+				trace('$title: $msg');
+			}
+		};
+
+		try {
+			if (!FileSystem.exists(getAssetDirectory()))
+				FileSystem.createDirectory(getAssetDirectory());
+		} catch (e:Dynamic) {
+			safeAlert('Looks like you don\'t have directory named\n${getAssetDirectory()}\n\nCurrent Error:\n$e', "Warning!");
 		}
 
-		try
-		{
-			if (!FileSystem.exists(MobileUtil.getDirectory() + "content/"))
-				FileSystem.createDirectory(MobileUtil.getDirectory() + "content/");
-		}
-		catch (e:Dynamic)
-		{
-			Application.current.window.alert("Looks like you doesn't have directory named\n" + MobileUtil.getDirectory() + "content/" + 
-			"\nBut maybe this couldn't be right, android loves to give errors like this\nPress OK & let's see what happens\nCurrent Error You Got:\n" + e, "Warning!");
-			//lime.system.System.exit(1);
+		try {
+			final contentDir = '${daPath}content/';
+			if (!FileSystem.exists(contentDir))
+				FileSystem.createDirectory(contentDir);
+		} catch (e:Dynamic) {
+			safeAlert('Looks like you don\'t have directory named\n${daPath}content/\n\nCurrent Error:\n$e', "Warning!");
 		}
 
 		return daPath;
 	}
 
-	/**
-	 * Requests Storage Permissions on Android Platform.
-	 */
 	public static function getPermissions():Void
 	{
 		if (AndroidVersion.SDK_INT >= AndroidVersionCode.TIRAMISU)
@@ -159,37 +163,43 @@ class MobileUtil
 	}
 
 	public static var lastGettedPermission:Int;
-	public static function chmodPermission(fullPath:String) {
-		var process = new Process('stat -c %a ${fullPath}');
-		var stringOutput:String = process.stdout.readAll().toString();
-		process.close();
-		lastGettedPermission = Std.parseInt(stringOutput);
+	
+	public static function chmodPermission(fullPath:String):Void {
+		try {
+			final process = new Process('stat -c %a ${fullPath}');
+			final stringOutput:String = process.stdout.readAll().toString();
+			process.close();
+			lastGettedPermission = Std.parseInt(stringOutput);
+		} catch (e:Dynamic) {
+			trace('Error getting permissions for $fullPath: $e');
+		}
 	}
 
-	public static function chmod(permissions:Int, fullPath:String) {
-		var process = new Process('chmod -R ${permissions} ${fullPath}');
-
-		var exitCode = process.exitCode();
-		if (exitCode == 0) 
-			trace('Success: Permissions for the ${fullPath} file have been set to (${permissions})');
-		else
-		{
-			var errorOutput = process.stderr.readAll().toString();
-			trace('ERROR: Request to change permissions for the (${fullPath}) file failed. Exit Code: ${exitCode}, Error: ${errorOutput}');
+	public static function chmod(permissions:Int, fullPath:String):Void {
+		try {
+			final process = new Process('chmod -R ${permissions} ${fullPath}');
+			final exitCode = process.exitCode();
+			if (exitCode == 0) 
+				trace('Success: Permissions for $fullPath set to ($permissions)');
+			else {
+				final errorOutput = process.stderr.readAll().toString();
+				trace('ERROR: chmod failed for $fullPath. Exit: $exitCode, Error: $errorOutput');
+			}
+			process.close();
+		} catch (e:Dynamic) {
+			trace('Failed to execute chmod on $fullPath: $e');
 		}
-		process.close();
 	}
 	#end
 
 	public static function getDirectory():String
 	{
 		#if android	
-		var _currentDirectory = currentDirectory;
-		if (_currentDirectory == null || _currentDirectory == "") {
+		if (currentDirectory == null || currentDirectory == "") {
     	    trace("currentDirectory is null, initializing again...");
-    	    _currentDirectory = initDirectory(); 
+			currentDirectory = initDirectory(); 
     	}
-		return _currentDirectory;
+		return currentDirectory;
 		#elseif ios
 		return LimeSystem.documentsDirectory;
 		#else
@@ -198,71 +208,94 @@ class MobileUtil
 	}
 
 	/**
-	 * Saves a file to the external storage.
+	 * Saves a file to the external storage using atomic save (.tmp) to prevent corruption on out-of-memory.
 	 */
 	public static function save(fileName:String = 'Ye', fileExt:String = '.txt', fileData:String = 'Nice try, but you failed, try again!', ?alert:Bool = true):Void
 	{
-		final folder:String = #if android MobileUtil.getDirectory() + #else Sys.getCwd() + #end 'saves/';
-		try
-		{
+		final folder:String = #if android getDirectory() + #else Sys.getCwd() + #end 'saves/';
+
+		try {
 			if (!FileSystem.exists(folder))
 				FileSystem.createDirectory(folder);
 
-			File.saveContent('$folder/$fileName', fileData);
-			if (alert)
-				Application.current.window.alert('${fileName} has been saved.', "Success!");
-		}
-		catch (e:Dynamic)
-			if (alert)
-				Application.current.window.alert('${fileName} couldn\'t be saved.\n${e.message}', "Error!");
+			final targetPath = '$folder$fileName';
+			final tempPath = '$folder$fileName.tmp';
+
+			File.saveContent(tempPath, fileData);
+
+			if (FileSystem.exists(targetPath)) {
+				FileSystem.deleteFile(targetPath);
+			}
+
+			FileSystem.rename(tempPath, targetPath);
+
+			if (alert && Application.current?.window != null)
+				Application.current.window.alert('$fileName has been saved.', "Success!");
+			else if (alert)
+				trace('$fileName has been saved.');
+		} catch (e:Dynamic) {
+			try { if (FileSystem.exists('$folder$fileName.tmp')) FileSystem.deleteFile('$folder$fileName.tmp'); } catch(e2:Dynamic) {}
+
+			final errorMsg = 'Couldn\'t save $fileName.\nCheck if your device has enough free storage space!\n\nError: $e';
+			
+			if (alert && Application.current?.window != null)
+				Application.current.window.alert(errorMsg, "Storage Error!");
 			else
-				trace('$fileName couldn\'t be saved. (${e.message})');
+				trace('Save failed (storage full?): $e');
+		}
 	}
 	#end
 
 	/**
 	 * @param folders Optional list of specific folders (e.g. ["assets/data/"]). If null, copies all assets.
 	 */
-	public static function copyAssets(folders:Array<String> = null, onProgress:String->Int->Int->Void = null, onComplete:Void->Void = null):Void {
+	public static function copyAssets(?folders:Array<String> = null, ?onProgress:String->Int->Int->Void = null, ?onComplete:Void->Void = null):Void {
 		#if mobile
-		var rootTarget = getAssetDirectory();
-		try {
-			var assetList:Array<String> = Assets.list();
+		final rootTarget = getAssetDirectory();
 
-			var toCopy = assetList.filter(function(assetKey) {
+		try {
+			final assetList:Array<String> = Assets.list();
+			
+			if (assetList == null) {
+				trace("Error: Assets.list() returned null.");
+				if (onComplete != null) onComplete();
+				return;
+			}
+
+			final toCopy = assetList.filter(assetKey -> {
 				var cleanPath = assetKey;
-				var colonIndex = cleanPath.indexOf(":");
+				final colonIndex = cleanPath.indexOf(":");
 				if (colonIndex != -1) {
 					cleanPath = cleanPath.substring(colonIndex + 1);
 				}
 
-				if (!StringTools.startsWith(cleanPath, "assets/")) return false;
+				if (!cleanPath.startsWith("assets/")) return false;
 				if (folders == null) return true;
 
 				for (f in folders) {
-					if (StringTools.startsWith(cleanPath, f)) return true;
+					if (cleanPath.startsWith(f)) return true;
 				}
 				return false;
 			});
 
-			var total = toCopy.length;
+			final total = toCopy.length;
 			if (total == 0) {
 				if (onComplete != null) onComplete();
 				return;
 			}
 
 			for (i in 0...total) {
-				var assetKey = toCopy[i];
-
+				final assetKey = toCopy[i];
 				var cleanPath = assetKey;
-				var colonIndex = cleanPath.indexOf(":");
+				final colonIndex = cleanPath.indexOf(":");
+
 				if (colonIndex != -1) {
 					cleanPath = cleanPath.substring(colonIndex + 1);
 				}
 
-				var fullPath = Path.join([rootTarget, cleanPath]);
+				final fullPath = Path.join([rootTarget, cleanPath]);
+				final directory = Path.directory(fullPath);
 
-				var directory = Path.directory(fullPath);
 				if (!FileSystem.exists(directory)) FileSystem.createDirectory(directory);
 
 				if (!FileSystem.exists(fullPath)) {
@@ -272,17 +305,29 @@ class MobileUtil
 						bytes = Assets.getBytes(assetKey);
 					} catch (e:Dynamic) {
 						try {
-							var text:String = Assets.getText(assetKey);
-							if (text != null) {
-								bytes = Bytes.ofString(text);
-							}
+							final text:String = Assets.getText(assetKey);
+							if (text != null) bytes = Bytes.ofString(text);
 						} catch (e2:Dynamic) {
 							trace('Failed to read text fallback for $assetKey: $e2');
 						}
 					}
 
 					if (bytes != null) {
-						File.saveBytes(fullPath, bytes);
+						try {
+							File.saveBytes(fullPath, bytes);
+						} catch (saveErr:Dynamic) {
+							trace('CRITICAL: Failed to write $fullPath. Storage full? Error: $saveErr');
+							
+							if (Application.current?.window != null) {
+								Application.current.window.alert(
+									"Failed to copy game data.\nYour phone's storage might be full.\nPlease free up some space and try again.", 
+									"Out of Storage!"
+								);
+							}
+							
+							if (onComplete != null) onComplete();
+							return; 
+						}
 					} else {
 						trace('Could not extract data for asset: $assetKey');
 					}
@@ -294,6 +339,7 @@ class MobileUtil
 			if (onComplete != null) onComplete();
 		} catch (e:Dynamic) {
 			trace('Asset Copy Error: $e');
+			if (onComplete != null) onComplete();
 		}
 		#end
 	}
