@@ -81,6 +81,7 @@ Current version: **1.1.1b**
 - FINALE stage was simplified for Low Quality mode.
 - Who given optional captions.
 - Girlfriend's sprite in Danger was updated for consistency.
+- Pink's Pretender sprite changed for consistency.
 
 ## 1.1.1b (june 21 2026)
   
