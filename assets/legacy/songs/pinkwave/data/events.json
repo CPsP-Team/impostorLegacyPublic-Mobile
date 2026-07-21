@@ -8,8 +8,15 @@
 						"Alter Camera Bop",
 						"0",
 						"0"
+					],
+					[
+						"Add Camera Zoom",
+						"",
+						""
 					]
-				]
+				],
+				null,
+				""
 			],
 			[
 				3360,
@@ -423,8 +430,15 @@
 						"Alter Camera Bop",
 						"0",
 						"0"
+					],
+					[
+						"Add Camera Zoom",
+						"",
+						""
 					]
-				]
+				],
+				null,
+				""
 			],
 			[
 				110880,
