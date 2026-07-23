@@ -39,7 +39,7 @@ WEBSITE: https://vsimpostor.com/
 # CHANGELOG
 Current version: **1.1.1b**
 
-## 1.1.2 (? 2026)
+## 1.1.2 (july 23 2026)
 
 ### Additions
 - Who now has captions.
@@ -83,6 +83,7 @@ Current version: **1.1.1b**
 - FINALE stage was simplified for Low Quality mode.
 - Girlfriend's sprite in Danger was updated for consistency.
 - Pink's Pretender sprite changed for consistency.
+- Updated note coloring.
 
 ## 1.1.1b (june 21 2026)
   
