@@ -65,6 +65,7 @@ Current version: **1.1.1b**
 - Black's Defeat sprite was re-exported to fix effects.
 - White's halo effect was fixed.
 - Fixed some variables not working correctly in Hscript.
+- Fixed Greatest Plan intro when Camera Zoom on Beat is disabled.
 - Pets are correctly scaled in Pip Towers stage.
 - Playable Green's scared animation is fixed.
 - Dark BF's down pose plays correctly.
