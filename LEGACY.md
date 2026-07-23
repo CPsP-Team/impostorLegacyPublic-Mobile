@@ -37,7 +37,7 @@ WEBSITE: https://vsimpostor.com/
 - Lithuanian
 
 # CHANGELOG
-Current version: **1.1.1b**
+Current version: **1.1.2**
 
 ## 1.1.2 (july 23 2026)
 

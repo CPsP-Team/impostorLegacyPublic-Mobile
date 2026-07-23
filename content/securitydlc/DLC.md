@@ -27,9 +27,9 @@ The DLC is an example mod made for VS. Impostor Legacy. For a grounded guide to 
 - Indonesian
 
 # CHANGELOG
-Current version: **1.1.1b**
+Current version: **1.1.2**
 
-## 1.1.2 (? 2026)
+## 1.1.2 (july 23 2026)
 
 ### Changes
 - Playable Noob49 error fixed.
