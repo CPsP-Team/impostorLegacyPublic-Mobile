@@ -42,6 +42,7 @@ Current version: **1.1.1b**
 ## 1.1.2 (? 2026)
 
 ### Additions
+- Who now has captions.
 - You can now skip time in the Pause menu, while Charting Mode is active.
 - Added `curDecSection`.
 - Updated some libraries.
@@ -79,7 +80,6 @@ Current version: **1.1.1b**
 - The Ejected cutscene is changed if using skins.
 - Meltdown uses a correct icon in the Freeplay menu.
 - FINALE stage was simplified for Low Quality mode.
-- Who given optional captions.
 - Girlfriend's sprite in Danger was updated for consistency.
 - Pink's Pretender sprite changed for consistency.
 
