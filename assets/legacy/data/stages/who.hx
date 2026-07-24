@@ -22,18 +22,18 @@ function onLoad()
 	starsFG.setPosition(54.3, 59.45);
 	starsFG.visible = false;
 	add(starsFG);
-
-   whoend = new flixel.addons.text.FlxTypeText();
-   whoend.setFormat(Paths.font('vcr.ttf'), 50, 0xFFFFFFFF);
-   whoend.antialiasing = false;
-   whoend.resetText(Lang.str('who-end'));
-   whoend.updateHitbox();
-   whoend.x = 1100 - (whoend.frameWidth / 2);
-   whoend.y = 1120;
-   whoend.delay = 0.05;
-   add(whoend);
 	
-	whoAngered = new FlxSprite(-1000, 975);
+	whoend = new flixel.addons.text.FlxTypeText(102, 1120);
+	whoend.antialiasing = false;
+	whoend.setFormat(Paths.font('bahn.ttf'), 25, 0xFFFFFFFF, FlxTextAlign.CENTER);
+	whoend.resetText(Lang.str('who-end'));
+	whoend.fieldWidth = 2000;
+	whoend.updateHitbox();
+	whoend.scale.set(2, 2);
+	whoend.delay = .03;
+	add(whoend);
+	
+	whoAngered = new FlxSprite(-900, 975);
 	whoAngered.loadGraphic(Paths.image(ext + "mad mad dude"));
 	whoAngered.visible = false;
 	add(whoAngered);
@@ -90,7 +90,6 @@ function onUpdate(elapsed)
 		starsBG.x += elapsed * 25;
 		camZooming = false;
 	}
-   whoend.x = 1100 - (whoend.frameWidth / 2);
 }
 
 function onEvent(eventName, value1, value2)
@@ -114,7 +113,7 @@ function onEvent(eventName, value1, value2)
 								emergency.visible = true;
 							}
 						case 1:
-							new flixel.util.FlxTimer().start(1.35, function(_) whoend.start());
+							new flixel.util.FlxTimer().start(2.6, function(_) whoend.start());
 							furiousRage.visible = false;
 							emergency.visible = false;
 							bg.visible = false;
@@ -126,7 +125,7 @@ function onEvent(eventName, value1, value2)
 							starsFG.visible = true;
 							whoAngered.visible = true;
 							FlxTween.angle(whoAngered, 0, 720, 10);
-							FlxTween.tween(whoAngered, {x: 3000}, 10);
+							FlxTween.tween(whoAngered, {x: 3000}, 10, {ease: FlxEase.quadOut});
 							defaultCamZoom = 0.5;
 							FlxG.camera.zoom = 0.5;
 							game.snapCamToPos(1100, 1150);
