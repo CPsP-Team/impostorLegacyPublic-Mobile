@@ -25,7 +25,7 @@ jobs:
 
       - name: Optimize PNGs
         run: |
-          find . -type f -iname "*.png" -print0 | xargs -0 -P 0 -I {} oxipng -o 2 --strip safe {} || true
+          find . -type f -iname "*.png" -print0 | xargs -0 -P 0 -I {} sh -c 'oxipng -o 2 --strip safe "$1" || true' _ {}
 
       - name: Optimize OGG Audio
         run: |
