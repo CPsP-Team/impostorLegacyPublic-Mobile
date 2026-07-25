@@ -35,13 +35,9 @@ jobs:
         run: |
              haxelib run lime build android -final -ONLY_ARM64
 
-      - name: Create ZIP File
-        run: |
-          7z a -tzip -mx=9 Android-Release.zip export/release/android/bin/app/build/outputs/apk/release/*.apk
-
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7.0.1
         with:
-          name: Android Release
-          path: Android-Release.zip
+          name: Android-Release
+          path: export/release/android/bin/app/build/outputs/apk/*
           if-no-files-found: error
