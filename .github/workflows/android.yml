@@ -32,7 +32,14 @@ jobs:
           haxelib run lime config ANDROID_SETUP true
 
       - name: Compile
-        run: haxelib run lime build android -final -ONLY_ARM64 -D DLC
+        run: |
+             haxelib run lime build android -final -ONLY_ARM64 -D DLC -D no-debug
+             cd export/release/android/bin
+          
+             ./gradlew assembleRelease \
+             -Pandroid.enableR8=true \
+             -Pandroid.enablePngCrunch=true \
+             --parallel
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v7.0.1
