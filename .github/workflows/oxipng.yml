@@ -24,7 +24,7 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y ffmpeg
 
       - name: Optimize PNGs
-        run: oxipng -o 4 --strip safe -r .
+        run: oxipng -o 2 --strip safe -r .
 
       - name: Optimize OGG Audio
         run: |
