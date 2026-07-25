@@ -33,7 +33,7 @@ jobs:
 
       - name: Compile
         run: |
-             haxelib run lime build android -final -ONLY_ARM64 -D DLC
+             haxelib run lime build android -final -ONLY_ARM64
 
       - name: Create ZIP File
         run: |
