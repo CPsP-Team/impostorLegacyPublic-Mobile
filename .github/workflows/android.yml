@@ -31,19 +31,27 @@ jobs:
           haxelib run lime config JAVA_HOME $JAVA_HOME_17_X64
           haxelib run lime config ANDROID_SETUP true
 
+      - name: Optimize PNG
+        run: |
+          sudo apt-get update && sudo apt-get install -y optipng
+          find assets/ -name "*.png" | xargs -P 0 -I {} optipng -o2 -quiet {}
+          
+      - name: Optimize Audio Bitrates
+        run: |
+          sudo apt-get install -y ffmpeg
+          find assets/ -name "*.ogg" -exec ffmpeg -i {} -map 0:a -b:a 112k -y {}.tmp && mv {}.tmp {} \; || true
+
       - name: Compile
         run: |
              haxelib run lime build android -final -ONLY_ARM64 -D DLC -D no-debug
-             cd export/release/android/bin
-          
-             ./gradlew assembleRelease \
-             -Pandroid.enableR8=true \
-             -Pandroid.enablePngCrunch=true \
-             --parallel
+
+      - name: Create ZIP File
+        run: |
+          7z a -tzip -mx=9 Android-Release.zip export/release/android/bin/app/build/outputs/apk/release/*.apk
 
       - name: Upload Artifact
-        uses: actions/upload-artifact@v7.0.1
+        uses: actions/upload-artifact@v4
         with:
-          name: Android-Release
-          path: export/release/android/bin/app/build/outputs/apk/*
+          name: Android Release
+          path: Android-Release.zip
           if-no-files-found: error
