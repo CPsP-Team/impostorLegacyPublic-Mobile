@@ -46,6 +46,7 @@ Current version: **1.1.2**
 - Fixed application title.
 - Fixed skateboard not appearing on Danger.
 - Fixed loop points for some characters.
+- Pets should be better positioned and scaled in the Cafeteria stage.
 
 ## 1.1.2 (july 23 2026)
 
