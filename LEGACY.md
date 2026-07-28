@@ -43,6 +43,7 @@ Current version: **1.1.2**
 
 ### Bugfixes
 - Fixed a game breaking issue when opening the Credits during a modded song.
+- Fixed current beat being inaccurate in some cases.
 - Readded icons in Cosmicubes.
 - Fixed application title.
 - Fixed skateboard not appearing on Danger.
