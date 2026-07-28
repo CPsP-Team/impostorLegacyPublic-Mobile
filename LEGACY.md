@@ -39,6 +39,14 @@ WEBSITE: https://vsimpostor.com/
 # CHANGELOG
 Current version: **1.1.2**
 
+## 1.1.2b (? 2026)
+
+### Bugfixes
+- Readded icons in Cosmicubes.
+- Fixed application title.
+- Fixed skateboard not appearing on Danger.
+- Fixed loop points for some characters.
+
 ## 1.1.2 (july 23 2026)
 
 ### Additions
