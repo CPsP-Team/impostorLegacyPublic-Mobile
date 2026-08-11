@@ -137,7 +137,7 @@
 				2,
 				3,
 				4,
-				5,
+				5
 			],
 			"name": "scared"
 		},
@@ -171,7 +171,8 @@
 	"flags": {
 		"variants": {
 			"dark": "bf-dark",
-			"stabbed": "bfweird-stabbed"
+			"stabbed": "bfweird-stabbed",
+			"windy": "bfweird-windy"
 		}
 	},
 	"scalableOffsets": false,

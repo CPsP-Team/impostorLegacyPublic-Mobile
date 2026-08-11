@@ -41,11 +41,24 @@ Current version: **1.1.2**
 
 ## 1.1.2b (? 2026)
 
+### Additions
+- Chef BF given a Monotone variant.
+
 ### Bugfixes
+- Fixed a game breaking issue when opening the Credits during a modded song.
+- Fixed current beat being inaccurate in some cases.
 - Readded icons in Cosmicubes.
 - Fixed application title.
 - Fixed skateboard not appearing on Danger.
 - Fixed loop points for some characters.
+- Pets should be better positioned and scaled in the Cafeteria stage.
+- Polus BF's jacket clipping fixed.
+- Esculent's duped icon is removed.
+- Fixed Maroon's stage BF position.
+
+### Changes
+- Some more characters have been turned into atlases.
+- Regular BF has been given a windy variant.
 
 ## 1.1.2 (july 23 2026)
 

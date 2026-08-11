@@ -33,6 +33,8 @@ Current version: **1.1.2**
 
 ### Changes
 - Fixed health bar color not changing during a section in Don't Lied.
+- Triple Threat stage made windy.
+- Weird BF given a windy variant.
 
 ## 1.1.2 (july 23 2026)
 
