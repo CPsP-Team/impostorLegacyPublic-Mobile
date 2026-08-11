@@ -151,11 +151,7 @@
 		}
 	],
 	"no_antialiasing": false,
-<<<<<<< HEAD
-	"image": "characters/bf/bfPolusStatic",
-=======
 	"image": "characters/bf/bfpolus",
->>>>>>> upstream/main
 	"position": [
 		-12,
 		332
